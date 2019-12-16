@@ -19,7 +19,7 @@ set(SOURCE_FILES
         "game/game.cpp")
 
 set(HEADER_FILES
-        "game/game.h" map/Room.cpp map/Room.h)
+        "game/game.h" map/Room.cpp map/Room.h map/Map.cpp map/Map.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
