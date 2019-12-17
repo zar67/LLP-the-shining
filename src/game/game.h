@@ -1,7 +1,7 @@
 #pragma once
+#include "../map/Map.h"
 #include <Engine/OGLGame.h>
 #include <string>
-#include "../map/Map.h"
 
 /**
  *  An OpenGL Game based on ASGE.

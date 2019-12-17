@@ -4,42 +4,43 @@
 
 #include "Room.h"
 
-Room::Room(int id, std::string filename, int x, int y, bool n, bool e, bool s, bool w)
+Room::Room(
+  int id, std::string filename, int x, int y, bool n, bool e, bool s, bool w)
 {
-    ID = id;
-    north = n;
-    east = e;
-    south = s;
-    west = w;
+  ID = id;
+  north = n;
+  east = e;
+  south = s;
+  west = w;
 
-    // Setup Sprite
-    // Load Sprite
-    // Set Position
+  // Setup Sprite
+  // Load Sprite
+  // Set Position
 
-    // Setup Collision
+  // Setup Collision
 }
 
 int Room::getId()
 {
-    return ID;
+  return ID;
 }
 
 bool Room::getNorth()
 {
-    return north;
+  return north;
 }
 
 bool Room::getEast()
 {
-    return east;
+  return east;
 }
 
 bool Room::getSouth()
 {
-    return south;
+  return south;
 }
 
 bool Room::getWest()
 {
-    return west;
+  return west;
 }
