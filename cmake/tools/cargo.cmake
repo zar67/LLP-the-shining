@@ -1,6 +1,6 @@
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/_deps/ci-src)
 
-set(MD5URL "https://www.dropbox.com/s/zq6f626pzlm529o/ares.md5?dl=1")
+set(MD5URL "https://www.dropbox.com/s/zq6f626pzlm529o/aether.md5?dl=1")
 set(MD5DL ${CMAKE_BINARY_DIR}/_deps/ci-src/cargo.zip.md5)
 
 ## download the MD5
@@ -20,7 +20,7 @@ endif()
 file(STRINGS ${MD5DL} MD5FILE LIMIT_INPUT 32)
 message("${MD5FILE}")
 
-set(PAKURL "https://www.dropbox.com/s/i2bb4buddkc0o91/ares.zip?dl=1")
+set(PAKURL "https://www.dropbox.com/s/i2bb4buddkc0o91/aether.zip?dl=1")
 set(PAKDL  ${CMAKE_BINARY_DIR}/_deps/ci-src/cargo.zip)
 set(PAKDIR ${CMAKE_BINARY_DIR}/_deps/ci-src)
 
