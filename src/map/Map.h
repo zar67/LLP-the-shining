@@ -15,11 +15,24 @@ public:
     ~Map() = default;
 
     void changeRooms(int new_ID);
-    Room getCurrentRoom();
+    Room* getCurrentRoom();
+    bool generateRooms();
 
 private:
-    std::vector<Room> rooms;
+    std::string needNorthDoor(int x, int y);
+    std::string needEastDoor(int x, int y);
+    std::string needSouthDoor(int x, int y);
+    std::string needWestDoor(int x, int y);
+    bool checkRoomName(std::string name, std::string required_doors);
+
+
+    Room rooms[5][5] = {{Room(), Room(), Room(), Room(), Room()},
+                        {Room(), Room(), Room(), Room(), Room()},
+                        {Room(), Room(), Room(), Room(), Room()},
+                        {Room(), Room(), Room(), Room(), Room()},
+                        {Room(), Room(), Room(), Room(), Room()}};
     int current_room;
+    int num_initialised_rooms = 0;
 };
 
 

@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include <Engine/DebugPrinter.h>
 #include <Engine/Input.h>
@@ -15,6 +16,7 @@
 MyASGEGame::MyASGEGame()
 {
   game_name = "ASGE Game";
+  srand(time(0));
 }
 
 /**
@@ -54,6 +56,8 @@ bool MyASGEGame::init()
 
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
+
+  map.generateRooms();
 
   return true;
 }
