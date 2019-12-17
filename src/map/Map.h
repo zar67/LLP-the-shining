@@ -31,7 +31,6 @@ class Map
                        { Room(), Room(), Room(), Room(), Room() },
                        { Room(), Room(), Room(), Room(), Room() } };
   int current_room;
-  int num_initialised_rooms = 0;
 };
 
 #endif // PROJECT_MAP_H
