@@ -19,7 +19,7 @@ set(SOURCE_FILES
         "game/game.cpp")
 
 set(HEADER_FILES
-        "game/game.h")
+        "game/game.h" game/SceneObjects/GameObject.cpp game/SceneObjects/GameObject.h game/Components/SpriteComponent.cpp game/Components/SpriteComponent.h game/Components/CollisionComponent.cpp game/Components/CollisionComponent.h game/SceneObjects/Player.cpp game/SceneObjects/Player.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
