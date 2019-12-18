@@ -19,6 +19,7 @@ class Map
   void moveSouth();
   void moveWest();
   Room* getCurrentRoom();
+  void renderCurrentRoom(ASGE::Renderer* renderer);
   bool generateRooms(ASGE::Renderer* renderer);
 
  private:

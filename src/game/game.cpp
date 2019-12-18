@@ -100,6 +100,22 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     signalExit();
   }
+  if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.moveNorth();
+  }
+  if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.moveWest();
+  }
+  if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.moveSouth();
+  }
+  if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.moveEast();
+  }
 }
 
 /**
@@ -150,7 +166,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
-  renderer->renderSprite(*map.getCurrentRoom()->spriteComponent()->getSprite());
+  map.renderCurrentRoom(renderer.get());
 
   if (in_menu)
   {

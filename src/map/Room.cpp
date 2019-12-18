@@ -18,12 +18,6 @@ Room::Room(int id,
   east = e_door;
   south = s_door;
   west = w_door;
-
-  // Setup Sprite
-  // Load Sprite
-  // Set Position
-
-  // Setup Collision
 }
 
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)

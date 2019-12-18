@@ -11,7 +11,7 @@
 
 void Map::moveNorth()
 {
-  if (rooms[current_room / map_size][current_room % map_size].getNorth())
+  if (getCurrentRoom()->getNorth())
   {
     current_room -= map_size;
   }
@@ -19,7 +19,7 @@ void Map::moveNorth()
 
 void Map::moveEast()
 {
-  if (rooms[current_room / map_size][current_room % map_size].getEast())
+  if (getCurrentRoom()->getEast())
   {
     current_room += 1;
   }
@@ -27,7 +27,7 @@ void Map::moveEast()
 
 void Map::moveSouth()
 {
-  if (rooms[current_room / map_size][current_room % map_size].getSouth())
+  if (getCurrentRoom()->getSouth())
   {
     current_room += map_size;
   }
@@ -35,7 +35,7 @@ void Map::moveSouth()
 
 void Map::moveWest()
 {
-  if (rooms[current_room / map_size][current_room % map_size].getWest())
+  if (getCurrentRoom()->getWest())
   {
     current_room -= 1;
   }
@@ -55,6 +55,11 @@ Room* Map::getCurrentRoom()
   }
 
   return nullptr;
+}
+
+void Map::renderCurrentRoom(ASGE::Renderer* renderer)
+{
+  renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
 }
 
 bool Map::generateRooms(ASGE::Renderer* renderer)
