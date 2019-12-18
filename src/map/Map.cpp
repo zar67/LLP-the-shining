@@ -33,8 +33,9 @@ Room* Map::getCurrentRoom()
 bool Map::generateRooms()
 {
   // Generate Starting Room
+  std::string file = "data/Rooms/NESW.png";
   rooms[map_size / 2][map_size / 2] =
-    Room(12, "data/Rooms/NESW.png", 2, 2, true, true, true, true);
+    Room(12, &file, 2, 2, true, true, true, true);
 
   // Create Queue of Rooms From Open Doors
   std::queue<std::array<int, 2>> rooms_to_generate;
@@ -78,8 +79,9 @@ bool Map::generateRooms()
       int index = static_cast<int>(rand() % possible_rooms.size());
 
       // Setup Room
+      std::string file = "data/Rooms/" + possible_rooms[index];
       rooms[x_index][y_index] = Room(x_index * map_size + y_index,
-                                     "data/Rooms/" + possible_rooms[index],
+                                     &file,
                                      y_index,
                                      x_index,
                                      possible_rooms[index][0] == 'N',
