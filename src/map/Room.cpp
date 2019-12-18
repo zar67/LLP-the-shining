@@ -5,13 +5,13 @@
 #include "Room.h"
 
 Room::Room(
-  int id, std::string filename, int x, int y, bool n, bool e, bool s, bool w)
+  int id, std::string filename, int x_pos, int y_pos, bool n_door, bool e_door, bool s_door, bool w_door)
 {
   ID = id;
-  north = n;
-  east = e;
-  south = s;
-  west = w;
+  north = n_door;
+  east = e_door;
+  south = s_door;
+  west = w_door;
 
   // Setup Sprite
   // Load Sprite

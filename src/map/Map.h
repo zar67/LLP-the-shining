@@ -19,10 +19,10 @@ class Map
   bool generateRooms();
 
  private:
-  std::string needNorthDoor(int x, int y);
-  std::string needEastDoor(int x, int y);
-  std::string needSouthDoor(int x, int y);
-  std::string needWestDoor(int x, int y);
+  std::string needNorthDoor(int x_pos, int y_pos);
+  std::string needEastDoor(int x_pos, int y_pos);
+  std::string needSouthDoor(int x_pos, int y_pos);
+  std::string needWestDoor(int x_pos, int y_pos);
   bool checkRoomName(std::string name, std::string required_doors);
 
   Room rooms[5][5] = { { Room(), Room(), Room(), Room(), Room() },
@@ -31,6 +31,7 @@ class Map
                        { Room(), Room(), Room(), Room(), Room() },
                        { Room(), Room(), Room(), Room(), Room() } };
   int current_room;
+  int map_size = 5;
 };
 
 #endif // PROJECT_MAP_H
