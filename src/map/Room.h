@@ -11,8 +11,14 @@ class Room
 {
  public:
   Room() = default;
-  Room(
-    int id, std::string filename, int x_pos, int y_pos, bool n_door, bool e_door, bool s_door, bool w_door);
+  Room(int id,
+       std::string* filename,
+       int x_pos,
+       int y_pos,
+       bool n_door,
+       bool e_door,
+       bool s_door,
+       bool w_door);
   ~Room() = default;
 
   int getId();

@@ -33,7 +33,8 @@ Room* Map::getCurrentRoom()
 bool Map::generateRooms()
 {
   // Generate Starting Room
-  rooms[map_size/2][map_size/2] = Room(12, "data/Rooms/NESW.png", 2, 2, true, true, true, true);
+  rooms[map_size / 2][map_size / 2] =
+    Room(12, "data/Rooms/NESW.png", 2, 2, true, true, true, true);
 
   // Create Queue of Rooms From Open Doors
   std::queue<std::array<int, 2>> rooms_to_generate;
@@ -51,8 +52,9 @@ bool Map::generateRooms()
     if (rooms[x_index][y_index].getId() == -1)
     {
       // Calculate Required Doors (NESW)
-      std::string doors_needed = needNorthDoor(x_index, y_index) + needEastDoor(x_index, y_index) +
-                                 needSouthDoor(x_index, y_index) + needWestDoor(x_index, y_index);
+      std::string doors_needed =
+        needNorthDoor(x_index, y_index) + needEastDoor(x_index, y_index) +
+        needSouthDoor(x_index, y_index) + needWestDoor(x_index, y_index);
 
       // Randomly Select Room with Correct Doors
       // Directory: data/Rooms/NESW.png
@@ -77,28 +79,32 @@ bool Map::generateRooms()
 
       // Setup Room
       rooms[x_index][y_index] = Room(x_index * map_size + y_index,
-                         "data/Rooms/" + possible_rooms[index],
-                         y_index,
-                         x_index,
-                         possible_rooms[index][0] == 'N',
-                         possible_rooms[index][1] == 'E',
-                         possible_rooms[index][2] == 'S',
-                         possible_rooms[index][3] == 'W');
+                                     "data/Rooms/" + possible_rooms[index],
+                                     y_index,
+                                     x_index,
+                                     possible_rooms[index][0] == 'N',
+                                     possible_rooms[index][1] == 'E',
+                                     possible_rooms[index][2] == 'S',
+                                     possible_rooms[index][3] == 'W');
 
       // Add New Rooms To Generate To Queue
-      if (rooms[x_index][y_index].getNorth() && rooms[x_index - 1][y_index].getId() == -1)
+      if (rooms[x_index][y_index].getNorth() &&
+          rooms[x_index - 1][y_index].getId() == -1)
       {
         rooms_to_generate.push({ x_index - 1, y_index });
       }
-      if (rooms[x_index][y_index].getEast() && rooms[x_index][y_index + 1].getId() == -1)
+      if (rooms[x_index][y_index].getEast() &&
+          rooms[x_index][y_index + 1].getId() == -1)
       {
         rooms_to_generate.push({ x_index, y_index + 1 });
       }
-      if (rooms[x_index][y_index].getSouth() && rooms[x_index + 1][y_index].getId() == -1)
+      if (rooms[x_index][y_index].getSouth() &&
+          rooms[x_index + 1][y_index].getId() == -1)
       {
         rooms_to_generate.push({ x_index + 1, y_index });
       }
-      if (rooms[x_index][y_index].getWest() && rooms[x_index][y_index - 1].getId() == -1)
+      if (rooms[x_index][y_index].getWest() &&
+          rooms[x_index][y_index - 1].getId() == -1)
       {
         rooms_to_generate.push({ x_index, y_index - 1 });
       }
