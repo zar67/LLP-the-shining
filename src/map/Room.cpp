@@ -26,6 +26,11 @@ Room::Room(int id,
   // Setup Collision
 }
 
+bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
+{
+  addSpriteComponent(renderer, *filename);
+}
+
 int Room::getId()
 {
   return ID;

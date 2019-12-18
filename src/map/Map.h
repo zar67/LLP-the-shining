@@ -14,9 +14,12 @@ class Map
   Map() = default;
   ~Map() = default;
 
-  void changeRooms(int new_ID);
+  void moveNorth();
+  void moveEast();
+  void moveSouth();
+  void moveWest();
   Room* getCurrentRoom();
-  bool generateRooms();
+  bool generateRooms(ASGE::Renderer* renderer);
 
  private:
   std::string needNorthDoor(int x_pos, int y_pos);
@@ -30,8 +33,8 @@ class Map
                        { Room(), Room(), Room(), Room(), Room() },
                        { Room(), Room(), Room(), Room(), Room() },
                        { Room(), Room(), Room(), Room(), Room() } };
-  int current_room;
   int map_size = 5;
+  int current_room = map_size / 2 * map_size + (map_size / 2);
 };
 
 #endif // PROJECT_MAP_H

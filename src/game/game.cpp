@@ -57,7 +57,7 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
-  map.generateRooms();
+  map.generateRooms(renderer.get());
 
   return true;
 }
@@ -78,8 +78,8 @@ void MyASGEGame::setupResolution()
   // https://www.gamasutra.com/blogs/KenanBolukbasi/20171002/306822/
   // Scaling_and_MultiResolution_in_2D_Games.php
 
-  game_width = 1280;
-  game_height = 720;
+  game_width = 704;
+  game_height = 448;
 }
 
 /**
@@ -150,6 +150,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
+  renderer->renderSprite(*map.getCurrentRoom()->spriteComponent()->getSprite());
 
   if (in_menu)
   {

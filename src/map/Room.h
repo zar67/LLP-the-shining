@@ -5,9 +5,10 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/SceneObjects/GameObject.h"
 #include <string>
 
-class Room
+class Room : public GameObject
 {
  public:
   Room() = default;
@@ -21,6 +22,7 @@ class Room
        bool w_door);
   ~Room() = default;
 
+  bool setup(ASGE::Renderer* renderer, std::string* filename);
   int getId();
   bool getNorth();
   bool getEast();
@@ -28,8 +30,6 @@ class Room
   bool getWest();
 
  private:
-  // SpriteComponent* sprite = nullptr;
-  // CollisionComponent* collision = nullptr;
   int ID = -1;
   bool north = false;
   bool east = false;
