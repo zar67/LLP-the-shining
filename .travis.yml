@@ -1,6 +1,6 @@
 # .travis.yml
 
-sudo: required
+os: linux
 language: cpp
 git:
   depth: 5
@@ -9,7 +9,7 @@ cache:
   - directories:
     - ~/.cache/apt # This must be accessible for non-root users
 
-matrix:
+jobs:
   include:
 
     # Code Style
@@ -34,7 +34,6 @@ matrix:
         apt:
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'ppa:jonathonf/development-tools'
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++"
       before_script:
@@ -65,7 +64,6 @@ matrix:
         apt:
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'ppa:jonathonf/development-tools'
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
       before_script:
