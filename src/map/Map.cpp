@@ -9,9 +9,36 @@
 
 #include "Map.h"
 
-void Map::changeRooms(int new_ID)
+void Map::moveNorth()
 {
-  current_room = new_ID;
+  if (getCurrentRoom()->getNorth())
+  {
+    current_room -= map_size;
+  }
+}
+
+void Map::moveEast()
+{
+  if (getCurrentRoom()->getEast())
+  {
+    current_room += 1;
+  }
+}
+
+void Map::moveSouth()
+{
+  if (getCurrentRoom()->getSouth())
+  {
+    current_room += map_size;
+  }
+}
+
+void Map::moveWest()
+{
+  if (getCurrentRoom()->getWest())
+  {
+    current_room -= 1;
+  }
 }
 
 Room* Map::getCurrentRoom()
@@ -30,12 +57,18 @@ Room* Map::getCurrentRoom()
   return nullptr;
 }
 
-bool Map::generateRooms()
+void Map::renderCurrentRoom(ASGE::Renderer* renderer)
+{
+  renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
+}
+
+bool Map::generateRooms(ASGE::Renderer* renderer)
 {
   // Generate Starting Room
   std::string file = "data/Rooms/NESW.png";
   rooms[map_size / 2][map_size / 2] =
     Room(12, &file, 2, 2, true, true, true, true);
+  rooms[map_size / 2][map_size / 2].setup(renderer, &file);
 
   // Create Queue of Rooms From Open Doors
   std::queue<std::array<int, 2>> rooms_to_generate;
@@ -88,6 +121,7 @@ bool Map::generateRooms()
                                      possible_rooms[index][1] == 'E',
                                      possible_rooms[index][2] == 'S',
                                      possible_rooms[index][3] == 'W');
+      rooms[x_index][y_index].setup(renderer, &file);
 
       // Add New Rooms To Generate To Queue
       if (rooms[x_index][y_index].getNorth() &&
@@ -119,18 +153,6 @@ bool Map::generateRooms()
       // Remove This Room from Queue
       rooms_to_generate.pop();
     }
-  }
-
-  for (int i = 0; i < map_size; i++)
-  {
-    for (int j = 0; j < map_size; j++)
-    {
-      std::cout << i << ", " << j << " : " << rooms[i][j].getId() << "->"
-                << rooms[i][j].getNorth() << ", " << rooms[i][j].getEast()
-                << ", " << rooms[i][j].getSouth() << ", "
-                << rooms[i][j].getWest() << std::endl;
-    }
-    std::cout << std::endl;
   }
 
   return true;
