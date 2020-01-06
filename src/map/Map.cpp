@@ -194,8 +194,8 @@ bool Map::setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height
 
         if (mini_map.at(count).addSpriteComponent(renderer, file))
         {
-            mini_map.at(count).spriteComponent()->getSprite()->xPos(game_width - (8 * map_size) + (j * 8));
-            mini_map.at(count).spriteComponent()->getSprite()->yPos(game_height - (8 * map_size) + (i * 8));
+            mini_map.at(count).spriteComponent()->getSprite()->xPos(game_width - (20 * map_size) + (j * 20));
+            mini_map.at(count).spriteComponent()->getSprite()->yPos(game_height - (20 * map_size) + (i * 20));
             count += 1;
         }
       }
