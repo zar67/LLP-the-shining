@@ -57,8 +57,17 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
-  map.generateRooms(renderer.get());
+  if (!map.generateRooms(renderer.get()))
+  {
+    return false;
+  }
 
+  if (!map.setupMinimap(renderer.get(), game_width, game_height))
+  {
+    return false;
+  }
+
+  ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
 
@@ -166,7 +175,9 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
+
   map.renderCurrentRoom(renderer.get());
+  map.renderMiniMap(renderer.get());
 
   if (in_menu)
   {
