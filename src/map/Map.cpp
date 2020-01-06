@@ -14,6 +14,7 @@ void Map::moveNorth()
   if (getCurrentRoom()->getNorth())
   {
     current_room -= map_size;
+    updateMiniMap();
   }
 }
 
@@ -22,6 +23,7 @@ void Map::moveEast()
   if (getCurrentRoom()->getEast())
   {
     current_room += 1;
+    updateMiniMap();
   }
 }
 
@@ -30,6 +32,7 @@ void Map::moveSouth()
   if (getCurrentRoom()->getSouth())
   {
     current_room += map_size;
+    updateMiniMap();
   }
 }
 
@@ -38,6 +41,7 @@ void Map::moveWest()
   if (getCurrentRoom()->getWest())
   {
     current_room -= 1;
+    updateMiniMap();
   }
 }
 
@@ -63,10 +67,10 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 
 void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
-    for (int i = 0; i < mini_map.size(); i++)
-    {
-        renderer->renderSprite(*mini_map[i].spriteComponent()->getSprite());
-    }
+  for (int i = 0; i < mini_map.size(); i++)
+  {
+    renderer->renderSprite(*mini_map[i].spriteComponent()->getSprite());
+  }
 }
 
 bool Map::generateRooms(ASGE::Renderer* renderer)
@@ -152,12 +156,12 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
         rooms_to_generate.push({ x_index, y_index - 1 });
       }
 
-      // Remove This Room from Queue
+      // Remove This Room From Queue
       rooms_to_generate.pop();
     }
     else
     {
-      // Remove This Room from Queue
+      // Remove This Room From Queue
       rooms_to_generate.pop();
     }
   }
@@ -165,20 +169,25 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
   return true;
 }
 
-bool Map::setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height)
+bool Map::setupMinimap(ASGE::Renderer* renderer,
+                       int game_width,
+                       int game_height)
 {
-    for (int i = 0; i < map_size; i++)
+  // Create Rooms in Vector
+  for (int i = 0; i < map_size; i++)
+  {
+    for (int j = 0; j < map_size; j++)
     {
-        for (int j = 0; j < map_size; j++)
-        {
-            if (rooms[i][j].getId() != -1)
-            {
-                mini_map.emplace_back(GameObject());
-            }
-        }
+      if (rooms[i][j].getId() != -1)
+      {
+        mini_map.emplace_back(GameObject());
+        mini_map_ids.push_back(rooms[i][j].getId());
+      }
     }
+  }
 
   int count = 0;
+  // For Each Valid Room, Setup Mini Map Room With a Sprite Component
   for (int i = 0; i < map_size; i++)
   {
     for (int j = 0; j < map_size; j++)
@@ -194,15 +203,35 @@ bool Map::setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height
 
         if (mini_map.at(count).addSpriteComponent(renderer, file))
         {
-            mini_map.at(count).spriteComponent()->getSprite()->xPos(game_width - (20 * map_size) + (j * 20));
-            mini_map.at(count).spriteComponent()->getSprite()->yPos(game_height - (20 * map_size) + (i * 20));
-            count += 1;
+          mini_map.at(count).spriteComponent()->getSprite()->xPos(
+            game_width - (20 * map_size) + (j * 20));
+          mini_map.at(count).spriteComponent()->getSprite()->yPos(
+            game_height - (20 * map_size) + (i * 20));
+          count += 1;
         }
       }
     }
   }
 
+  updateMiniMap();
   return true;
+}
+
+void Map::updateMiniMap()
+{
+  for (int i = 0; i < mini_map.size(); i++)
+  {
+    // Update The Current Room To Red and The Rest to Black
+    if (mini_map_ids.at(i) == current_room)
+    {
+      mini_map.at(i).spriteComponent()->getSprite()->colour(ASGE::COLOURS::RED);
+    }
+    else
+    {
+      mini_map.at(i).spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::BLACK);
+    }
+  }
 }
 
 std::string Map::needNorthDoor(int x_pos, int y_pos)

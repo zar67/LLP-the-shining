@@ -59,15 +59,15 @@ bool MyASGEGame::init()
 
   if (!map.generateRooms(renderer.get()))
   {
-      return false;
+    return false;
   }
 
   if (!map.setupMinimap(renderer.get(), game_width, game_height))
   {
-      return false;
+    return false;
   }
 
-  ASGE::DebugPrinter{}  << "SETUP COMPLETE" << std::endl;
+  ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
 
@@ -176,7 +176,7 @@ void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
 
-    map.renderCurrentRoom(renderer.get());
+  map.renderCurrentRoom(renderer.get());
   map.renderMiniMap(renderer.get());
 
   if (in_menu)
