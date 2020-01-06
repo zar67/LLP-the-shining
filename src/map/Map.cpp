@@ -53,13 +53,20 @@ Room* Map::getCurrentRoom()
       }
     }
   }
-
   return nullptr;
 }
 
 void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
+}
+
+void Map::renderMiniMap(ASGE::Renderer* renderer)
+{
+    for (int i = 0; i < mini_map.size(); i++)
+    {
+        renderer->renderSprite(*mini_map[i].spriteComponent()->getSprite());
+    }
 }
 
 bool Map::generateRooms(ASGE::Renderer* renderer)
@@ -152,6 +159,46 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
     {
       // Remove This Room from Queue
       rooms_to_generate.pop();
+    }
+  }
+
+  return true;
+}
+
+bool Map::setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height)
+{
+    for (int i = 0; i < map_size; i++)
+    {
+        for (int j = 0; j < map_size; j++)
+        {
+            if (rooms[i][j].getId() != -1)
+            {
+                mini_map.emplace_back(GameObject());
+            }
+        }
+    }
+
+  int count = 0;
+  for (int i = 0; i < map_size; i++)
+  {
+    for (int j = 0; j < map_size; j++)
+    {
+      if (rooms[i][j].getId() != -1)
+      {
+        std::string file = "data/MiniMap/";
+        file += rooms[i][j].getNorth() ? "N" : "_";
+        file += rooms[i][j].getEast() ? "E" : "_";
+        file += rooms[i][j].getSouth() ? "S" : "_";
+        file += rooms[i][j].getWest() ? "W" : "_";
+        file += ".png";
+
+        if (mini_map.at(count).addSpriteComponent(renderer, file))
+        {
+            mini_map.at(count).spriteComponent()->getSprite()->xPos(game_width - (8 * map_size) + (j * 8));
+            mini_map.at(count).spriteComponent()->getSprite()->yPos(game_height - (8 * map_size) + (i * 8));
+            count += 1;
+        }
+      }
     }
   }
 
