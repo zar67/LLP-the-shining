@@ -20,3 +20,7 @@ float Items::itemEffect()
   // if it has then apply the items effect eg damage up or health up etc
   return 0;
 }
+void Items::setUpItems()
+{
+  // set up all the items
+}

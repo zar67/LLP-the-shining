@@ -13,6 +13,7 @@ class Items
   bool hasCollidedWithPlayer();
   void hasPickedUpItem();
   float itemEffect();
+  void setUpItems();
 
  private:
   bool visibility = true;
