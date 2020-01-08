@@ -1,9 +1,9 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <Engine/OGLGame.h>
 #include "../map/Map.h"
 #include "SceneObjects/Enemies/Demon.h"
+#include <Engine/OGLGame.h>
+#include <string>
+#include <vector>
 
 /**
  *  An OpenGL Game based on ASGE.

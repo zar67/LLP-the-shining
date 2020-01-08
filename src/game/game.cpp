@@ -159,7 +159,8 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
  */
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
-  double delta_time = game_time.delta.count() / 1000.0;;
+  double delta_time = game_time.delta.count() / 1000.0;
+  ;
 
   if (!in_menu)
   {

@@ -19,17 +19,17 @@ class Enemy : public GameObject
   int moveSpeed();
 
   virtual void update(double delta_time, float player_x, float player_y){};
-  virtual bool setup(ASGE::Renderer* renderer, int x_pos, int y_pos) {};
+  virtual bool setup(ASGE::Renderer* renderer, int x_pos, int y_pos){};
   void render(ASGE::Renderer* renderer);
   void move(double delta_time, float x_dir, float y_dir);
   void takeDamage(int hit);
 
-protected:
-    int hp = 0;
-    int damage = 0;
-    float speed = 0;
+ protected:
+  int hp = 0;
+  int damage = 0;
+  float speed = 0;
 
-private:
+ private:
   void die();
 };
 

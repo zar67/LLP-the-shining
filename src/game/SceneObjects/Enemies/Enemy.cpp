@@ -22,14 +22,14 @@ int Enemy::moveSpeed()
 
 void Enemy::render(ASGE::Renderer* renderer)
 {
-    if (spriteComponent()->getSprite() == nullptr)
-    {
-        std::cout << "SPRITE NULL" << std::endl;
-    }
-    else
-    {
-        renderer->renderSprite(*spriteComponent()->getSprite());
-    }
+  if (spriteComponent()->getSprite() == nullptr)
+  {
+    std::cout << "SPRITE NULL" << std::endl;
+  }
+  else
+  {
+    renderer->renderSprite(*spriteComponent()->getSprite());
+  }
 }
 
 void Enemy::move(double delta_time, float x_dir, float y_dir)

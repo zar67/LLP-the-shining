@@ -3,57 +3,56 @@
 //
 
 #include "Demon.h"
-#include <math.h>
 #include <iostream>
+#include <math.h>
 
 bool Demon::setup(ASGE::Renderer* renderer, int x_pos, int y_pos)
 {
-    hp = 100;
-    damage = 10;
-    speed = 80;
+  hp = 100;
+  damage = 10;
+  speed = 80;
 
-    if (addSpriteComponent(renderer, "data/Characters/Demon.png"))
-    {
-        spriteComponent()->getSprite()->xPos(x_pos);
-        spriteComponent()->getSprite()->yPos(y_pos);
-        return true;
-    }
+  if (addSpriteComponent(renderer, "data/Characters/Demon.png"))
+  {
+    spriteComponent()->getSprite()->xPos(x_pos);
+    spriteComponent()->getSprite()->yPos(y_pos);
+    return true;
+  }
 
-    return false;
+  return false;
 }
 
 void Demon::update(double delta_time, float player_x, float player_y)
 {
-    // Move Towards Player
-    if (getDistanceToPlayer(player_x, player_y) > distance_to_keep)
-    {
-        std::vector<float> dir = getDirectionToPlayer(player_x, player_y);
-        std::cout << dir[0] << ", " << dir[1] << std::endl;
-        move(delta_time, dir[0], dir[1]);
-    }
+  // Move Towards Player
+  if (getDistanceToPlayer(player_x, player_y) > distance_to_keep)
+  {
+    std::vector<float> dir = getDirectionToPlayer(player_x, player_y);
+    std::cout << dir[0] << ", " << dir[1] << std::endl;
+    move(delta_time, dir[0], dir[1]);
+  }
 
-    // Shoot Player
+  // Shoot Player
 }
 
 std::vector<float> Demon::getDirectionToPlayer(float player_x, float player_y)
 {
-    float length = getDistanceToPlayer(player_x, player_y);
+  float length = getDistanceToPlayer(player_x, player_y);
 
-    std::vector<float> dir = {player_x - spriteComponent()->getSprite()->xPos(),
-                              player_y - spriteComponent()->getSprite()->yPos()};
+  std::vector<float> dir = { player_x - spriteComponent()->getSprite()->xPos(),
+                             player_y -
+                               spriteComponent()->getSprite()->yPos() };
 
-    dir[0] /= length;
-    dir[1] /= length;
+  dir[0] /= length;
+  dir[1] /= length;
 
-    return dir;
+  return dir;
 }
 
 float Demon::getDistanceToPlayer(float player_x, float player_y)
 {
-    float x_dir = player_x - spriteComponent()->getSprite()->xPos();
-    float y_dir = player_y - spriteComponent()->getSprite()->yPos();
+  float x_dir = player_x - spriteComponent()->getSprite()->xPos();
+  float y_dir = player_y - spriteComponent()->getSprite()->yPos();
 
-    return sqrt((x_dir * x_dir) + (y_dir * y_dir));
+  return sqrt((x_dir * x_dir) + (y_dir * y_dir));
 }
-
-
