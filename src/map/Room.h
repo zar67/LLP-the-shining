@@ -5,8 +5,10 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/GameObject.h"
 #include <string>
+#include <vector>
 
 class Room : public GameObject
 {
@@ -29,12 +31,18 @@ class Room : public GameObject
   bool getSouth();
   bool getWest();
 
+  void renderObjectsInRoom(ASGE::Renderer* renderer);
+
  private:
   int ID = -1;
   bool north = false;
   bool east = false;
   bool south = false;
   bool west = false;
+
+  std::vector<Demon> demons;
+  // std::vector<Ghost> ghosts;
+  // std::vector<Item> items;
 };
 
 #endif // PROJECT_ROOM_H

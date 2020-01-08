@@ -63,6 +63,7 @@ Room* Map::getCurrentRoom()
 void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
+  getCurrentRoom()->renderObjectsInRoom(renderer);
 }
 
 void Map::renderMiniMap(ASGE::Renderer* renderer)

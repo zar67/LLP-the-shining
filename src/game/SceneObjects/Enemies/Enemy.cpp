@@ -45,17 +45,9 @@ void Enemy::move(double delta_time, float x_dir, float y_dir)
   updateCollisionComponent();
 }
 
-void Enemy::takeDamage(int hit)
+bool Enemy::takeDamage(int hit)
 {
   hp -= hit;
 
-  if (hp <= 0)
-  {
-    die();
-  }
-}
-
-void Enemy::die()
-{
-  delete this;
+  return hp <= 0;
 }

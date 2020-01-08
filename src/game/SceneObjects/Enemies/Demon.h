@@ -14,7 +14,7 @@ class Demon : public Enemy
   Demon() = default;
   ~Demon() = default;
 
-  bool setup(ASGE::Renderer* renderer, int x_pos, int y_pos) override;
+  bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
   void update(double delta_time, float player_x, float player_y) override;
 
   std::vector<float> getDirectionToPlayer(float player_x, float player_y);

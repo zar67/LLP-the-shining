@@ -49,3 +49,11 @@ bool Room::getWest()
 {
   return west;
 }
+
+void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
+{
+  for (int i = 0; i < demons.size(); i++)
+  {
+    demons.at(i).render(renderer);
+  }
+}

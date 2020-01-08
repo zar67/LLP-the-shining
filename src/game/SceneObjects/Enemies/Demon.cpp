@@ -6,7 +6,7 @@
 #include <iostream>
 #include <math.h>
 
-bool Demon::setup(ASGE::Renderer* renderer, int x_pos, int y_pos)
+bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   hp = 100;
   damage = 10;
