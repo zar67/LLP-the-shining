@@ -73,8 +73,18 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
   }
 }
 
-bool Map::generateRooms(ASGE::Renderer* renderer)
+bool Map::generateRooms(ASGE::Renderer* renderer, int game_width, int game_height)
 {
+  // Set All Rooms To Empty
+  current_room = map_size / 2 * map_size + (map_size / 2);
+  for (int i = 0; i < map_size; i++)
+  {
+      for (int j = 0; j < map_size; j++)
+      {
+          rooms[i][j] = Room();
+      }
+  }
+
   // Generate Starting Room
   std::string file = "data/Rooms/NESW.png";
   rooms[map_size / 2][map_size / 2] =
@@ -88,6 +98,7 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
   rooms_to_generate.push({ 2, 3 });
   rooms_to_generate.push({ 3, 2 });
 
+  int last_room = 0;
   // For Each Room in the Queue
   while (!rooms_to_generate.empty())
   {
@@ -133,6 +144,7 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
                                      possible_rooms[index][2] == 'S',
                                      possible_rooms[index][3] == 'W');
       rooms[x_index][y_index].setup(renderer, &file);
+      last_room = x_index * map_size + y_index;
 
       // Add New Rooms To Generate To Queue
       if (rooms[x_index][y_index].getNorth() &&
@@ -166,13 +178,18 @@ bool Map::generateRooms(ASGE::Renderer* renderer)
     }
   }
 
-  return true;
+  exit_room = last_room;
+
+  return setupMinimap(renderer, game_width, game_height);
 }
 
 bool Map::setupMinimap(ASGE::Renderer* renderer,
                        int game_width,
                        int game_height)
 {
+  mini_map = {};
+  mini_map_ids = {};
+
   // Create Rooms in Vector
   for (int i = 0; i < map_size; i++)
   {
@@ -209,6 +226,10 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
             game_height - (20 * map_size) + (i * 20));
           count += 1;
         }
+        else
+        {
+          return false;
+        }
       }
     }
   }
@@ -225,6 +246,11 @@ void Map::updateMiniMap()
     if (mini_map_ids.at(i) == current_room)
     {
       mini_map.at(i).spriteComponent()->getSprite()->colour(ASGE::COLOURS::RED);
+    }
+    else if (mini_map_ids.at(i) == exit_room)
+    {
+      mini_map.at(i).spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::BLUE);
     }
     else
     {

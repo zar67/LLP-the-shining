@@ -47,7 +47,7 @@ SpriteComponent* GameObject::spriteComponent()
   return sprite_component;
 }
 
-void GameObject::addCollisionComponenet()
+void GameObject::addCollisionComponent()
 {
   if (collision_component)
   {

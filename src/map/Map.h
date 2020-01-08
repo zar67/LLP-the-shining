@@ -23,7 +23,7 @@ class Map
   Room* getCurrentRoom();
   void renderCurrentRoom(ASGE::Renderer* renderer);
   void renderMiniMap(ASGE::Renderer* renderer);
-  bool generateRooms(ASGE::Renderer* renderer);
+  bool generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   bool setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
  private:
@@ -39,6 +39,7 @@ class Map
   std::vector<GameObject> mini_map;
   std::vector<int> mini_map_ids;
   int current_room = map_size / 2 * map_size + (map_size / 2);
+  int exit_room = 0;
 };
 
 #endif // PROJECT_MAP_H

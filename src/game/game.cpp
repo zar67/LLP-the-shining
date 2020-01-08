@@ -57,12 +57,7 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
-  if (!map.generateRooms(renderer.get()))
-  {
-    return false;
-  }
-
-  if (!map.setupMinimap(renderer.get(), game_width, game_height))
+  if (!map.generateRooms(renderer.get(), game_width, game_height))
   {
     return false;
   }
@@ -125,6 +120,10 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     map.moveEast();
   }
+    if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
+    {
+        map.generateRooms(renderer.get(), game_width, game_height);
+    }
 }
 
 /**

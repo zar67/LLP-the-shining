@@ -17,7 +17,7 @@ class GameObject
   addSpriteComponent(ASGE::Renderer* renderer, std::string texture_location);
   SpriteComponent* spriteComponent();
 
-  void addCollisionComponenet();
+  void addCollisionComponent();
   CollisionComponent* collisionComponent();
 
   void updateCollisionComponent();
