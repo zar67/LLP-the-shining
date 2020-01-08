@@ -62,6 +62,9 @@ bool MyASGEGame::init()
     return false;
   }
 
+  demons.emplace_back(Demon());
+  demons.at(0).setup(renderer.get(), 0, 0);
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -120,10 +123,10 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     map.moveEast();
   }
-    if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
-    {
-        map.generateRooms(renderer.get(), game_width, game_height);
-    }
+  if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.generateRooms(renderer.get(), game_width, game_height);
+  }
 }
 
 /**
@@ -156,8 +159,7 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
  */
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
-  // auto dt_sec = game_time.delta.count() / 1000.0;;
-  // make sure you use delta time in any movement calculations!
+  double delta_time = game_time.delta.count() / 1000.0;;
 
   if (!in_menu)
   {

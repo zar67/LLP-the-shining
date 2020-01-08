@@ -73,16 +73,18 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
   }
 }
 
-bool Map::generateRooms(ASGE::Renderer* renderer, int game_width, int game_height)
+bool Map::generateRooms(ASGE::Renderer* renderer,
+                        int game_width,
+                        int game_height)
 {
   // Set All Rooms To Empty
   current_room = map_size / 2 * map_size + (map_size / 2);
   for (int i = 0; i < map_size; i++)
   {
-      for (int j = 0; j < map_size; j++)
-      {
-          rooms[i][j] = Room();
-      }
+    for (int j = 0; j < map_size; j++)
+    {
+      rooms[i][j] = Room();
+    }
   }
 
   // Generate Starting Room

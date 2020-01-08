@@ -13,7 +13,7 @@ class Player : public GameObject
 {
  public:
   void Movement(float x, float y);
-  void takeDamage(int hit_damage); // maybe pass enemie as different enemies do
+  void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damages
 
  private:
