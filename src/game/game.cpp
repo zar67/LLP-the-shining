@@ -106,25 +106,29 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
   if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.moveNorth();
+    // map.moveNorth();
+    player_y -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.moveWest();
+    // map.moveWest();
+    player_x -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.moveSouth();
+    // map.moveSouth();
+    player_y += 10;
   }
   if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.moveEast();
+    // map.moveEast();
+    player_x += 10;
   }
   if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.generateRooms(renderer.get(), game_width, game_height);
-    // map.getCurrentRoom()->addDemonToRoom(renderer.get(), rand() % 400, rand()
-    // % 400);
+    // map.generateRooms(renderer.get(), game_width, game_height);
+    map.getCurrentRoom()->addDemonToRoom(
+      renderer.get(), rand() % 400, rand() % 400);
   }
   if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
