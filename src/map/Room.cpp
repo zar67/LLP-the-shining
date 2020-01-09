@@ -6,15 +6,14 @@
 #include <iostream>
 
 Room::Room(int id,
-           std::string* filename,
-           int x_pos,
-           int y_pos,
+           RoomType room_type,
            bool n_door,
            bool e_door,
            bool s_door,
            bool w_door)
 {
   ID = id;
+  type = room_type;
   north = n_door;
   east = e_door;
   south = s_door;
@@ -46,6 +45,15 @@ int Room::getId()
   return ID;
 }
 
+Room::RoomType Room::getType()
+{
+    return type;
+}
+void Room::setType(RoomType room_type)
+{
+    type = room_type;
+}
+
 bool Room::getNorth()
 {
   return north;
@@ -64,6 +72,16 @@ bool Room::getSouth()
 bool Room::getWest()
 {
   return west;
+}
+
+bool Room::canMove()
+{
+    return movement_enabled;
+}
+
+void Room::canMove(bool movement)
+{
+    movement_enabled = movement;
 }
 
 void Room::renderObjectsInRoom(ASGE::Renderer* renderer)

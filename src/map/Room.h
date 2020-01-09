@@ -14,11 +14,11 @@
 class Room : public GameObject
 {
  public:
+    enum RoomType {NORMAL, ITEM, SHOP, EXIT};
+
   Room() = default;
   Room(int id,
-       std::string* filename,
-       int x_pos,
-       int y_pos,
+       RoomType room_type,
        bool n_door,
        bool e_door,
        bool s_door,
@@ -26,11 +26,18 @@ class Room : public GameObject
   ~Room();
 
   bool setup(ASGE::Renderer* renderer, std::string* filename);
+
   int getId();
+  RoomType getType();
+  void setType(RoomType room_type);
+
   bool getNorth();
   bool getEast();
   bool getSouth();
   bool getWest();
+
+  bool canMove();
+  void canMove(bool movement);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   void updateObjectsInRoom(double delta_time, float player_x, float player_y);
@@ -42,10 +49,12 @@ class Room : public GameObject
 
  private:
   int ID = -1;
+  RoomType type = NORMAL;
   bool north = false;
   bool east = false;
   bool south = false;
   bool west = false;
+  bool movement_enabled = true;
 
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;

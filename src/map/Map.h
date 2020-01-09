@@ -9,6 +9,8 @@
 #include "Room.h"
 #include <vector>
 
+const int STARTING_ROOM = 12;
+
 class Map
 {
  public:
@@ -20,6 +22,7 @@ class Map
   void moveSouth();
   void moveWest();
 
+  Room* getRoom(int id);
   Room* getCurrentRoom();
   void renderCurrentRoom(ASGE::Renderer* renderer);
   void updateCurrentRoom(double delta_time, float player_x, float player_y);
@@ -28,6 +31,8 @@ class Map
   bool setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
  private:
+  void generateItemRooms();
+  void generateShopRoom();
   void updateMiniMap();
   std::string needNorthDoor(int x_pos, int y_pos);
   std::string needEastDoor(int x_pos, int y_pos);
@@ -39,8 +44,7 @@ class Map
   Room rooms[5][5];
   std::vector<GameObject*> mini_map;
   std::vector<int> mini_map_ids;
-  int current_room = map_size / 2 * map_size + (map_size / 2);
-  int exit_room = 0;
+  int current_room = STARTING_ROOM;
 };
 
 #endif // PROJECT_MAP_H
