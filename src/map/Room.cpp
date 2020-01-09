@@ -28,6 +28,12 @@ Room::~Room()
     delete demon;
   }
   demons.clear();
+
+    for (auto ghost : ghosts)
+    {
+        delete ghost;
+    }
+    ghosts.clear();
 }
 
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
@@ -66,6 +72,11 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   {
     demons.at(i)->render(renderer);
   }
+
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    ghosts.at(i)->render(renderer);
+  }
 }
 
 void Room::updateObjectsInRoom(double delta_time,
@@ -75,6 +86,11 @@ void Room::updateObjectsInRoom(double delta_time,
   for (int i = 0; i < demons.size(); i++)
   {
     demons.at(i)->update(delta_time, player_x, player_y);
+  }
+
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    ghosts.at(i)->update(delta_time, player_x, player_y);
   }
 }
 
@@ -90,5 +106,20 @@ void Room::removeDemonFromRoom(int demon_index)
   if (demon_index < demons.size())
   {
     demons.erase(demons.begin() + demon_index);
+  }
+}
+
+void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
+{
+  Ghost* new_ghost = new Ghost();
+  ghosts.push_back(new_ghost);
+  ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
+}
+
+void Room::removeGhostFromRoom(int ghost_index)
+{
+  if (ghost_index < ghosts.size())
+  {
+    ghosts.erase(ghosts.begin() + ghost_index);
   }
 }

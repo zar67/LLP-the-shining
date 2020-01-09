@@ -6,6 +6,7 @@
 #define PROJECT_ROOM_H
 
 #include "../game/SceneObjects/Enemies/Demon.h"
+#include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
 #include <string>
 #include <vector>
@@ -33,8 +34,11 @@ class Room : public GameObject
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   void updateObjectsInRoom(double delta_time, float player_x, float player_y);
+
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void removeDemonFromRoom(int demon_index);
+  void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
+  void removeGhostFromRoom(int ghost_index);
 
  private:
   int ID = -1;
@@ -44,7 +48,7 @@ class Room : public GameObject
   bool west = false;
 
   std::vector<Demon*> demons;
-  // std::vector<Ghost> ghosts;
+  std::vector<Ghost*> ghosts;
   // std::vector<Item> items;
 };
 

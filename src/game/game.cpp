@@ -127,12 +127,12 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     // map.generateRooms(renderer.get(), game_width, game_height);
-    map.getCurrentRoom()->addDemonToRoom(
+    map.getCurrentRoom()->addGhostToRoom(
       renderer.get(), rand() % 400, rand() % 400);
   }
   if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.getCurrentRoom()->removeDemonFromRoom(0);
+    map.getCurrentRoom()->removeGhostFromRoom(0);
   }
 }
 
