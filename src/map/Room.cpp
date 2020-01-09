@@ -68,6 +68,16 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   }
 }
 
+void Room::updateObjectsInRoom(double delta_time,
+                               float player_x,
+                               float player_y)
+{
+  for (int i = 0; i < demons.size(); i++)
+  {
+    demons.at(i)->update(delta_time, player_x, player_y);
+  }
+}
+
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   Demon* new_demon = new Demon();

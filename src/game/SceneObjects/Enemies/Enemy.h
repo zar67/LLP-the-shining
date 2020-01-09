@@ -21,7 +21,6 @@ class Enemy : public GameObject
   virtual void update(double delta_time, float player_x, float player_y){};
   virtual bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos){};
   void render(ASGE::Renderer* renderer);
-  void move(double delta_time, float x_dir, float y_dir);
   bool takeDamage(int hit);
 
  protected:

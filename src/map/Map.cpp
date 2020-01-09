@@ -75,6 +75,11 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
   getCurrentRoom()->renderObjectsInRoom(renderer);
 }
 
+void Map::updateCurrentRoom(double delta_time, float player_x, float player_y)
+{
+  getCurrentRoom()->updateObjectsInRoom(delta_time, player_x, player_y);
+}
+
 void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)

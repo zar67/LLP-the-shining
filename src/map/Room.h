@@ -32,6 +32,7 @@ class Room : public GameObject
   bool getWest();
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
+  void updateObjectsInRoom(double delta_time, float player_x, float player_y);
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void removeDemonFromRoom(int demon_index);
 

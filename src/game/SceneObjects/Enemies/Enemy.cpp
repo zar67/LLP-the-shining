@@ -22,27 +22,7 @@ int Enemy::moveSpeed()
 
 void Enemy::render(ASGE::Renderer* renderer)
 {
-  if (spriteComponent()->getSprite() == nullptr)
-  {
-    std::cout << "SPRITE NULL" << std::endl;
-  }
-  else
-  {
-    renderer->renderSprite(*spriteComponent()->getSprite());
-  }
-}
-
-void Enemy::move(double delta_time, float x_dir, float y_dir)
-{
-  if (spriteComponent())
-  {
-    spriteComponent()->getSprite()->xPos(
-      spriteComponent()->getSprite()->xPos() + (x_dir * speed * delta_time));
-    spriteComponent()->getSprite()->yPos(
-      spriteComponent()->getSprite()->yPos() + (y_dir * speed * delta_time));
-  }
-
-  updateCollisionComponent();
+  renderer->renderSprite(*spriteComponent()->getSprite());
 }
 
 bool Enemy::takeDamage(int hit)

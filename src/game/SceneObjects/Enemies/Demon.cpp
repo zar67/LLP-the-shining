@@ -25,34 +25,24 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 void Demon::update(double delta_time, float player_x, float player_y)
 {
   // Move Towards Player
-  if (getDistanceToPlayer(player_x, player_y) > distance_to_keep)
+  float distance_to_player =
+    getDistanceBetween(spriteComponent()->getSprite()->xPos(),
+                       spriteComponent()->getSprite()->yPos(),
+                       player_x,
+                       player_y);
+  std::vector<float> direction_to_player =
+    getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
+                       spriteComponent()->getSprite()->yPos(),
+                       player_x,
+                       player_y);
+  if (distance_to_player > distance_to_keep)
   {
-    std::vector<float> dir = getDirectionToPlayer(player_x, player_y);
-    std::cout << dir[0] << ", " << dir[1] << std::endl;
-    move(delta_time, dir[0], dir[1]);
+    move(delta_time, direction_to_player[0], direction_to_player[1], speed);
+  }
+  else if (distance_to_player < distance_to_keep)
+  {
+    move(delta_time, -direction_to_player[0], -direction_to_player[1], speed);
   }
 
   // Shoot Player
-}
-
-std::vector<float> Demon::getDirectionToPlayer(float player_x, float player_y)
-{
-  float length = getDistanceToPlayer(player_x, player_y);
-
-  std::vector<float> dir = { player_x - spriteComponent()->getSprite()->xPos(),
-                             player_y -
-                               spriteComponent()->getSprite()->yPos() };
-
-  dir[0] /= length;
-  dir[1] /= length;
-
-  return dir;
-}
-
-float Demon::getDistanceToPlayer(float player_x, float player_y)
-{
-  float x_dir = player_x - spriteComponent()->getSprite()->xPos();
-  float y_dir = player_y - spriteComponent()->getSprite()->yPos();
-
-  return sqrt((x_dir * x_dir) + (y_dir * y_dir));
 }

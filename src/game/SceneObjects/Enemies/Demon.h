@@ -17,9 +17,6 @@ class Demon : public Enemy
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
   void update(double delta_time, float player_x, float player_y) override;
 
-  std::vector<float> getDirectionToPlayer(float player_x, float player_y);
-  float getDistanceToPlayer(float player_x, float player_y);
-
  private:
   float distance_to_keep = 200;
 };

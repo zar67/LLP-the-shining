@@ -163,7 +163,8 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
   double delta_time = game_time.delta.count() / 1000.0;
-  ;
+
+  map.updateCurrentRoom(delta_time, player_x, player_y);
 
   if (!in_menu)
   {
