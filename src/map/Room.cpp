@@ -3,6 +3,7 @@
 //
 
 #include "Room.h"
+#include <iostream>
 
 Room::Room(int id,
            std::string* filename,
@@ -18,6 +19,15 @@ Room::Room(int id,
   east = e_door;
   south = s_door;
   west = w_door;
+}
+
+Room::~Room()
+{
+  for (auto demon : demons)
+  {
+    delete demon;
+  }
+  demons.clear();
 }
 
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
@@ -54,6 +64,21 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < demons.size(); i++)
   {
-    demons.at(i).render(renderer);
+    demons.at(i)->render(renderer);
+  }
+}
+
+void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
+{
+  Demon* new_demon = new Demon();
+  demons.push_back(new_demon);
+  demons.at(demons.size() - 1)->setup(renderer, x_pos, y_pos);
+}
+
+void Room::removeDemonFromRoom(int demon_index)
+{
+  if (demon_index < demons.size())
+  {
+    demons.erase(demons.begin() + demon_index);
   }
 }

@@ -22,7 +22,7 @@ class Room : public GameObject
        bool e_door,
        bool s_door,
        bool w_door);
-  ~Room() = default;
+  ~Room();
 
   bool setup(ASGE::Renderer* renderer, std::string* filename);
   int getId();
@@ -32,6 +32,8 @@ class Room : public GameObject
   bool getWest();
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
+  void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
+  void removeDemonFromRoom(int demon_index);
 
  private:
   int ID = -1;
@@ -40,7 +42,7 @@ class Room : public GameObject
   bool south = false;
   bool west = false;
 
-  std::vector<Demon> demons;
+  std::vector<Demon*> demons;
   // std::vector<Ghost> ghosts;
   // std::vector<Item> items;
 };

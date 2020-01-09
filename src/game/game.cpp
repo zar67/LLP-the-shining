@@ -62,9 +62,6 @@ bool MyASGEGame::init()
     return false;
   }
 
-  demons.emplace_back(Demon());
-  demons.at(0).setup(renderer.get(), 0, 0);
-
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -126,6 +123,12 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.generateRooms(renderer.get(), game_width, game_height);
+    // map.getCurrentRoom()->addDemonToRoom(renderer.get(), rand() % 400, rand()
+    // % 400);
+  }
+  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.getCurrentRoom()->removeDemonFromRoom(0);
   }
 }
 

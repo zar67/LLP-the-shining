@@ -13,7 +13,7 @@ class Map
 {
  public:
   Map() = default;
-  ~Map() = default;
+  ~Map();
 
   void moveNorth();
   void moveEast();
@@ -36,7 +36,7 @@ class Map
 
   int map_size = 5;
   Room rooms[5][5];
-  std::vector<GameObject> mini_map;
+  std::vector<GameObject*> mini_map;
   std::vector<int> mini_map_ids;
   int current_room = map_size / 2 * map_size + (map_size / 2);
   int exit_room = 0;

@@ -9,6 +9,15 @@
 
 #include "Map.h"
 
+Map::~Map()
+{
+  for (auto room : mini_map)
+  {
+    delete room;
+  }
+  mini_map.clear();
+}
+
 void Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth())
@@ -70,7 +79,7 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    renderer->renderSprite(*mini_map[i].spriteComponent()->getSprite());
+    renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
   }
 }
 
@@ -190,21 +199,8 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
                        int game_width,
                        int game_height)
 {
-  mini_map = {};
-  mini_map_ids = {};
-
-  // Create Rooms in Vector
-  for (int i = 0; i < map_size; i++)
-  {
-    for (int j = 0; j < map_size; j++)
-    {
-      if (rooms[i][j].getId() != -1)
-      {
-        mini_map.emplace_back(GameObject());
-        mini_map_ids.push_back(rooms[i][j].getId());
-      }
-    }
-  }
+  mini_map.clear();
+  mini_map_ids.clear();
 
   int count = 0;
   // For Each Valid Room, Setup Mini Map Room With a Sprite Component
@@ -221,11 +217,14 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
         file += rooms[i][j].getWest() ? "W" : "_";
         file += ".png";
 
-        if (mini_map.at(count).addSpriteComponent(renderer, file))
+        GameObject* new_room = new GameObject();
+        mini_map.push_back(new_room);
+        mini_map_ids.push_back(rooms[i][j].getId());
+        if (mini_map.at(count)->addSpriteComponent(renderer, file))
         {
-          mini_map.at(count).spriteComponent()->getSprite()->xPos(
+          mini_map.at(count)->spriteComponent()->getSprite()->xPos(
             game_width - (20 * map_size) + (j * 20));
-          mini_map.at(count).spriteComponent()->getSprite()->yPos(
+          mini_map.at(count)->spriteComponent()->getSprite()->yPos(
             game_height - (20 * map_size) + (i * 20));
           count += 1;
         }
@@ -248,16 +247,17 @@ void Map::updateMiniMap()
     // Update The Current Room To Red and The Rest to Black
     if (mini_map_ids.at(i) == current_room)
     {
-      mini_map.at(i).spriteComponent()->getSprite()->colour(ASGE::COLOURS::RED);
+      mini_map.at(i)->spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::RED);
     }
     else if (mini_map_ids.at(i) == exit_room)
     {
-      mini_map.at(i).spriteComponent()->getSprite()->colour(
+      mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::BLUE);
     }
     else
     {
-      mini_map.at(i).spriteComponent()->getSprite()->colour(
+      mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::BLACK);
     }
   }
