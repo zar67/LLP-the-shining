@@ -22,7 +22,7 @@ bool Projectile::setup(ASGE::Renderer* renderer,
   target[0] = dir[0];
   target[1] = dir[1];
 
-  if (addSpriteComponent(renderer, "data/projectile.png"))
+  if (addSpriteComponent(renderer, "data/Projectile.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
     spriteComponent()->getSprite()->yPos(y_pos);

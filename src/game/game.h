@@ -1,5 +1,6 @@
 #pragma once
 #include "../map/Map.h"
+#include "SceneManager.h"
 #include "SceneObjects/Enemies/Demon.h"
 #include <Engine/OGLGame.h>
 #include <string>
@@ -23,6 +24,7 @@ class MyASGEGame : public ASGE::OGLGame
   void update(const ASGE::GameTime&) override;
   void render(const ASGE::GameTime&) override;
 
+  SceneManager scene_manager;
   Map map = Map();
   float player_x = 500;
   float player_y = 300;
