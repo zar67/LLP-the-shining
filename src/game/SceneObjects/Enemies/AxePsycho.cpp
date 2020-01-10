@@ -22,6 +22,8 @@ bool AxePsycho::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 void AxePsycho::update(double delta_time, float player_x, float player_y)
 {
+  // If Colliding With Player Attack and Don't Move
+
   // Move Towards Player
   if (in_room)
   {
@@ -31,8 +33,6 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
                          player_x,
                          player_y);
 
-    move(delta_time, -direction_to_player[0], -direction_to_player[1], speed);
+    move(delta_time, direction_to_player[0], direction_to_player[1], speed);
   }
-
-  // If Colliding With Player Attack
 }
