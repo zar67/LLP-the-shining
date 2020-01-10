@@ -16,7 +16,7 @@
 MyASGEGame::MyASGEGame()
 {
   game_name = "ASGE Game";
-  srand(time(0));
+  srand(time(nullptr));
 }
 
 /**
@@ -57,12 +57,7 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
-  if (!map.generateRooms(renderer.get()))
-  {
-    return false;
-  }
-
-  if (!map.setupMinimap(renderer.get(), game_width, game_height))
+  if (!map.generateRooms(renderer.get(), game_width, game_height))
   {
     return false;
   }
@@ -112,18 +107,32 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveNorth();
+    // player_y -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveWest();
+    // player_x -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveSouth();
+    // player_y += 10;
   }
   if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveEast();
+    // player_x += 10;
+  }
+  if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.generateRooms(renderer.get(), game_width, game_height);
+    // map.getCurrentRoom()->addGhostToRoom(
+    // renderer.get(), rand() % 400, rand() % 400);
+  }
+  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.getCurrentRoom()->removeGhostFromRoom(0);
   }
 }
 
@@ -157,8 +166,9 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
  */
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
-  // auto dt_sec = game_time.delta.count() / 1000.0;;
-  // make sure you use delta time in any movement calculations!
+  double delta_time = game_time.delta.count() / 1000.0;
+
+  map.updateCurrentRoom(delta_time, player_x, player_y);
 
   if (!in_menu)
   {
