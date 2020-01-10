@@ -28,11 +28,11 @@ Room::~Room()
   }
   demons.clear();
 
-    for (auto ghost : ghosts)
-    {
-        delete ghost;
-    }
-    ghosts.clear();
+  for (auto ghost : ghosts)
+  {
+    delete ghost;
+  }
+  ghosts.clear();
 }
 
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
@@ -47,11 +47,11 @@ int Room::getId()
 
 Room::RoomType Room::getType()
 {
-    return type;
+  return type;
 }
 void Room::setType(RoomType room_type)
 {
-    type = room_type;
+  type = room_type;
 }
 
 bool Room::getNorth()
@@ -76,12 +76,12 @@ bool Room::getWest()
 
 bool Room::canMove()
 {
-    return movement_enabled;
+  return movement_enabled;
 }
 
 void Room::canMove(bool movement)
 {
-    movement_enabled = movement;
+  movement_enabled = movement;
 }
 
 void Room::renderObjectsInRoom(ASGE::Renderer* renderer)

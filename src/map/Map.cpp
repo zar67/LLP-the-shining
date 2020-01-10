@@ -56,8 +56,8 @@ void Map::moveWest()
 
 Room* Map::getRoom(int id)
 {
-    int x_index = id % map_size;
-    return &rooms[x_index][id - (x_index * map_size)];
+  int x_index = id % map_size;
+  return &rooms[x_index][id - (x_index * map_size)];
 }
 
 Room* Map::getCurrentRoom()
@@ -194,6 +194,7 @@ bool Map::generateRooms(ASGE::Renderer* renderer,
   last_room->canMove(false);
   generateItemRooms();
   generateShopRoom();
+  generateEnemies(renderer, game_width, game_height);
 
   return setupMinimap(renderer, game_width, game_height);
 }
@@ -245,29 +246,66 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
 
 void Map::generateItemRooms()
 {
-    int item_room_num = rand() % 3 + 2;
+  int item_room_num = rand() % 3 + 2;
 
-    for (int i = 0; i < item_room_num; i++)
+  for (int i = 0; i < item_room_num; i++)
+  {
+    int id = STARTING_ROOM;
+    while (id == STARTING_ROOM || getRoom(id)->getId() == -1 ||
+           getRoom(id)->getType() != Room::NORMAL)
     {
-        int id = STARTING_ROOM;
-        while (id == STARTING_ROOM || getRoom(id)->getId() == -1 || getRoom(id)->getType() != Room::NORMAL)
-        {
-            id = rand() % (map_size * map_size);
-        }
-
-        getRoom(id)->setType(Room::ITEM);
+      id = rand() % (map_size * map_size);
     }
+
+    getRoom(id)->setType(Room::ITEM);
+  }
 }
 
 void Map::generateShopRoom()
 {
-    int id = STARTING_ROOM;
-    while (id == STARTING_ROOM || getRoom(id)->getId() == -1 || getRoom(id)->getType() != Room::NORMAL)
-    {
-        id = rand() % (map_size * map_size);
-    }
+  int id = STARTING_ROOM;
+  while (id == STARTING_ROOM || getRoom(id)->getId() == -1 ||
+         getRoom(id)->getType() != Room::NORMAL)
+  {
+    id = rand() % (map_size * map_size);
+  }
 
-    getRoom(id)->setType(Room::SHOP);
+  getRoom(id)->setType(Room::SHOP);
+}
+
+void Map::generateEnemies(ASGE::Renderer* renderer,
+                          int game_width,
+                          int game_height)
+{
+  for (int i = 0; i < map_size; i++)
+  {
+    for (int j = 0; j < map_size; j++)
+    {
+      if (rooms[i][j].getId() != -1 && rooms[i][j].getId() != STARTING_ROOM &&
+          rooms[i][j].getType() == Room::NORMAL)
+      {
+        // Generate Demons
+        int demon_num = rand() % 2 + 1;
+        for (int x = 0; x < demon_num; x++)
+        {
+          float rand_x = rand() % (game_width - 204) + 102;
+          float rand_y = rand() % (game_height - 236) + 118;
+
+          rooms[i][j].addDemonToRoom(renderer, rand_x, rand_y);
+        }
+
+        // Generate Ghosts
+        int ghost_num = rand() % 2;
+        for (int x = 0; x < ghost_num; x++)
+        {
+          float rand_x = rand() % (game_width - 204) + 102;
+          float rand_y = rand() % (game_height - 236) + 118;
+
+          rooms[i][j].addGhostToRoom(renderer, rand_x, rand_y);
+        }
+      }
+    }
+  }
 }
 
 void Map::updateMiniMap()
@@ -287,13 +325,13 @@ void Map::updateMiniMap()
     }
     else if (getRoom(mini_map_ids.at(i))->getType() == Room::SHOP)
     {
-        mini_map.at(i)->spriteComponent()->getSprite()->colour(
-                ASGE::COLOURS::YELLOW);
+      mini_map.at(i)->spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::YELLOW);
     }
     else if (getRoom(mini_map_ids.at(i))->getType() == Room::ITEM)
     {
-        mini_map.at(i)->spriteComponent()->getSprite()->colour(
-                ASGE::COLOURS::GREEN);
+      mini_map.at(i)->spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::GREEN);
     }
     else
     {

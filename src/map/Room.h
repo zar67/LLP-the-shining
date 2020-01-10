@@ -14,7 +14,13 @@
 class Room : public GameObject
 {
  public:
-    enum RoomType {NORMAL, ITEM, SHOP, EXIT};
+  enum RoomType
+  {
+    NORMAL,
+    ITEM,
+    SHOP,
+    EXIT
+  };
 
   Room() = default;
   Room(int id,

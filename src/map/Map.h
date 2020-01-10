@@ -33,6 +33,8 @@ class Map
  private:
   void generateItemRooms();
   void generateShopRoom();
+  void
+  generateEnemies(ASGE::Renderer* renderer, int game_width, int game_height);
   void updateMiniMap();
   std::string needNorthDoor(int x_pos, int y_pos);
   std::string needEastDoor(int x_pos, int y_pos);
