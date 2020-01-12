@@ -210,13 +210,7 @@ void MyASGEGame::render(const ASGE::GameTime&)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
-    renderer->renderText("Floor " + std::to_string(1), 5, 20);
-    renderer->renderText("$" + std::to_string(10), 5, 40);
-    // Health
-    // Power Ups = {HEALTH, DAMAGE, MOVE SPEED, SHOT SPEED, SHOT SIZE}
   }
-  else
-  {
-    scene_manager.render(renderer.get());
-  }
+
+  scene_manager.render(renderer.get(), 1, 10, 50);
 }

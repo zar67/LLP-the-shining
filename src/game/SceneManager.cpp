@@ -30,6 +30,44 @@ SceneManager::~SceneManager()
     shop_title = nullptr;
   }
 
+  if (health_bar)
+  {
+    delete health_bar;
+    health_bar = nullptr;
+  }
+
+  if (health_bar_background)
+  {
+    delete health_bar_background;
+    health_bar_background = nullptr;
+  }
+
+  if (damage_icon)
+  {
+    delete damage_icon;
+    damage_icon = nullptr;
+  }
+  if (health_icon)
+  {
+    delete health_icon;
+    health_icon = nullptr;
+  }
+  if (move_speed_icon)
+  {
+    delete move_speed_icon;
+    move_speed_icon = nullptr;
+  }
+  if (shot_size_icon)
+  {
+    delete shot_size_icon;
+    shot_size_icon = nullptr;
+  }
+  if (shot_speed_icon)
+  {
+    delete shot_speed_icon;
+    shot_speed_icon = nullptr;
+  }
+
   if (damage_powerup)
   {
     delete damage_powerup;
@@ -91,140 +129,248 @@ SceneManager::~SceneManager()
   }
 }
 
-bool SceneManager::initialise(ASGE::Renderer* renderer,
-                              float game_width,
-                              float game_height)
+bool SceneManager::initSprites(ASGE::Renderer* renderer,
+                               float game_width,
+                               float game_height)
 {
   menu_title = renderer->createRawSprite();
-  if (!setupUIElement(*menu_title,
-                      "data/UI/MenuTitle.png",
-                      game_width / 2 - 200,
-                      38,
-                      400,
-                      100))
+  if (!setupSprite(*menu_title,
+                   "data/UI/MenuTitle.png",
+                   game_width / 2 - 200,
+                   38,
+                   400,
+                   100))
   {
     return false;
   }
 
   game_over_title = renderer->createRawSprite();
-  if (!setupUIElement(*game_over_title,
-                      "data/UI/GameOverTitle.png",
-                      game_width / 2 - 200,
-                      38,
-                      400,
-                      100))
+  if (!setupSprite(*game_over_title,
+                   "data/UI/GameOverTitle.png",
+                   game_width / 2 - 200,
+                   38,
+                   400,
+                   100))
   {
     return false;
   }
 
   shop_title = renderer->createRawSprite();
-  if (!setupUIElement(*shop_title,
-                      "data/UI/ShopTitle.png",
-                      game_width / 2 - 200,
-                      38,
-                      400,
-                      100))
+  if (!setupSprite(*shop_title,
+                   "data/UI/ShopTitle.png",
+                   game_width / 2 - 200,
+                   38,
+                   400,
+                   100))
   {
     return false;
   }
 
+  health_bar = renderer->createRawSprite();
+  if (!setupSprite(
+        *health_bar, "data/UI/HealthBar.png", 20, game_height - 100, 100, 20))
+  {
+    return false;
+  }
+
+  health_bar_background = renderer->createRawSprite();
+  if (!setupSprite(*health_bar_background,
+                   "data/UI/HealthBarBackground.png",
+                   20,
+                   game_height - 100,
+                   100,
+                   20))
+  {
+    return false;
+  }
+
+  damage_icon = renderer->createRawSprite();
+  if (!setupSprite(*damage_icon,
+                   "data/UI/Power Up Icons/DamageIcon.png",
+                   20,
+                   game_height - 65,
+                   40,
+                   40))
+  {
+    return false;
+  }
+
+  health_icon = renderer->createRawSprite();
+  if (!setupSprite(*health_icon,
+                   "data/UI/Power Up Icons/HealthIcon.png",
+                   80,
+                   game_height - 65,
+                   40,
+                   40))
+  {
+    return false;
+  }
+
+  move_speed_icon = renderer->createRawSprite();
+  if (!setupSprite(*move_speed_icon,
+                   "data/UI/Power Up Icons/MoveSpeedIcon.png",
+                   140,
+                   game_height - 65,
+                   40,
+                   40))
+  {
+    return false;
+  }
+
+  shot_size_icon = renderer->createRawSprite();
+  if (!setupSprite(*shot_size_icon,
+                   "data/UI/Power Up Icons/ShotSizeIcon.png",
+                   200,
+                   game_height - 65,
+                   40,
+                   40))
+  {
+    return false;
+  }
+
+  shot_speed_icon = renderer->createRawSprite();
+  if (!setupSprite(*shot_speed_icon,
+                   "data/UI/Power Up Icons/ShotSpeedIcon.png",
+                   260,
+                   game_height - 65,
+                   40,
+                   40))
+  {
+    return false;
+  }
+
+  return true;
+}
+
+bool SceneManager::initButtons(ASGE::Renderer* renderer,
+                               float game_width,
+                               float game_height)
+{
+  start_game = renderer->createRawSprite();
+  if (!setupSprite(*start_game,
+                   "data/UI/MenuButtons/StartButton.png",
+                   game_width / 2 - 60,
+                   175,
+                   120,
+                   30))
+  {
+    return false;
+  }
+  open_shop = renderer->createRawSprite();
+  if (!setupSprite(*open_shop,
+                   "data/UI/MenuButtons/ShopButton.png",
+                   game_width / 2 - 60,
+                   225,
+                   120,
+                   30))
+  {
+    return false;
+  }
+  exit_game = renderer->createRawSprite();
+  if (!setupSprite(*exit_game,
+                   "data/UI/MenuButtons/ExitButton.png",
+                   game_width / 2 - 60,
+                   275,
+                   120,
+                   30))
+  {
+    return false;
+  }
+  open_main_menu = renderer->createRawSprite();
+  if (!setupSprite(*open_main_menu,
+                   "data/UI/MenuButtons/MenuButton.png",
+                   game_width / 2 - 60,
+                   game_height - 80,
+                   120,
+                   30))
+  {
+    return false;
+  }
+
+  return true;
+}
+
+bool SceneManager::initShop(ASGE::Renderer* renderer, float game_height)
+{
   damage_powerup = renderer->createRawSprite();
-  if (!setupUIElement(*damage_powerup,
-                      "data/UI/Shop/DamagePowerup.png",
-                      42,
-                      game_height / 2 - 50,
-                      100,
-                      130))
+  if (!setupSprite(*damage_powerup,
+                   "data/UI/Shop/DamagePowerup.png",
+                   42,
+                   game_height / 2 - 50,
+                   100,
+                   130))
   {
     return false;
   }
 
   health_powerup = renderer->createRawSprite();
-  if (!setupUIElement(*health_powerup,
-                      "data/UI/Shop/HealthPowerup.png",
-                      172,
-                      game_height / 2 - 50,
-                      100,
-                      130))
+  if (!setupSprite(*health_powerup,
+                   "data/UI/Shop/HealthPowerup.png",
+                   172,
+                   game_height / 2 - 50,
+                   100,
+                   130))
   {
     return false;
   }
 
   move_speed_powerup = renderer->createRawSprite();
-  if (!setupUIElement(*move_speed_powerup,
-                      "data/UI/Shop/MoveSpeedPowerup.png",
-                      302,
-                      game_height / 2 - 50,
-                      100,
-                      130))
+  if (!setupSprite(*move_speed_powerup,
+                   "data/UI/Shop/MoveSpeedPowerup.png",
+                   302,
+                   game_height / 2 - 50,
+                   100,
+                   130))
   {
     return false;
   }
 
   shot_size_powerup = renderer->createRawSprite();
-  if (!setupUIElement(*shot_size_powerup,
-                      "data/UI/Shop/ShotSizePowerup.png",
-                      432,
-                      game_height / 2 - 50,
-                      100,
-                      130))
+  if (!setupSprite(*shot_size_powerup,
+                   "data/UI/Shop/ShotSizePowerup.png",
+                   432,
+                   game_height / 2 - 50,
+                   100,
+                   130))
   {
     return false;
   }
 
   shot_speed_powerup = renderer->createRawSprite();
-  if (!setupUIElement(*shot_speed_powerup,
-                      "data/UI/Shop/ShotSpeedPowerup.png",
-                      562,
-                      game_height / 2 - 50,
-                      100,
-                      130))
+  if (!setupSprite(*shot_speed_powerup,
+                   "data/UI/Shop/ShotSpeedPowerup.png",
+                   562,
+                   game_height / 2 - 50,
+                   100,
+                   130))
   {
     return false;
   }
 
-  start_game = renderer->createRawSprite();
-  if (!setupUIElement(*start_game,
-                      "data/UI/MenuButtons/StartButton.png",
-                      game_width / 2 - 60,
-                      175,
-                      120,
-                      30))
+  return true;
+}
+
+bool SceneManager::initialise(ASGE::Renderer* renderer,
+                              float game_width,
+                              float game_height)
+{
+  if (!initSprites(renderer, game_width, game_height))
   {
     return false;
   }
-  open_shop = renderer->createRawSprite();
-  if (!setupUIElement(*open_shop,
-                      "data/UI/MenuButtons/ShopButton.png",
-                      game_width / 2 - 60,
-                      225,
-                      120,
-                      30))
+
+  if (!initButtons(renderer, game_width, game_height))
   {
     return false;
   }
-  exit_game = renderer->createRawSprite();
-  if (!setupUIElement(*exit_game,
-                      "data/UI/MenuButtons/ExitButton.png",
-                      game_width / 2 - 60,
-                      275,
-                      120,
-                      30))
+
+  if (!initShop(renderer, game_height))
   {
     return false;
   }
-  open_main_menu = renderer->createRawSprite();
-  if (!setupUIElement(*open_main_menu,
-                      "data/UI/MenuButtons/MenuButton.png",
-                      game_width / 2 - 60,
-                      game_height - 80,
-                      120,
-                      30))
-  {
-    return false;
-  }
+
   cursor = renderer->createRawSprite();
-  if (!setupUIElement(*cursor, "data/Projectile.png", 0, 0, 10, 10))
+  if (!setupSprite(*cursor, "data/Projectile.png", 0, 0, 10, 10))
   {
     return false;
   }
@@ -311,7 +457,10 @@ SceneManager::MenuItem SceneManager::update(const ASGE::GameTime&)
   return temp;
 }
 
-void SceneManager::render(ASGE::Renderer* renderer)
+void SceneManager::render(ASGE::Renderer* renderer,
+                          int floor,
+                          int coins,
+                          int health)
 {
   // renderer->setFont(menu_font_index);
 
@@ -340,8 +489,22 @@ void SceneManager::render(ASGE::Renderer* renderer)
     renderer->renderSprite(*shot_size_powerup);
     renderer->renderSprite(*shot_speed_powerup);
   }
+  else if (screen_open == GAME)
+  {
+    renderer->renderText("Floor " + std::to_string(floor), 5, 20);
+    renderer->renderText("$" + std::to_string(coins), 5, 40);
 
-  renderer->renderSprite(*cursor);
+    renderer->renderSprite(*health_bar_background);
+    health_bar->width(health);
+    renderer->renderSprite(*health_bar);
+
+    // Power Ups = {HEALTH, DAMAGE, MOVE SPEED, SHOT SPEED, SHOT SIZE}
+  }
+
+  if (screen_open != GAME)
+  {
+    renderer->renderSprite(*cursor);
+  }
 }
 
 SceneManager::ScreenOpen SceneManager::screenOpen()
@@ -456,12 +619,12 @@ SceneManager::MenuItem SceneManager::menuItem(const Point2D& mouse_pos)
   return MenuItem::NONE;
 }
 
-bool SceneManager::setupUIElement(ASGE::Sprite& sprite,
-                                  std::string texture,
-                                  float x_pos,
-                                  float y_pos,
-                                  float width,
-                                  float height)
+bool SceneManager::setupSprite(ASGE::Sprite& sprite,
+                               std::string texture,
+                               float x_pos,
+                               float y_pos,
+                               float width,
+                               float height)
 {
   if (!sprite.loadTexture(texture))
   {

@@ -47,11 +47,16 @@ class SceneManager
   ~SceneManager();
 
   bool
+  initSprites(ASGE::Renderer* renderer, float game_width, float game_height);
+  bool
+  initButtons(ASGE::Renderer* renderer, float game_width, float game_height);
+  bool initShop(ASGE::Renderer* renderer, float game_height);
+  bool
   initialise(ASGE::Renderer* renderer, float game_width, float game_height);
   void enableInput(ASGE::Input* input);
   void disableInput(ASGE::Input* input);
   MenuItem update(const ASGE::GameTime&);
-  void render(ASGE::Renderer* renderer);
+  void render(ASGE::Renderer* renderer, int floor, int coins, int health);
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
 
@@ -62,12 +67,12 @@ class SceneManager
   void clickHandler(ASGE::SharedEventData data);
 
   MenuItem menuItem(const Point2D& mouse_pos);
-  bool setupUIElement(ASGE::Sprite& sprite,
-                      std::string texture,
-                      float x_pos,
-                      float y_pos,
-                      float width,
-                      float height);
+  bool setupSprite(ASGE::Sprite& sprite,
+                   std::string texture,
+                   float x_pos,
+                   float y_pos,
+                   float width,
+                   float height);
 
   void resetOpacity();
 
@@ -78,8 +83,17 @@ class SceneManager
   ASGE::Sprite* menu_title = nullptr;
   ASGE::Sprite* game_over_title = nullptr;
   ASGE::Sprite* shop_title = nullptr;
+  ASGE::Sprite* health_bar = nullptr;
+  ASGE::Sprite* health_bar_background = nullptr;
 
-  // Powerups
+  // Power Up Icons
+  ASGE::Sprite* damage_icon = nullptr;
+  ASGE::Sprite* health_icon = nullptr;
+  ASGE::Sprite* move_speed_icon = nullptr;
+  ASGE::Sprite* shot_size_icon = nullptr;
+  ASGE::Sprite* shot_speed_icon = nullptr;
+
+  // Shop Power Ups
   ASGE::Sprite* damage_powerup = nullptr;
   ASGE::Sprite* health_powerup = nullptr;
   ASGE::Sprite* move_speed_powerup = nullptr;
