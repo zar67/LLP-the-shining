@@ -18,7 +18,6 @@ class Room : public GameObject
   {
     NORMAL,
     ITEM,
-    SHOP,
     EXIT
   };
 

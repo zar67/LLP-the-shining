@@ -193,7 +193,6 @@ bool Map::generateRooms(ASGE::Renderer* renderer,
   last_room->setType(Room::EXIT);
   last_room->canMove(false);
   generateItemRooms();
-  generateShopRoom();
   generateEnemies(renderer, game_width, game_height);
 
   return setupMinimap(renderer, game_width, game_height);
@@ -261,18 +260,6 @@ void Map::generateItemRooms()
   }
 }
 
-void Map::generateShopRoom()
-{
-  int id = STARTING_ROOM;
-  while (id == STARTING_ROOM || getRoom(id)->getId() == -1 ||
-         getRoom(id)->getType() != Room::NORMAL)
-  {
-    id = rand() % (map_size * map_size);
-  }
-
-  getRoom(id)->setType(Room::SHOP);
-}
-
 void Map::generateEnemies(ASGE::Renderer* renderer,
                           int game_width,
                           int game_height)
@@ -322,11 +309,6 @@ void Map::updateMiniMap()
     {
       mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::BLUE);
-    }
-    else if (getRoom(mini_map_ids.at(i))->getType() == Room::SHOP)
-    {
-      mini_map.at(i)->spriteComponent()->getSprite()->colour(
-        ASGE::COLOURS::YELLOW);
     }
     else if (getRoom(mini_map_ids.at(i))->getType() == Room::ITEM)
     {

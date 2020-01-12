@@ -48,7 +48,7 @@ bool MyASGEGame::init()
     return false;
   }
 
-  toggleFPS();
+  // toggleFPS();
 
   // input handling functions
   inputs->use_threads = false;
@@ -186,6 +186,12 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     {
       signalExit();
     }
+    if (menu_item == SceneManager::MenuItem::SHOT_SPEED_POWERUP)
+    {
+      std::cout << "CLICKED SHOT SPEED" << std::endl;
+      // Add Powerup To Player if Correct Coins
+      // Decrease Coins
+    }
   }
 }
 
@@ -204,10 +210,10 @@ void MyASGEGame::render(const ASGE::GameTime&)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
-    // Floor #
-    // Coins
+    renderer->renderText("Floor " + std::to_string(1), 5, 20);
+    renderer->renderText("$" + std::to_string(10), 5, 40);
     // Health
-    // Abilities = {HEALTH, DAMAGE, MOVE SPEED, SHOT SPEED, SHOT SIZE}
+    // Power Ups = {HEALTH, DAMAGE, MOVE SPEED, SHOT SPEED, SHOT SIZE}
   }
   else
   {
