@@ -19,6 +19,12 @@ SceneManager::~SceneManager()
     menu_title = nullptr;
   }
 
+  if (game_over_title)
+  {
+    delete game_over_title;
+    game_over_title = nullptr;
+  }
+
   if (start_game)
   {
     delete start_game;
@@ -55,6 +61,17 @@ bool SceneManager::initialise(ASGE::Renderer* renderer, int game_width)
   menu_title = renderer->createRawSprite();
   if (!setupUIElement(*menu_title,
                       "data/UI/MenuTitle.png",
+                      game_width / 2 - 200,
+                      38,
+                      400,
+                      100))
+  {
+    return false;
+  }
+
+  game_over_title = renderer->createRawSprite();
+  if (!setupUIElement(*game_over_title,
+                      "data/UI/GameOverTitle.png",
                       game_width / 2 - 200,
                       38,
                       400,
@@ -186,7 +203,7 @@ void SceneManager::render(ASGE::Renderer* renderer)
     }
     else
     {
-      renderer->renderText("GAME OVER", 205, 150);
+      renderer->renderSprite(*game_over_title);
     }
   }
   else if (screen_open == SHOP)
@@ -199,6 +216,11 @@ void SceneManager::render(ASGE::Renderer* renderer)
 SceneManager::ScreenOpen SceneManager::screenOpen()
 {
   return screen_open;
+}
+
+void SceneManager::screenOpen(ScreenOpen screen)
+{
+  screen_open = screen;
 }
 
 bool SceneManager::isInside(ASGE::Sprite* btn, Point2D point) const

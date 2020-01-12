@@ -47,6 +47,7 @@ class SceneManager
   MenuItem update(const ASGE::GameTime&);
   void render(ASGE::Renderer* renderer);
   ScreenOpen screenOpen();
+  void screenOpen(ScreenOpen screen);
 
  private:
   bool isInside(ASGE::Sprite* btn, Point2D point) const;
@@ -68,6 +69,7 @@ class SceneManager
   std::atomic<MenuItem> mouse_click{ MenuItem::NONE };
 
   ASGE::Sprite* menu_title = nullptr;
+  ASGE::Sprite* game_over_title = nullptr;
   ASGE::Sprite* start_game = nullptr;
   ASGE::Sprite* open_shop = nullptr;
   ASGE::Sprite* exit_game = nullptr;
