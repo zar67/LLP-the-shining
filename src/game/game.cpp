@@ -30,7 +30,7 @@ MyASGEGame::~MyASGEGame()
   this->inputs->unregisterCallback(
     static_cast<unsigned int>(mouse_callback_id));
 
-  scene_manager.disableInput(inputs.get());
+  scene_handler.disableInputs(inputs.get());
 }
 
 /**
@@ -60,9 +60,9 @@ bool MyASGEGame::init()
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
   renderer->setClearColour(ASGE::COLOURS::BLACK);
-  scene_manager.enableInput(inputs.get());
 
-  if (!scene_manager.initialise(renderer.get(), game_width, game_height))
+  if (!scene_handler.init(
+        inputs.get(), renderer.get(), game_width, game_height))
   {
     return false;
   }
@@ -175,22 +175,30 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
   double delta_time = game_time.delta.count() / 1000.0;
 
-  if (scene_manager.screenOpen() == SceneManager::GAME)
+  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
   {
     map.updateCurrentRoom(delta_time, player_x, player_y);
   }
   else
   {
-    auto menu_item = scene_manager.update(game_time);
-    if (menu_item == SceneManager::MenuItem::EXIT_GAME)
+    SceneManager::ReturnValue return_value = scene_handler.update(game_time);
+    switch (return_value)
     {
-      signalExit();
-    }
-    if (menu_item == SceneManager::MenuItem::SHOT_SPEED_POWERUP)
-    {
-      std::cout << "CLICKED SHOT SPEED" << std::endl;
-      // Add Powerup To Player if Correct Coins
-      // Decrease Coins
+      case SceneManager::ReturnValue::START_GAME:
+        break;
+      case SceneManager::ReturnValue::EXIT_GAME:
+        signalExit();
+        break;
+      case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
+        break;
+      case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
+        break;
+      case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
+        break;
     }
   }
 }
@@ -205,12 +213,13 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
+  scene_handler.render(renderer.get());
 
-  if (scene_manager.screenOpen() == SceneManager::GAME)
+  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
   }
 
-  scene_manager.render(renderer.get(), 1, 10, 50);
+  // scene_manager.render(renderer.get(), 1, 10, 50);
 }

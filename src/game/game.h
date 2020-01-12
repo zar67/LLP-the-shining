@@ -1,7 +1,7 @@
 #pragma once
 #include "../map/Map.h"
-#include "SceneManager.h"
 #include "SceneObjects/Enemies/Demon.h"
+#include "UIHandler/SceneManager.h"
 #include <Engine/OGLGame.h>
 #include <string>
 #include <vector>
@@ -24,12 +24,11 @@ class MyASGEGame : public ASGE::OGLGame
   void update(const ASGE::GameTime&) override;
   void render(const ASGE::GameTime&) override;
 
-  SceneManager scene_manager;
+  SceneManager scene_handler;
   Map map = Map();
   float player_x = 500;
   float player_y = 300;
 
   int key_callback_id = -1;   /**< Key Input Callback ID. */
   int mouse_callback_id = -1; /**< Mouse Input Callback ID. */
-  bool in_menu = true;
 };
