@@ -59,9 +59,10 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
+  renderer->setClearColour(ASGE::COLOURS::BLACK);
   scene_manager.enableInput(inputs.get());
 
-  if (!scene_manager.initialise(renderer.get(), game_width))
+  if (!scene_manager.initialise(renderer.get(), game_width, game_height))
   {
     return false;
   }
@@ -203,6 +204,10 @@ void MyASGEGame::render(const ASGE::GameTime&)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
+    // Floor #
+    // Coins
+    // Health
+    // Abilities = {HEALTH, DAMAGE, MOVE SPEED, SHOT SPEED, SHOT SIZE}
   }
   else
   {

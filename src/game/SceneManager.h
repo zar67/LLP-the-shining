@@ -26,7 +26,12 @@ class SceneManager
     START_GAME = 1,
     OPEN_SHOP = 2,
     EXIT_GAME = 3,
-    OPEN_MAIN_MENU = 4
+    OPEN_MAIN_MENU = 4,
+    DAMAGE_POWERUP = 5,
+    HEALTH_POWERUP = 6,
+    MOVE_SPEED_POWERUP = 7,
+    SHOT_SIZE_POWERUP = 8,
+    SHOT_SPEED_POWERUP = 9
   };
 
   enum ScreenOpen
@@ -41,7 +46,8 @@ class SceneManager
   SceneManager() = default;
   ~SceneManager();
 
-  bool initialise(ASGE::Renderer* renderer, int game_width);
+  bool
+  initialise(ASGE::Renderer* renderer, float game_width, float game_height);
   void enableInput(ASGE::Input* input);
   void disableInput(ASGE::Input* input);
   MenuItem update(const ASGE::GameTime&);
@@ -63,13 +69,24 @@ class SceneManager
                       float width,
                       float height);
 
-  void setOpacity(float start, float shop, float exit, float menu);
+  void resetOpacity();
 
   std::atomic<MenuItem> mouse_over{ MenuItem::NONE };
   std::atomic<MenuItem> mouse_click{ MenuItem::NONE };
 
+  // Sprites
   ASGE::Sprite* menu_title = nullptr;
   ASGE::Sprite* game_over_title = nullptr;
+  ASGE::Sprite* shop_title = nullptr;
+
+  // Powerups
+  ASGE::Sprite* damage_powerup = nullptr;
+  ASGE::Sprite* health_powerup = nullptr;
+  ASGE::Sprite* move_speed_powerup = nullptr;
+  ASGE::Sprite* shot_size_powerup = nullptr;
+  ASGE::Sprite* shot_speed_powerup = nullptr;
+
+  // Buttons
   ASGE::Sprite* start_game = nullptr;
   ASGE::Sprite* open_shop = nullptr;
   ASGE::Sprite* exit_game = nullptr;

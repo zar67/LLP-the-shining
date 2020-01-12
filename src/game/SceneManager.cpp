@@ -3,7 +3,6 @@
 //
 
 #include "SceneManager.h"
-#include <Engine/DebugPrinter.h>
 #include <Engine/FileIO.h>
 #include <Engine/Font.h>
 #include <Engine/Renderer.h>
@@ -23,6 +22,42 @@ SceneManager::~SceneManager()
   {
     delete game_over_title;
     game_over_title = nullptr;
+  }
+
+  if (shop_title)
+  {
+    delete shop_title;
+    shop_title = nullptr;
+  }
+
+  if (damage_powerup)
+  {
+    delete damage_powerup;
+    damage_powerup = nullptr;
+  }
+
+  if (health_powerup)
+  {
+    delete health_powerup;
+    health_powerup = nullptr;
+  }
+
+  if (move_speed_powerup)
+  {
+    delete move_speed_powerup;
+    move_speed_powerup = nullptr;
+  }
+
+  if (shot_size_powerup)
+  {
+    delete shot_size_powerup;
+    shot_size_powerup = nullptr;
+  }
+
+  if (shot_speed_powerup)
+  {
+    delete shot_speed_powerup;
+    shot_speed_powerup = nullptr;
   }
 
   if (start_game)
@@ -56,7 +91,9 @@ SceneManager::~SceneManager()
   }
 }
 
-bool SceneManager::initialise(ASGE::Renderer* renderer, int game_width)
+bool SceneManager::initialise(ASGE::Renderer* renderer,
+                              float game_width,
+                              float game_height)
 {
   menu_title = renderer->createRawSprite();
   if (!setupUIElement(*menu_title,
@@ -80,9 +117,75 @@ bool SceneManager::initialise(ASGE::Renderer* renderer, int game_width)
     return false;
   }
 
+  shop_title = renderer->createRawSprite();
+  if (!setupUIElement(*shop_title,
+                      "data/UI/ShopTitle.png",
+                      game_width / 2 - 200,
+                      38,
+                      400,
+                      100))
+  {
+    return false;
+  }
+
+  damage_powerup = renderer->createRawSprite();
+  if (!setupUIElement(*damage_powerup,
+                      "data/UI/Shop/DamagePowerup.png",
+                      42,
+                      game_height / 2 - 50,
+                      100,
+                      130))
+  {
+    return false;
+  }
+
+  health_powerup = renderer->createRawSprite();
+  if (!setupUIElement(*health_powerup,
+                      "data/UI/Shop/HealthPowerup.png",
+                      172,
+                      game_height / 2 - 50,
+                      100,
+                      130))
+  {
+    return false;
+  }
+
+  move_speed_powerup = renderer->createRawSprite();
+  if (!setupUIElement(*move_speed_powerup,
+                      "data/UI/Shop/MoveSpeedPowerup.png",
+                      302,
+                      game_height / 2 - 50,
+                      100,
+                      130))
+  {
+    return false;
+  }
+
+  shot_size_powerup = renderer->createRawSprite();
+  if (!setupUIElement(*shot_size_powerup,
+                      "data/UI/Shop/ShotSizePowerup.png",
+                      432,
+                      game_height / 2 - 50,
+                      100,
+                      130))
+  {
+    return false;
+  }
+
+  shot_speed_powerup = renderer->createRawSprite();
+  if (!setupUIElement(*shot_speed_powerup,
+                      "data/UI/Shop/ShotSpeedPowerup.png",
+                      562,
+                      game_height / 2 - 50,
+                      100,
+                      130))
+  {
+    return false;
+  }
+
   start_game = renderer->createRawSprite();
   if (!setupUIElement(*start_game,
-                      "data/UI/StartButton.png",
+                      "data/UI/MenuButtons/StartButton.png",
                       game_width / 2 - 60,
                       175,
                       120,
@@ -91,22 +194,30 @@ bool SceneManager::initialise(ASGE::Renderer* renderer, int game_width)
     return false;
   }
   open_shop = renderer->createRawSprite();
-  if (!setupUIElement(
-        *open_shop, "data/UI/ShopButton.png", game_width / 2 - 60, 225, 120, 30))
+  if (!setupUIElement(*open_shop,
+                      "data/UI/MenuButtons/ShopButton.png",
+                      game_width / 2 - 60,
+                      225,
+                      120,
+                      30))
   {
     return false;
   }
   exit_game = renderer->createRawSprite();
-  if (!setupUIElement(
-        *exit_game, "data/UI/ExitButton.png", game_width / 2 - 60, 275, 120, 30))
+  if (!setupUIElement(*exit_game,
+                      "data/UI/MenuButtons/ExitButton.png",
+                      game_width / 2 - 60,
+                      275,
+                      120,
+                      30))
   {
     return false;
   }
   open_main_menu = renderer->createRawSprite();
   if (!setupUIElement(*open_main_menu,
-                      "data/UI/MenuButton.png",
+                      "data/UI/MenuButtons/MenuButton.png",
                       game_width / 2 - 60,
-                      200,
+                      game_height - 80,
                       120,
                       30))
   {
@@ -149,47 +260,60 @@ void SceneManager::disableInput(ASGE::Input* input)
 
 SceneManager::MenuItem SceneManager::update(const ASGE::GameTime&)
 {
-  if (mouse_over == MenuItem::START_GAME)
+  resetOpacity();
+
+  switch (mouse_over)
   {
-    setOpacity(1.0f, 0.5f, 0.5f, 0.5f);
-  }
-  else if (mouse_over == MenuItem::OPEN_SHOP)
-  {
-    setOpacity(0.5f, 1.0f, 0.5f, 0.5f);
-  }
-  else if (mouse_over == MenuItem::EXIT_GAME)
-  {
-    setOpacity(0.5f, 0.5f, 1.0f, 0.5f);
-  }
-  else if (mouse_over == MenuItem::OPEN_MAIN_MENU)
-  {
-    setOpacity(0.5f, 0.5f, 0.5f, 1.0f);
-  }
-  else
-  {
-    setOpacity(0.5f, 0.5f, 0.5f, 0.5f);
+    case MenuItem::START_GAME:
+      start_game->opacity(1.0f);
+      break;
+    case MenuItem::OPEN_SHOP:
+      open_shop->opacity(1.0f);
+      break;
+    case MenuItem::EXIT_GAME:
+      exit_game->opacity(1.0f);
+      break;
+    case MenuItem::OPEN_MAIN_MENU:
+      open_main_menu->opacity(1.0f);
+      break;
+    case MenuItem::DAMAGE_POWERUP:
+      damage_powerup->opacity(1.0f);
+      break;
+    case MenuItem::HEALTH_POWERUP:
+      health_powerup->opacity(1.0f);
+      break;
+    case MenuItem::MOVE_SPEED_POWERUP:
+      move_speed_powerup->opacity(1.0f);
+      break;
+    case MenuItem::SHOT_SIZE_POWERUP:
+      shot_size_powerup->opacity(1.0f);
+      break;
+    case MenuItem::SHOT_SPEED_POWERUP:
+      shot_speed_powerup->opacity(1.0f);
+      break;
   }
 
-  if (mouse_click == MenuItem::START_GAME)
+  switch (mouse_click)
   {
-    screen_open = GAME;
-  }
-  else if (mouse_click == MenuItem::OPEN_SHOP)
-  {
-    screen_open = SHOP;
-  }
-  else if (mouse_click == MenuItem::OPEN_MAIN_MENU)
-  {
-    screen_open = MAIN_MENU;
+    case MenuItem::START_GAME:
+      screen_open = GAME;
+      break;
+    case MenuItem::OPEN_SHOP:
+      screen_open = SHOP;
+      break;
+    case MenuItem::OPEN_MAIN_MENU:
+      screen_open = MAIN_MENU;
+      break;
   }
 
-  return mouse_click;
+  MenuItem temp = mouse_click;
+  mouse_click = MenuItem::NONE;
+  return temp;
 }
 
 void SceneManager::render(ASGE::Renderer* renderer)
 {
   // renderer->setFont(menu_font_index);
-  renderer->renderSprite(*cursor);
 
   if (screen_open == MAIN_MENU || screen_open == GAME_OVER)
   {
@@ -208,9 +332,16 @@ void SceneManager::render(ASGE::Renderer* renderer)
   }
   else if (screen_open == SHOP)
   {
-    renderer->renderText("SHOP", 205, 150);
+    renderer->renderSprite(*shop_title);
     renderer->renderSprite(*open_main_menu);
+    renderer->renderSprite(*damage_powerup);
+    renderer->renderSprite(*health_powerup);
+    renderer->renderSprite(*move_speed_powerup);
+    renderer->renderSprite(*shot_size_powerup);
+    renderer->renderSprite(*shot_speed_powerup);
   }
+
+  renderer->renderSprite(*cursor);
 }
 
 SceneManager::ScreenOpen SceneManager::screenOpen()
@@ -274,7 +405,11 @@ void SceneManager::clickHandler(ASGE::SharedEventData data)
 {
   auto event = static_cast<const ASGE::ClickEvent*>(data.get());
   Point2D mouse_pos{ float(event->xpos), float(event->ypos) };
-  mouse_click = menuItem(mouse_pos);
+
+  if (event->action == ASGE::MOUSE::BUTTON_RELEASED)
+  {
+    mouse_click = menuItem(mouse_pos);
+  }
 }
 
 SceneManager::MenuItem SceneManager::menuItem(const Point2D& mouse_pos)
@@ -298,6 +433,26 @@ SceneManager::MenuItem SceneManager::menuItem(const Point2D& mouse_pos)
   {
     return MenuItem::OPEN_MAIN_MENU;
   }
+  else if (isInside(damage_powerup, mouse_pos) && screen_open == SHOP)
+  {
+    return MenuItem::DAMAGE_POWERUP;
+  }
+  else if (isInside(health_powerup, mouse_pos) && screen_open == SHOP)
+  {
+    return MenuItem::HEALTH_POWERUP;
+  }
+  else if (isInside(move_speed_powerup, mouse_pos) && screen_open == SHOP)
+  {
+    return MenuItem::MOVE_SPEED_POWERUP;
+  }
+  else if (isInside(shot_size_powerup, mouse_pos) && screen_open == SHOP)
+  {
+    return MenuItem::SHOT_SIZE_POWERUP;
+  }
+  else if (isInside(shot_speed_powerup, mouse_pos) && screen_open == SHOP)
+  {
+    return MenuItem::SHOT_SPEED_POWERUP;
+  }
   return MenuItem::NONE;
 }
 
@@ -317,15 +472,20 @@ bool SceneManager::setupUIElement(ASGE::Sprite& sprite,
   sprite.yPos(y_pos);
   sprite.width(width);
   sprite.height(height);
-  sprite.opacity(0.5f);
 
   return true;
 }
 
-void SceneManager::setOpacity(float start, float shop, float exit, float menu)
+void SceneManager::resetOpacity()
 {
-  start_game->opacity(start);
-  open_shop->opacity(shop);
-  exit_game->opacity(exit);
-  open_main_menu->opacity(menu);
+  damage_powerup->opacity(0.5f);
+  health_powerup->opacity(0.5f);
+  move_speed_powerup->opacity(0.5f);
+  shot_size_powerup->opacity(0.5f);
+  shot_speed_powerup->opacity(0.5f);
+
+  start_game->opacity(0.5f);
+  open_shop->opacity(0.5f);
+  exit_game->opacity(0.5f);
+  open_main_menu->opacity(0.5f);
 }
