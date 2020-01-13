@@ -28,7 +28,7 @@ class GameObject
   getDirectionFromTo(float from_x, float from_y, float to_x, float to_y);
   float getDistanceBetween(float from_x, float from_y, float to_x, float to_y);
 
- private:
+ protected:
   SpriteComponent* sprite_component = nullptr;
   CollisionComponent* collision_component = nullptr;
 };

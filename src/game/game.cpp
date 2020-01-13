@@ -62,6 +62,13 @@ bool MyASGEGame::init()
     return false;
   }
 
+  player.init(renderer.get(),
+              "/data/Characters/Demon.png",
+              player_x,
+              player_y,
+              50.0f,
+              50.0f);
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -134,6 +141,9 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     map.getCurrentRoom()->removeGhostFromRoom(0);
   }
+
+  // player movement
+  playerInput(data);
 }
 
 /**
@@ -169,6 +179,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   double delta_time = game_time.delta.count() / 1000.0;
 
   map.updateCurrentRoom(delta_time, player_x, player_y);
+  player.Movement(delta_time);
 
   if (!in_menu)
   {
@@ -188,8 +199,50 @@ void MyASGEGame::render(const ASGE::GameTime&)
 
   map.renderCurrentRoom(renderer.get());
   map.renderMiniMap(renderer.get());
+  renderer->renderSprite(*player.spriteComponent()->getSprite());
 
   if (in_menu)
   {
   }
+}
+
+void MyASGEGame::playerInput(ASGE::SharedEventData data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  // vertical movement
+  if (key->key == ASGE::KEYS::KEY_DOWN &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[1] = 1.0f;
+  }
+  else if (key->key == ASGE::KEYS::KEY_UP &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[1] = -1.0f;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_DOWN ||
+            key->key == ASGE::KEYS::KEY_UP) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    vec[1] = 0.0f;
+  }
+  // Horizontal movement
+  if (key->key == ASGE::KEYS::KEY_RIGHT &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[0] = 1.0f;
+  }
+  else if (key->key == ASGE::KEYS::KEY_LEFT &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[0] = -1.0f;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_LEFT ||
+            key->key == ASGE::KEYS::KEY_RIGHT) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    vec[0] = 0.0f;
+  }
+  player.setMovementVec(vec);
 }
