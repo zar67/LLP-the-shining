@@ -15,6 +15,10 @@ void Player::init(ASGE::Renderer* renderer,
   {
     addSpriteComponent(renderer, tex_directory);
   }
+  if (!weapon_component)
+  {
+    addWeaponCompononet();
+  }
   sprite_component->getSprite()->xPos(x_pos);
   sprite_component->getSprite()->yPos(y_pos);
   sprite_component->getSprite()->width(width);
@@ -42,6 +46,12 @@ void Player::Movement(float delta_time)
 
   sprite->xPos(new_x);
   sprite->yPos(new_y);
+
+  // bullet movement
+  if (weapon_component)
+  {
+    weaponComponent()->maintainProjectiles(delta_time);
+  }
 }
 
 void Player::Movement(float x, float y)
@@ -72,4 +82,25 @@ void Player::setMovementVec(float* vec)
   {
     vector_movement[i] = vec[i];
   }
+}
+
+float* Player::getDirectionVector()
+{
+  return vector_movement;
+}
+
+bool Player::addWeaponCompononet()
+{
+  if (weapon_component)
+  {
+    delete (weapon_component);
+  }
+  weapon_component = new ShootingComponent();
+
+  return true;
+}
+
+ShootingComponent* Player::weaponComponent()
+{
+  return weapon_component;
 }

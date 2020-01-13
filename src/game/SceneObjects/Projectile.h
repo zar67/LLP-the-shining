@@ -6,6 +6,8 @@
 #define THE_SHINING_GAME_GROUP_3_PROJECTILE_H
 
 #include "GameObject.h"
+#include <Engine/Renderer.h>
+#include <vector>
 
 class Projectile : public GameObject
 {
@@ -22,8 +24,8 @@ class Projectile : public GameObject
              float y_dir);
 
  private:
-  int speed;
-  int target[2];
+  int speed = 0;
+  float target[2] = { 0.0f, 0.0f };
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_PROJECTILE_H

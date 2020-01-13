@@ -7,11 +7,12 @@
 
 #include <vector>
 
+#include "../Components/ShootingComponent.h"
 #include "GameObject.h"
-
 class Player : public GameObject
 {
  public:
+  Player() = default;
   void init(ASGE::Renderer* renderer,
             std::string tex_directory,
             float x_pos,
@@ -24,6 +25,10 @@ class Player : public GameObject
                                    // different damage
 
   void setMovementVec(float vec[2]);
+  float* getDirectionVector();
+
+  bool addWeaponCompononet();
+  ShootingComponent* weaponComponent();
 
  private:
   int speed = 50;
@@ -32,6 +37,7 @@ class Player : public GameObject
   float vector_movement[2] = { 0.0f, 0.0f };
 
   std::vector<int> abilities;
+  ShootingComponent* weapon_component = nullptr;
 };
 
 #endif // PROJECT_PLAYER_H

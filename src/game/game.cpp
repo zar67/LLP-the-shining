@@ -199,7 +199,16 @@ void MyASGEGame::render(const ASGE::GameTime&)
 
   map.renderCurrentRoom(renderer.get());
   map.renderMiniMap(renderer.get());
+
   renderer->renderSprite(*player.spriteComponent()->getSprite());
+  player.weaponComponent()->render(renderer.get());
+
+  // std::vector<Projectile> projectiles =
+  // player.weaponComponent()->getProjectiles();
+  // for(auto &bullet : projectiles)
+  //  {
+  //     renderer->renderSprite(*bullet.spriteComponent()->getSprite());
+  //  }
 
   if (in_menu)
   {
@@ -215,11 +224,13 @@ void MyASGEGame::playerInput(ASGE::SharedEventData data)
       key->action == ASGE::KEYS::KEY_PRESSED)
   {
     vec[1] = 1.0f;
+    player.weaponComponent()->setLastDirection(0.0f, vec[1]);
   }
   else if (key->key == ASGE::KEYS::KEY_UP &&
            key->action == ASGE::KEYS::KEY_PRESSED)
   {
     vec[1] = -1.0f;
+    player.weaponComponent()->setLastDirection(0.0f, vec[1]);
   }
   else if ((key->key == ASGE::KEYS::KEY_DOWN ||
             key->key == ASGE::KEYS::KEY_UP) &&
@@ -232,11 +243,13 @@ void MyASGEGame::playerInput(ASGE::SharedEventData data)
       key->action == ASGE::KEYS::KEY_PRESSED)
   {
     vec[0] = 1.0f;
+    player.weaponComponent()->setLastDirection(vec[0], 0.0f);
   }
   else if (key->key == ASGE::KEYS::KEY_LEFT &&
            key->action == ASGE::KEYS::KEY_PRESSED)
   {
     vec[0] = -1.0f;
+    player.weaponComponent()->setLastDirection(vec[0], 0.0f);
   }
   else if ((key->key == ASGE::KEYS::KEY_LEFT ||
             key->key == ASGE::KEYS::KEY_RIGHT) &&
@@ -245,4 +258,14 @@ void MyASGEGame::playerInput(ASGE::SharedEventData data)
     vec[0] = 0.0f;
   }
   player.setMovementVec(vec);
+
+  if (key->key == ASGE::KEYS::KEY_SPACE &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    // fire bullet using players vector
+    player.weaponComponent()->Fire(
+      renderer.get(),
+      player.spriteComponent()->getSprite()->xPos(),
+      player.spriteComponent()->getSprite()->yPos());
+  }
 }

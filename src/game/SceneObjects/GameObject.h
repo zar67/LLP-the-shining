@@ -4,10 +4,13 @@
 #ifndef PROJECT_GAMEOBJECT_H
 #define PROJECT_GAMEOBJECT_H
 
-#include "../Components/CollisionComponent.h"
-#include "../Components/SpriteComponent.h"
 #include <tuple>
 #include <vector>
+
+#include "../Components/CollisionComponent.h"
+#include "../Components/SpriteComponent.h"
+
+//#include "../Components/WeaponComponent.h"
 
 class GameObject
 {
@@ -23,7 +26,7 @@ class GameObject
   CollisionComponent* collisionComponent();
 
   void updateCollisionComponent();
-  void move(double delta_time, float x_dir, float y_dir, float speed);
+  void move(float delta_time, float x_dir, float y_dir, float speed);
   std::vector<float>
   getDirectionFromTo(float from_x, float from_y, float to_x, float to_y);
   float getDistanceBetween(float from_x, float from_y, float to_x, float to_y);

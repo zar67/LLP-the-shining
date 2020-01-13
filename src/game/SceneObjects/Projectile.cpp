@@ -18,11 +18,14 @@ bool Projectile::setup(ASGE::Renderer* renderer,
 {
   speed = move_speed;
 
-  std::vector<float> dir = getDirectionFromTo(x_pos, y_pos, target_x, target_y);
-  target[0] = dir[0];
-  target[1] = dir[1];
+  // std::vector<float> dir = getDirectionFromTo(x_pos, y_pos, target_x,
+  // target_y);
+  // target[0] = dir[0];
+  // target[1] = dir[1];
+  target[0] = target_x;
+  target[1] = target_y;
 
-  if (addSpriteComponent(renderer, "data/projectile.png"))
+  if (addSpriteComponent(renderer, "/data/projectile.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
     spriteComponent()->getSprite()->yPos(y_pos);
