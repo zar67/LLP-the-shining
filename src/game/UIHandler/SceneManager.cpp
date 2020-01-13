@@ -69,7 +69,12 @@ bool SceneManager::init(ASGE::Input* input,
     return false;
   }
 
-  return game_over_menu.init(renderer, game_width, game_height);
+  if (!game_over_menu.init(renderer, game_width, game_height))
+  {
+    return false;
+  }
+
+  return game_won_menu.init(renderer, game_width, game_height);
 }
 
 SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
@@ -159,6 +164,33 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
     }
   }
 
+  if (screen_open == ScreenOpen::GAME_WON)
+  {
+    GameWonMenu::MenuItem game_won_item = game_won_menu.update(mouse_pos);
+    if (mouse_click)
+    {
+      switch (game_won_item)
+      {
+        case GameWonMenu::MenuItem::START_GAME:
+          screen_open = ScreenOpen::GAME;
+          return_value = ReturnValue::START_GAME;
+          break;
+        case GameWonMenu::MenuItem::OPEN_SHOP:
+          screen_open = ScreenOpen::SHOP;
+          break;
+        case GameWonMenu::MenuItem::MAIN_MENU:
+          screen_open = ScreenOpen::MAIN_MENU;
+          break;
+        case GameWonMenu::MenuItem::EXIT_GAME:
+          return_value = ReturnValue::EXIT_GAME;
+          break;
+        default:
+          break;
+      }
+      mouse_click = false;
+    }
+  }
+
   return return_value;
 }
 
@@ -176,13 +208,17 @@ void SceneManager::render(ASGE::Renderer* renderer,
   {
     shop_menu.render(renderer);
   }
+  else if (screen_open == ScreenOpen::GAME)
+  {
+    game_scene.render(renderer, floor, coins, health, abilities);
+  }
   else if (screen_open == ScreenOpen::GAME_OVER)
   {
     game_over_menu.render(renderer);
   }
-  else if (screen_open == ScreenOpen::GAME)
+  else if (screen_open == ScreenOpen::GAME_WON)
   {
-    game_scene.render(renderer, floor, coins, health, abilities);
+    game_won_menu.render(renderer);
   }
 
   if (screen_open != ScreenOpen::GAME)

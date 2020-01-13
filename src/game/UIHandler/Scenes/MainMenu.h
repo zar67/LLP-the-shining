@@ -5,7 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_MAINMENU_H
 #define THE_SHINING_GAME_GROUP_3_MAINMENU_H
 
-#include "Scene.h"
+#include "../Scene.h"
 
 class MainMenu : public Scene
 {

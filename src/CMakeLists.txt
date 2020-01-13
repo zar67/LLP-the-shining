@@ -29,9 +29,12 @@ set(SOURCE_FILES
         game/SceneObjects/Enemies/Ghost.cpp
         game/SceneObjects/Enemies/AxePsycho.cpp
         game/UIHandler/Scene.cpp
-        game/UIHandler/MainMenu.cpp
         game/UIHandler/SceneManager.cpp
-        game/UIHandler/GameOverMenu.cpp
+        game/UIHandler/Scenes/MainMenu.cpp
+        game/UIHandler/Scenes/GameOverMenu.cpp
+        game/UIHandler/Scenes/ShopMenu.cpp
+        game/UIHandler/Scenes/GameScene.cpp
+        game/UIHandler/Scenes/GameWonMenu.cpp
         )
 
 set(HEADER_FILES
@@ -48,11 +51,12 @@ set(HEADER_FILES
         game/SceneObjects/Enemies/Ghost.h
         game/SceneObjects/Enemies/AxePsycho.h
         game/UIHandler/Scene.h
-        game/UIHandler/MainMenu.h
         game/UIHandler/SceneManager.h
-        game/UIHandler/ShopMenu.cpp
-        game/UIHandler/ShopMenu.h
-        game/UIHandler/GameOverMenu.h game/UIHandler/GameScene.cpp game/UIHandler/GameScene.h)
+        game/UIHandler/Scenes/MainMenu.h
+        game/UIHandler/Scenes/ShopMenu.h
+        game/UIHandler/Scenes/GameOverMenu.h
+        game/UIHandler/Scenes/GameScene.h
+        game/UIHandler/Scenes/GameWonMenu.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

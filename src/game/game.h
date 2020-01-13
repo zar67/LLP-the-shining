@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+const int MAX_FLOOR = 3;
+
 /**
  *  An OpenGL Game based on ASGE.
  */
@@ -26,6 +28,8 @@ class MyASGEGame : public ASGE::OGLGame
 
   SceneManager scene_handler;
   Map map = Map();
+  int floor = 0;
+
   float player_x = 500;
   float player_y = 300;
 

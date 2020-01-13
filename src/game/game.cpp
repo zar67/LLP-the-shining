@@ -67,11 +67,6 @@ bool MyASGEGame::init()
     return false;
   }
 
-  if (!map.generateRooms(renderer.get(), game_width, game_height))
-  {
-    return false;
-  }
-
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -136,13 +131,7 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
   if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.generateRooms(renderer.get(), game_width, game_height);
-    // map.getCurrentRoom()->addGhostToRoom(
-    // renderer.get(), rand() % 400, rand() % 400);
-  }
-  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.getCurrentRoom()->removeGhostFromRoom(0);
+    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
   }
 }
 
@@ -188,6 +177,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     switch (return_value)
     {
       case SceneManager::ReturnValue::START_GAME:
+        map.generateRooms(renderer.get(), game_width, game_height);
         break;
       case SceneManager::ReturnValue::EXIT_GAME:
         signalExit();

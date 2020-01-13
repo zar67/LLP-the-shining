@@ -5,7 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_SHOPMENU_H
 #define THE_SHINING_GAME_GROUP_3_SHOPMENU_H
 
-#include "Scene.h"
+#include "../Scene.h"
 
 class ShopMenu : public Scene
 {

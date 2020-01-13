@@ -84,7 +84,7 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
   }
 }
 
-bool Map::generateRooms(ASGE::Renderer* renderer,
+void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
 {
@@ -195,10 +195,10 @@ bool Map::generateRooms(ASGE::Renderer* renderer,
   generateItemRooms();
   generateEnemies(renderer, game_width, game_height);
 
-  return setupMinimap(renderer, game_width, game_height);
+  setupMinimap(renderer, game_width, game_height);
 }
 
-bool Map::setupMinimap(ASGE::Renderer* renderer,
+void Map::setupMinimap(ASGE::Renderer* renderer,
                        int game_width,
                        int game_height)
 {
@@ -223,6 +223,7 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
         GameObject* new_room = new GameObject();
         mini_map.push_back(new_room);
         mini_map_ids.push_back(rooms[i][j].getId());
+
         if (mini_map.at(count)->addSpriteComponent(renderer, file))
         {
           mini_map.at(count)->spriteComponent()->getSprite()->xPos(
@@ -231,16 +232,11 @@ bool Map::setupMinimap(ASGE::Renderer* renderer,
             game_height - (20 * map_size) + (i * 20));
           count += 1;
         }
-        else
-        {
-          return false;
-        }
       }
     }
   }
 
   updateMiniMap();
-  return true;
 }
 
 void Map::generateItemRooms()

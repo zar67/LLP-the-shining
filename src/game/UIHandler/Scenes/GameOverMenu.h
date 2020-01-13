@@ -5,7 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_GAMEOVER_H
 #  define THE_SHINING_GAME_GROUP_3_GAMEOVERMENU_H
 
-#  include "Scene.h"
+#  include "../Scene.h"
 
 class GameOverMenu : public Scene
 {

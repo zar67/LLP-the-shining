@@ -5,7 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_GAMESCENE_H
 #define THE_SHINING_GAME_GROUP_3_GAMESCENE_H
 
-#include "Scene.h"
+#include "../Scene.h"
 
 class GameScene : public Scene
 {
