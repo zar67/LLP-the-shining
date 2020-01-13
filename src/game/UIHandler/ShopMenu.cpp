@@ -7,47 +7,26 @@
 
 ShopMenu::~ShopMenu()
 {
-  if (shop_title)
-  {
-    delete shop_title;
-    shop_title = nullptr;
-  }
+  delete shop_title;
+  shop_title = nullptr;
 
-  if (damage_powerup)
-  {
-    delete damage_powerup;
-    damage_powerup = nullptr;
-  }
+  delete damage_powerup;
+  damage_powerup = nullptr;
 
-  if (health_powerup)
-  {
-    delete health_powerup;
-    health_powerup = nullptr;
-  }
+  delete health_powerup;
+  health_powerup = nullptr;
 
-  if (move_speed_powerup)
-  {
-    delete move_speed_powerup;
-    move_speed_powerup = nullptr;
-  }
+  delete move_speed_powerup;
+  move_speed_powerup = nullptr;
 
-  if (shot_size_powerup)
-  {
-    delete shot_size_powerup;
-    shot_size_powerup = nullptr;
-  }
+  delete shot_size_powerup;
+  shot_size_powerup = nullptr;
 
-  if (shot_speed_powerup)
-  {
-    delete shot_speed_powerup;
-    shot_speed_powerup = nullptr;
-  }
+  delete shot_speed_powerup;
+  shot_speed_powerup = nullptr;
 
-  if (open_main_menu)
-  {
-    delete open_main_menu;
-    open_main_menu = nullptr;
-  }
+  delete open_main_menu;
+  open_main_menu = nullptr;
 }
 
 bool ShopMenu::init(ASGE::Renderer* renderer,
@@ -127,18 +106,13 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   open_main_menu = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *open_main_menu,
-                   "data/UI/MenuButtons/MenuButton.png",
-                   game_width / 2 - 60,
-                   game_height - 50,
-                   120,
-                   30))
-  {
-    return false;
-  }
-
-  return true;
+  return setupSprite(renderer,
+                     *open_main_menu,
+                     "data/UI/MenuButtons/MenuButton.png",
+                     game_width / 2 - 60,
+                     game_height - 50,
+                     120,
+                     30);
 }
 
 ShopMenu::MenuItem ShopMenu::update(Point2D point)
@@ -165,6 +139,8 @@ ShopMenu::MenuItem ShopMenu::update(Point2D point)
       break;
     case MenuItem::SHOT_SPEED_POWERUP:
       shot_speed_powerup->opacity(1.0f);
+      break;
+    default:
       break;
   }
 

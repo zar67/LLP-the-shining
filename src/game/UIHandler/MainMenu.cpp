@@ -6,29 +6,17 @@
 
 MainMenu::~MainMenu()
 {
-  if (menu_title)
-  {
-    delete menu_title;
-    menu_title = nullptr;
-  }
+  delete menu_title;
+  menu_title = nullptr;
 
-  if (start_game)
-  {
-    delete start_game;
-    start_game = nullptr;
-  }
+  delete start_game;
+  start_game = nullptr;
 
-  if (open_shop)
-  {
-    delete open_shop;
-    open_shop = nullptr;
-  }
+  delete open_shop;
+  open_shop = nullptr;
 
-  if (exit_game)
-  {
-    delete exit_game;
-    exit_game = nullptr;
-  }
+  delete exit_game;
+  exit_game = nullptr;
 }
 
 bool MainMenu::init(ASGE::Renderer* renderer,
@@ -96,6 +84,8 @@ MainMenu::MenuItem MainMenu::update(Point2D point)
       break;
     case MenuItem::EXIT_GAME:
       exit_game->opacity(1.0f);
+      break;
+    default:
       break;
   }
 

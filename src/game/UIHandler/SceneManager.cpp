@@ -9,11 +9,8 @@
 
 SceneManager::~SceneManager()
 {
-  if (cursor)
-  {
-    delete cursor;
-    cursor = nullptr;
-  }
+  delete cursor;
+  cursor = nullptr;
 }
 
 void SceneManager::enableInputs(ASGE::Input* input)
@@ -91,6 +88,8 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
         case MainMenu::MenuItem::EXIT_GAME:
           return_value = ReturnValue::EXIT_GAME;
           break;
+        default:
+          break;
       }
       mouse_click = false;
     }
@@ -120,6 +119,8 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
           break;
         case ShopMenu::MenuItem::SHOT_SPEED_POWERUP:
           return_value = ReturnValue::BUY_SHOT_SPEED_POWERUP;
+          break;
+        default:
           break;
       }
       mouse_click = false;

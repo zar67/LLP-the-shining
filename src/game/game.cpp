@@ -160,8 +160,8 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
 {
   auto click = static_cast<const ASGE::ClickEvent*>(data.get());
 
-  double x_pos = click->xpos;
-  double y_pos = click->ypos;
+  //double x_pos = click->xpos;
+  //double y_pos = click->ypos;
 }
 
 /**
@@ -199,6 +199,8 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
         break;
+      default:
+        break;
     }
   }
 }
@@ -220,6 +222,4 @@ void MyASGEGame::render(const ASGE::GameTime&)
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
   }
-
-  // scene_manager.render(renderer.get(), 1, 10, 50);
 }

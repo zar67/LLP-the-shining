@@ -30,6 +30,6 @@ bool Scene::isInside(ASGE::Sprite* btn, Point2D point)
 {
   auto bbox = btn->getGlobalBounds();
 
-  return (point.x >= bbox.v1.x && point.x <= bbox.v2.x &&
-          point.y >= bbox.v1.y && point.y <= bbox.v3.y);
+  return point.x >= bbox.v1.x && point.x <= bbox.v2.x && point.y >= bbox.v1.y &&
+         point.y <= bbox.v3.y;
 }
