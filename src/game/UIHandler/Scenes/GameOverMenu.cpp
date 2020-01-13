@@ -9,6 +9,9 @@ GameOverMenu::~GameOverMenu()
   delete game_over_title;
   game_over_title = nullptr;
 
+  delete game_won_title;
+  game_won_title = nullptr;
+
   delete start_game;
   start_game = nullptr;
 
@@ -29,6 +32,17 @@ bool GameOverMenu::init(ASGE::Renderer* renderer,
   game_over_title = renderer->createRawSprite();
   if (!setupSprite(*game_over_title,
                    "data/UI/GameOverTitle.png",
+                   game_width / 2 - 200,
+                   38,
+                   400,
+                   100))
+  {
+    return false;
+  }
+
+  game_won_title = renderer->createRawSprite();
+  if (!setupSprite(*game_won_title,
+                   "data/UI/GameWonTitle.png",
                    game_width / 2 - 200,
                    38,
                    400,
@@ -105,9 +119,17 @@ GameOverMenu::MenuItem GameOverMenu::update(Point2D point)
   return mouse_over;
 }
 
-void GameOverMenu::render(ASGE::Renderer* renderer)
+void GameOverMenu::render(ASGE::Renderer* renderer, bool game_won)
 {
-  renderer->renderSprite(*game_over_title);
+  if (game_won)
+  {
+    renderer->renderSprite(*game_won_title);
+  }
+  else
+  {
+    renderer->renderSprite(*game_over_title);
+  }
+
   renderer->renderSprite(*start_game);
   renderer->renderSprite(*open_shop);
   renderer->renderSprite(*open_menu);

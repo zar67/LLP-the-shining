@@ -33,9 +33,7 @@ set(SOURCE_FILES
         game/UIHandler/Scenes/MainMenu.cpp
         game/UIHandler/Scenes/GameOverMenu.cpp
         game/UIHandler/Scenes/ShopMenu.cpp
-        game/UIHandler/Scenes/GameScene.cpp
-        game/UIHandler/Scenes/GameWonMenu.cpp
-        )
+        game/UIHandler/Scenes/GameScene.cpp)
 
 set(HEADER_FILES
         "game/game.h"
@@ -55,8 +53,7 @@ set(HEADER_FILES
         game/UIHandler/Scenes/MainMenu.h
         game/UIHandler/Scenes/ShopMenu.h
         game/UIHandler/Scenes/GameOverMenu.h
-        game/UIHandler/Scenes/GameScene.h
-        game/UIHandler/Scenes/GameWonMenu.h)
+        game/UIHandler/Scenes/GameScene.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

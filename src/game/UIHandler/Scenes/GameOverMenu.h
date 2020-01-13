@@ -26,7 +26,7 @@ class GameOverMenu : public Scene
   bool
   init(ASGE::Renderer* renderer, float game_width, float game_height) override;
   MenuItem update(Point2D point);
-  void render(ASGE::Renderer* renderer) override;
+  void render(ASGE::Renderer* renderer, bool game_won);
 
  private:
   MenuItem menuItem(Point2D point);
@@ -34,6 +34,7 @@ class GameOverMenu : public Scene
 
   // Sprites
   ASGE::Sprite* game_over_title = nullptr;
+  ASGE::Sprite* game_won_title = nullptr;
   ASGE::Sprite* start_game = nullptr;
   ASGE::Sprite* open_shop = nullptr;
   ASGE::Sprite* open_menu = nullptr;

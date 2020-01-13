@@ -7,7 +7,6 @@
 
 #include "Scenes/GameOverMenu.h"
 #include "Scenes/GameScene.h"
-#include "Scenes/GameWonMenu.h"
 #include "Scenes/MainMenu.h"
 #include "Scenes/ShopMenu.h"
 #include <Engine/GameTime.h>
@@ -71,11 +70,10 @@ class SceneManager
   GameScene game_scene;
   ShopMenu shop_menu;
   GameOverMenu game_over_menu;
-  GameWonMenu game_won_menu;
+
+  ScreenOpen screen_open = MAIN_MENU;
 
   ASGE::Sprite* cursor = nullptr;
-
-  ScreenOpen screen_open = GAME_WON;
 
   Point2D mouse_pos;
   bool mouse_click = false;

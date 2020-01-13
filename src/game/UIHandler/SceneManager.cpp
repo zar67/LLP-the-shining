@@ -69,12 +69,7 @@ bool SceneManager::init(ASGE::Input* input,
     return false;
   }
 
-  if (!game_over_menu.init(renderer, game_width, game_height))
-  {
-    return false;
-  }
-
-  return game_won_menu.init(renderer, game_width, game_height);
+  return game_over_menu.init(renderer, game_width, game_height);
 }
 
 SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
@@ -137,7 +132,8 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
     }
   }
 
-  if (screen_open == ScreenOpen::GAME_OVER)
+  if (screen_open == ScreenOpen::GAME_OVER ||
+      screen_open == ScreenOpen::GAME_WON)
   {
     GameOverMenu::MenuItem game_over_item = game_over_menu.update(mouse_pos);
     if (mouse_click)
@@ -155,33 +151,6 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
           screen_open = ScreenOpen::MAIN_MENU;
           break;
         case GameOverMenu::MenuItem::EXIT_GAME:
-          return_value = ReturnValue::EXIT_GAME;
-          break;
-        default:
-          break;
-      }
-      mouse_click = false;
-    }
-  }
-
-  if (screen_open == ScreenOpen::GAME_WON)
-  {
-    GameWonMenu::MenuItem game_won_item = game_won_menu.update(mouse_pos);
-    if (mouse_click)
-    {
-      switch (game_won_item)
-      {
-        case GameWonMenu::MenuItem::START_GAME:
-          screen_open = ScreenOpen::GAME;
-          return_value = ReturnValue::START_GAME;
-          break;
-        case GameWonMenu::MenuItem::OPEN_SHOP:
-          screen_open = ScreenOpen::SHOP;
-          break;
-        case GameWonMenu::MenuItem::MAIN_MENU:
-          screen_open = ScreenOpen::MAIN_MENU;
-          break;
-        case GameWonMenu::MenuItem::EXIT_GAME:
           return_value = ReturnValue::EXIT_GAME;
           break;
         default:
@@ -212,13 +181,10 @@ void SceneManager::render(ASGE::Renderer* renderer,
   {
     game_scene.render(renderer, floor, coins, health, abilities);
   }
-  else if (screen_open == ScreenOpen::GAME_OVER)
+  else if (screen_open == ScreenOpen::GAME_OVER ||
+           screen_open == ScreenOpen::GAME_WON)
   {
-    game_over_menu.render(renderer);
-  }
-  else if (screen_open == ScreenOpen::GAME_WON)
-  {
-    game_won_menu.render(renderer);
+    game_over_menu.render(renderer, screen_open == ScreenOpen::GAME_WON);
   }
 
   if (screen_open != ScreenOpen::GAME)
