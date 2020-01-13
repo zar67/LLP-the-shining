@@ -151,13 +151,53 @@ void ShopMenu::render(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*shop_title);
 
-  renderer->renderSprite(*damage_powerup);
-  renderer->renderSprite(*health_powerup);
-  renderer->renderSprite(*move_speed_powerup);
-  renderer->renderSprite(*shot_size_powerup);
-  renderer->renderSprite(*shot_speed_powerup);
+  if (render_damage)
+  {
+    renderer->renderSprite(*damage_powerup);
+  }
+  if (render_health)
+  {
+    renderer->renderSprite(*health_powerup);
+  }
+  if (render_move_speed)
+  {
+    renderer->renderSprite(*move_speed_powerup);
+  }
+  if (render_shot_size)
+  {
+    renderer->renderSprite(*shot_size_powerup);
+  }
+  if (render_shot_speed)
+  {
+    renderer->renderSprite(*shot_speed_powerup);
+  }
 
   renderer->renderSprite(*open_main_menu);
+}
+
+void ShopMenu::disableDamage()
+{
+  render_damage = false;
+}
+
+void ShopMenu::disableHealth()
+{
+  render_health = false;
+}
+
+void ShopMenu::disableMoveSpeed()
+{
+  render_move_speed = false;
+}
+
+void ShopMenu::disableShotSize()
+{
+  render_shot_size = false;
+}
+
+void ShopMenu::disableShotSpeed()
+{
+  render_shot_speed = false;
 }
 
 ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
@@ -166,23 +206,23 @@ ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
   {
     return MenuItem::OPEN_MAIN_MENU;
   }
-  else if (isInside(damage_powerup, point) && render_damage_powerup)
+  else if (isInside(damage_powerup, point) && render_damage)
   {
     return MenuItem::DAMAGE_POWERUP;
   }
-  else if (isInside(health_powerup, point) && render_health_powerup)
+  else if (isInside(health_powerup, point) && render_health)
   {
     return MenuItem::HEALTH_POWERUP;
   }
-  else if (isInside(move_speed_powerup, point) && render_move_speed_powerup)
+  else if (isInside(move_speed_powerup, point) && render_move_speed)
   {
     return MenuItem::MOVE_SPEED_POWERUP;
   }
-  else if (isInside(shot_size_powerup, point) && render_shot_size_powerup)
+  else if (isInside(shot_size_powerup, point) && render_shot_size)
   {
     return MenuItem::SHOT_SIZE_POWERUP;
   }
-  else if (isInside(shot_speed_powerup, point) && render_shot_speed_powerup)
+  else if (isInside(shot_speed_powerup, point) && render_shot_speed)
   {
     return MenuItem::SHOT_SPEED_POWERUP;
   }

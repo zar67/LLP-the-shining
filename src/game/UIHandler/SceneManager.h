@@ -5,6 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_SCENEMANAGER_H
 #define THE_SHINING_GAME_GROUP_3_SCENEMANAGER_H
 
+#include "GameOver.h"
 #include "MainMenu.h"
 #include "ShopMenu.h"
 #include <Engine/GameTime.h>
@@ -49,15 +50,22 @@ class SceneManager
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
 
+  void hideDamagePowerup();
+  void hideHealthPowerup();
+  void hideMoveSpeedPowerup();
+  void hideShotSizePowerup();
+  void hideShotSpeedPowerup();
+
  private:
   void mouseHandler(ASGE::SharedEventData data);
   void clickHandler(ASGE::SharedEventData data);
 
   MainMenu main_menu;
   ShopMenu shop_menu;
+  GameOver game_over_menu;
 
   ASGE::Sprite* cursor = nullptr;
-  ScreenOpen screen_open = MAIN_MENU;
+  ScreenOpen screen_open = GAME_OVER;
 
   Point2D mouse_pos;
   bool mouse_click = false;

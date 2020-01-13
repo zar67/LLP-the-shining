@@ -30,6 +30,12 @@ class ShopMenu : public Scene
   MenuItem update(Point2D point);
   void render(ASGE::Renderer* renderer) override;
 
+  void disableDamage();
+  void disableHealth();
+  void disableMoveSpeed();
+  void disableShotSize();
+  void disableShotSpeed();
+
  private:
   MenuItem menuItem(Point2D point);
   void resetOpacity() override;
@@ -43,11 +49,11 @@ class ShopMenu : public Scene
   ASGE::Sprite* shot_speed_powerup = nullptr;
   ASGE::Sprite* open_main_menu = nullptr;
 
-  bool render_damage_powerup = true;
-  bool render_health_powerup = true;
-  bool render_move_speed_powerup = true;
-  bool render_shot_size_powerup = true;
-  bool render_shot_speed_powerup = true;
+  bool render_damage = true;
+  bool render_health = true;
+  bool render_move_speed = true;
+  bool render_shot_size = true;
+  bool render_shot_speed = true;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_SHOPMENU_H

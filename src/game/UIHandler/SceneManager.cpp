@@ -64,7 +64,7 @@ bool SceneManager::init(ASGE::Input* input,
     return false;
   }
 
-  return true;
+  return game_over_menu.init(renderer, game_width, game_height);
 }
 
 SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
@@ -127,6 +127,33 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
     }
   }
 
+  if (screen_open == ScreenOpen::GAME_OVER)
+  {
+    GameOver::MenuItem game_over_item = game_over_menu.update(mouse_pos);
+    if (mouse_click)
+    {
+      switch (game_over_item)
+      {
+        case GameOver::MenuItem::START_GAME:
+          screen_open = ScreenOpen::GAME;
+          return_value = ReturnValue::START_GAME;
+          break;
+        case GameOver::MenuItem::OPEN_SHOP:
+          screen_open = ScreenOpen::SHOP;
+          break;
+        case GameOver::MenuItem::MAIN_MENU:
+          screen_open = ScreenOpen::MAIN_MENU;
+          break;
+        case GameOver::MenuItem::EXIT_GAME:
+          return_value = ReturnValue::EXIT_GAME;
+          break;
+        default:
+          break;
+      }
+      mouse_click = false;
+    }
+  }
+
   return return_value;
 }
 
@@ -139,6 +166,10 @@ void SceneManager::render(ASGE::Renderer* renderer)
   else if (screen_open == ScreenOpen::SHOP)
   {
     shop_menu.render(renderer);
+  }
+  else if (screen_open == ScreenOpen::GAME_OVER)
+  {
+    game_over_menu.render(renderer);
   }
 
   if (screen_open != ScreenOpen::GAME)
@@ -155,6 +186,31 @@ SceneManager::ScreenOpen SceneManager::screenOpen()
 void SceneManager::screenOpen(SceneManager::ScreenOpen screen)
 {
   screen_open = screen;
+}
+
+void SceneManager::hideDamagePowerup()
+{
+  shop_menu.disableDamage();
+}
+
+void SceneManager::hideHealthPowerup()
+{
+  shop_menu.disableHealth();
+}
+
+void SceneManager::hideMoveSpeedPowerup()
+{
+  shop_menu.disableMoveSpeed();
+}
+
+void SceneManager::hideShotSizePowerup()
+{
+  shop_menu.disableShotSize();
+}
+
+void SceneManager::hideShotSpeedPowerup()
+{
+  shop_menu.disableShotSpeed();
 }
 
 void SceneManager::mouseHandler(ASGE::SharedEventData data)

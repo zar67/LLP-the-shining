@@ -160,8 +160,11 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
 {
   auto click = static_cast<const ASGE::ClickEvent*>(data.get());
 
-  //double x_pos = click->xpos;
-  //double y_pos = click->ypos;
+  double x_pos = click->xpos;
+  double y_pos = click->ypos;
+
+  ASGE::DebugPrinter() << x_pos << std::endl;
+  ASGE::DebugPrinter() << y_pos << std::endl;
 }
 
 /**
@@ -190,14 +193,19 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         signalExit();
         break;
       case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
+        scene_handler.hideDamagePowerup();
         break;
       case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
+        scene_handler.hideHealthPowerup();
         break;
       case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
+        scene_handler.hideMoveSpeedPowerup();
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
+        scene_handler.hideShotSizePowerup();
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
+        scene_handler.hideShotSpeedPowerup();
         break;
       default:
         break;

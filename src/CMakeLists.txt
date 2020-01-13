@@ -48,7 +48,7 @@ set(HEADER_FILES
         game/SceneObjects/Enemies/AxePsycho.h
         game/SceneHandler/GameOverMenu.h
         game/UIHandler/Scene.h
-        game/UIHandler/MainMenu.h game/UIHandler/SceneManager.cpp game/UIHandler/SceneManager.h game/UIHandler/ShopMenu.cpp game/UIHandler/ShopMenu.h)
+        game/UIHandler/MainMenu.h game/UIHandler/SceneManager.cpp game/UIHandler/SceneManager.h game/UIHandler/ShopMenu.cpp game/UIHandler/ShopMenu.h game/UIHandler/GameOver.cpp game/UIHandler/GameOver.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
