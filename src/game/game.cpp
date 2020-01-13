@@ -223,11 +223,13 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
-  scene_handler.render(renderer.get());
 
   if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
   }
+
+  bool abilities[5] = { true, true, true, true, true };
+  scene_handler.render(renderer.get(), 1, 10, 50, abilities);
 }

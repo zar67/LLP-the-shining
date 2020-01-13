@@ -24,8 +24,7 @@ bool MainMenu::init(ASGE::Renderer* renderer,
                     float game_height)
 {
   menu_title = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *menu_title,
+  if (!setupSprite(*menu_title,
                    "data/UI/MenuTitle.png",
                    game_width / 2 - 200,
                    38,
@@ -36,8 +35,7 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   }
 
   start_game = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *start_game,
+  if (!setupSprite(*start_game,
                    "data/UI/MenuButtons/StartButton.png",
                    game_width / 2 - 60,
                    175,
@@ -48,8 +46,7 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   }
 
   open_shop = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *open_shop,
+  if (!setupSprite(*open_shop,
                    "data/UI/MenuButtons/ShopButton.png",
                    game_width / 2 - 60,
                    225,
@@ -60,8 +57,7 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   }
 
   exit_game = renderer->createRawSprite();
-  return setupSprite(renderer,
-                     *exit_game,
+  return setupSprite(*exit_game,
                      "data/UI/MenuButtons/ExitButton.png",
                      game_width / 2 - 60,
                      275,

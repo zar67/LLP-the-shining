@@ -25,8 +25,7 @@ class Scene
   virtual void render(ASGE::Renderer* renderer){};
 
  protected:
-  bool setupSprite(ASGE::Renderer* renderer,
-                   ASGE::Sprite& sprite,
+  bool setupSprite(ASGE::Sprite& sprite,
                    std::string texture,
                    float x_pos,
                    float y_pos,

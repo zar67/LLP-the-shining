@@ -5,7 +5,8 @@
 #ifndef THE_SHINING_GAME_GROUP_3_SCENEMANAGER_H
 #define THE_SHINING_GAME_GROUP_3_SCENEMANAGER_H
 
-#include "GameOver.h"
+#include "GameOverMenu.h"
+#include "GameScene.h"
 #include "MainMenu.h"
 #include "ShopMenu.h"
 #include <Engine/GameTime.h>
@@ -45,7 +46,11 @@ class SceneManager
             float game_width,
             float game_height);
   ReturnValue update(const ASGE::GameTime& game_time);
-  void render(ASGE::Renderer* renderer);
+  void render(ASGE::Renderer* renderer,
+              int floor,
+              int coins,
+              int health,
+              bool (&abilities)[5]);
 
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
@@ -61,11 +66,13 @@ class SceneManager
   void clickHandler(ASGE::SharedEventData data);
 
   MainMenu main_menu;
+  GameScene game_scene;
   ShopMenu shop_menu;
-  GameOver game_over_menu;
+  GameOverMenu game_over_menu;
 
   ASGE::Sprite* cursor = nullptr;
-  ScreenOpen screen_open = GAME_OVER;
+
+  ScreenOpen screen_open = MAIN_MENU;
 
   Point2D mouse_pos;
   bool mouse_click = false;

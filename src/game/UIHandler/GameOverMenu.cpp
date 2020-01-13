@@ -2,9 +2,9 @@
 // Created by Zoe on 13/01/2020.
 //
 
-#include "GameOver.h"
+#include "GameOverMenu.h"
 
-GameOver::~GameOver()
+GameOverMenu::~GameOverMenu()
 {
   delete game_over_title;
   game_over_title = nullptr;
@@ -22,13 +22,12 @@ GameOver::~GameOver()
   exit_game = nullptr;
 }
 
-bool GameOver::init(ASGE::Renderer* renderer,
-                    float game_width,
-                    float game_height)
+bool GameOverMenu::init(ASGE::Renderer* renderer,
+                        float game_width,
+                        float game_height)
 {
   game_over_title = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *game_over_title,
+  if (!setupSprite(*game_over_title,
                    "data/UI/GameOverTitle.png",
                    game_width / 2 - 200,
                    38,
@@ -39,8 +38,7 @@ bool GameOver::init(ASGE::Renderer* renderer,
   }
 
   start_game = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *start_game,
+  if (!setupSprite(*start_game,
                    "data/UI/MenuButtons/StartButton.png",
                    game_width / 2 - 60,
                    175,
@@ -51,8 +49,7 @@ bool GameOver::init(ASGE::Renderer* renderer,
   }
 
   open_shop = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *open_shop,
+  if (!setupSprite(*open_shop,
                    "data/UI/MenuButtons/ShopButton.png",
                    game_width / 2 - 60,
                    225,
@@ -63,8 +60,7 @@ bool GameOver::init(ASGE::Renderer* renderer,
   }
 
   open_menu = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *open_menu,
+  if (!setupSprite(*open_menu,
                    "data/UI/MenuButtons/MenuButton.png",
                    game_width / 2 - 60,
                    275,
@@ -75,8 +71,7 @@ bool GameOver::init(ASGE::Renderer* renderer,
   }
 
   exit_game = renderer->createRawSprite();
-  return setupSprite(renderer,
-                     *exit_game,
+  return setupSprite(*exit_game,
                      "data/UI/MenuButtons/ExitButton.png",
                      game_width / 2 - 60,
                      325,
@@ -84,7 +79,7 @@ bool GameOver::init(ASGE::Renderer* renderer,
                      30);
 }
 
-GameOver::MenuItem GameOver::update(Point2D point)
+GameOverMenu::MenuItem GameOverMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
 
@@ -110,7 +105,7 @@ GameOver::MenuItem GameOver::update(Point2D point)
   return mouse_over;
 }
 
-void GameOver::render(ASGE::Renderer* renderer)
+void GameOverMenu::render(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*game_over_title);
   renderer->renderSprite(*start_game);
@@ -119,7 +114,7 @@ void GameOver::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*exit_game);
 }
 
-GameOver::MenuItem GameOver::menuItem(Point2D point)
+GameOverMenu::MenuItem GameOverMenu::menuItem(Point2D point)
 {
   if (isInside(start_game, point))
   {
@@ -141,7 +136,7 @@ GameOver::MenuItem GameOver::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
-void GameOver::resetOpacity()
+void GameOverMenu::resetOpacity()
 {
   start_game->opacity(0.5f);
   open_shop->opacity(0.5f);

@@ -34,8 +34,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
                     float game_height)
 {
   shop_title = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *shop_title,
+  if (!setupSprite(*shop_title,
                    "data/UI/ShopTitle.png",
                    game_width / 2 - 200,
                    38,
@@ -46,8 +45,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   damage_powerup = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *damage_powerup,
+  if (!setupSprite(*damage_powerup,
                    "data/UI/Shop/DamagePowerup.png",
                    42,
                    game_height / 2 - 50,
@@ -58,8 +56,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   health_powerup = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *health_powerup,
+  if (!setupSprite(*health_powerup,
                    "data/UI/Shop/HealthPowerup.png",
                    172,
                    game_height / 2 - 50,
@@ -70,8 +67,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   move_speed_powerup = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *move_speed_powerup,
+  if (!setupSprite(*move_speed_powerup,
                    "data/UI/Shop/MoveSpeedPowerup.png",
                    302,
                    game_height / 2 - 50,
@@ -82,8 +78,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   shot_size_powerup = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *shot_size_powerup,
+  if (!setupSprite(*shot_size_powerup,
                    "data/UI/Shop/ShotSizePowerup.png",
                    432,
                    game_height / 2 - 50,
@@ -94,8 +89,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   shot_speed_powerup = renderer->createRawSprite();
-  if (!setupSprite(renderer,
-                   *shot_speed_powerup,
+  if (!setupSprite(*shot_speed_powerup,
                    "data/UI/Shop/ShotSpeedPowerup.png",
                    562,
                    game_height / 2 - 50,
@@ -106,8 +100,7 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   }
 
   open_main_menu = renderer->createRawSprite();
-  return setupSprite(renderer,
-                     *open_main_menu,
+  return setupSprite(*open_main_menu,
                      "data/UI/MenuButtons/MenuButton.png",
                      game_width / 2 - 60,
                      game_height - 50,

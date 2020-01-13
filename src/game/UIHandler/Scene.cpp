@@ -4,16 +4,13 @@
 
 #include "Scene.h"
 
-bool Scene::setupSprite(ASGE::Renderer* renderer,
-                        ASGE::Sprite& sprite,
+bool Scene::setupSprite(ASGE::Sprite& sprite,
                         std::string texture,
                         float x_pos,
                         float y_pos,
                         float width,
                         float height)
 {
-  sprite = *renderer->createRawSprite();
-
   if (sprite.loadTexture(texture))
   {
     sprite.xPos(x_pos);

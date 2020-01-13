@@ -59,6 +59,11 @@ bool SceneManager::init(ASGE::Input* input,
     return false;
   }
 
+  if (!game_scene.init(renderer, game_width, game_height))
+  {
+    return false;
+  }
+
   if (!shop_menu.init(renderer, game_width, game_height))
   {
     return false;
@@ -129,22 +134,22 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
 
   if (screen_open == ScreenOpen::GAME_OVER)
   {
-    GameOver::MenuItem game_over_item = game_over_menu.update(mouse_pos);
+    GameOverMenu::MenuItem game_over_item = game_over_menu.update(mouse_pos);
     if (mouse_click)
     {
       switch (game_over_item)
       {
-        case GameOver::MenuItem::START_GAME:
+        case GameOverMenu::MenuItem::START_GAME:
           screen_open = ScreenOpen::GAME;
           return_value = ReturnValue::START_GAME;
           break;
-        case GameOver::MenuItem::OPEN_SHOP:
+        case GameOverMenu::MenuItem::OPEN_SHOP:
           screen_open = ScreenOpen::SHOP;
           break;
-        case GameOver::MenuItem::MAIN_MENU:
+        case GameOverMenu::MenuItem::MAIN_MENU:
           screen_open = ScreenOpen::MAIN_MENU;
           break;
-        case GameOver::MenuItem::EXIT_GAME:
+        case GameOverMenu::MenuItem::EXIT_GAME:
           return_value = ReturnValue::EXIT_GAME;
           break;
         default:
@@ -157,7 +162,11 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
   return return_value;
 }
 
-void SceneManager::render(ASGE::Renderer* renderer)
+void SceneManager::render(ASGE::Renderer* renderer,
+                          int floor,
+                          int coins,
+                          int health,
+                          bool (&abilities)[5])
 {
   if (screen_open == ScreenOpen::MAIN_MENU)
   {
@@ -170,6 +179,10 @@ void SceneManager::render(ASGE::Renderer* renderer)
   else if (screen_open == ScreenOpen::GAME_OVER)
   {
     game_over_menu.render(renderer);
+  }
+  else if (screen_open == ScreenOpen::GAME)
+  {
+    game_scene.render(renderer, floor, coins, health, abilities);
   }
 
   if (screen_open != ScreenOpen::GAME)
