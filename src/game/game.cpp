@@ -67,11 +67,6 @@ bool MyASGEGame::init()
     return false;
   }
 
-  if (!item1.setUpItems(renderer.get()))
-  {
-    return false;
-  }
-
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
