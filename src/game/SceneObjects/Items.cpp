@@ -3,10 +3,12 @@
 //
 
 #include "Items.h"
+#include "../Components/CollisionComponent.h"
+#include <Engine/OGLGame.h>
+
 bool Items::hasCollidedWithPlayer()
 {
-  // has the player collided with the item
-  // if yes return true
+  Item.collisionComponent()->hasCollided(Item.collisionComponent());
 
   return false;
 }
@@ -20,7 +22,18 @@ float Items::itemEffect()
   // if it has then apply the items effect eg damage up or health up etc
   return 0;
 }
-void Items::setUpItems()
+bool Items::setUpItems(ASGE::Renderer* renderer)
 {
   // set up all the items
+  Item.addSpriteComponent(renderer, "data/Items/Item1.PNG");
+  Item.addCollisionComponenet();
+
+  Item.spriteComponent()->getSprite()->width(32);
+  Item.spriteComponent()->getSprite()->height(32);
+
+  return true;
+}
+void Items::renderItem(ASGE::Renderer* renderer)
+{
+  renderer->renderSprite(*Item.spriteComponent()->getSprite());
 }

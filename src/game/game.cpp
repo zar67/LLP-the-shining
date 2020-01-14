@@ -67,6 +67,11 @@ bool MyASGEGame::init()
     return false;
   }
 
+  if (!item1.setUpItems(renderer.get()))
+  {
+    return false;
+  }
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -178,6 +183,7 @@ void MyASGEGame::render(const ASGE::GameTime&)
 
   map.renderCurrentRoom(renderer.get());
   map.renderMiniMap(renderer.get());
+  item1.renderItem(renderer.get());
 
   if (in_menu)
   {

@@ -5,18 +5,22 @@
 #ifndef THE_SHINING_GAME_GROUP_3_ITEMS_H
 #define THE_SHINING_GAME_GROUP_3_ITEMS_H
 
+#include "GameObject.h"
 #include "string"
+#include <Engine/OGLGame.h>
 
-class Items
+class Items : GameObject
 {
  public:
   bool hasCollidedWithPlayer();
   void hasPickedUpItem();
   float itemEffect();
-  void setUpItems();
+  bool setUpItems(ASGE::Renderer* renderer);
+  void renderItem(ASGE::Renderer* renderer);
 
  private:
   bool visibility = true;
+  GameObject Item;
   std::string item_Name = "";
 };
 

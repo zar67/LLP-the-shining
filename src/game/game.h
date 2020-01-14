@@ -1,5 +1,6 @@
 #pragma once
 #include "../map/Map.h"
+#include "SceneObjects/Items.h"
 #include <Engine/OGLGame.h>
 #include <string>
 
@@ -22,6 +23,7 @@ class MyASGEGame : public ASGE::OGLGame
   void render(const ASGE::GameTime&) override;
 
   Map map = Map();
+  Items item1;
 
   int key_callback_id = -1;   /**< Key Input Callback ID. */
   int mouse_callback_id = -1; /**< Mouse Input Callback ID. */
