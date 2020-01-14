@@ -42,6 +42,11 @@ bool SceneManager::init(ASGE::Input* input,
                         float game_width,
                         float game_height)
 {
+  if (input->getGamePad(0).is_connected)
+  {
+    controller_connected = true;
+  }
+
   enableInputs(input);
 
   cursor = renderer->createRawSprite();
@@ -49,10 +54,12 @@ bool SceneManager::init(ASGE::Input* input,
   {
     return false;
   }
-  cursor->xPos(0);
-  cursor->yPos(0);
+  cursor->xPos(game_width / 2 - 5);
+  cursor->yPos(151.5);
   cursor->width(10);
   cursor->height(10);
+
+  cursor_pos = { cursor->xPos(), cursor->yPos() };
 
   if (!main_menu.init(renderer, game_width, game_height))
   {
@@ -72,14 +79,16 @@ bool SceneManager::init(ASGE::Input* input,
   return game_over_menu.init(renderer, game_width, game_height);
 }
 
-SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
+SceneManager::ReturnValue
+SceneManager::update(double delta_time, ASGE::Input* input)
 {
   ReturnValue return_value = ReturnValue::NONE;
+  controllerHandler(delta_time, input);
 
   if (screen_open == ScreenOpen::MAIN_MENU)
   {
-    MainMenu::MenuItem main_menu_item = main_menu.update(mouse_pos);
-    if (mouse_click)
+    MainMenu::MenuItem main_menu_item = main_menu.update(cursor_pos);
+    if (selected_pressed)
     {
       switch (main_menu_item)
       {
@@ -96,14 +105,14 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
         default:
           break;
       }
-      mouse_click = false;
+      selected_pressed = false;
     }
   }
 
   if (screen_open == ScreenOpen::SHOP)
   {
-    ShopMenu::MenuItem shop_menu_item = shop_menu.update(mouse_pos);
-    if (mouse_click)
+    ShopMenu::MenuItem shop_menu_item = shop_menu.update(cursor_pos);
+    if (selected_pressed)
     {
       switch (shop_menu_item)
       {
@@ -128,15 +137,15 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
         default:
           break;
       }
-      mouse_click = false;
+      selected_pressed = false;
     }
   }
 
   if (screen_open == ScreenOpen::GAME_OVER ||
       screen_open == ScreenOpen::GAME_WON)
   {
-    GameOverMenu::MenuItem game_over_item = game_over_menu.update(mouse_pos);
-    if (mouse_click)
+    GameOverMenu::MenuItem game_over_item = game_over_menu.update(cursor_pos);
+    if (selected_pressed)
     {
       switch (game_over_item)
       {
@@ -156,7 +165,7 @@ SceneManager::ReturnValue SceneManager::update(const ASGE::GameTime& game_time)
         default:
           break;
       }
-      mouse_click = false;
+      selected_pressed = false;
     }
   }
 
@@ -230,20 +239,57 @@ void SceneManager::hideShotSpeedPowerup()
 
 void SceneManager::mouseHandler(ASGE::SharedEventData data)
 {
-  auto event = static_cast<const ASGE::MoveEvent*>(data.get());
-  mouse_pos = { float(event->xpos), float(event->ypos) };
+  if (!controller_connected)
+  {
+    auto event = static_cast<const ASGE::MoveEvent*>(data.get());
+    cursor_pos = { float(event->xpos), float(event->ypos) };
 
-  cursor->xPos(mouse_pos.x - cursor->width() / 2);
-  cursor->yPos(mouse_pos.y - cursor->height() / 2);
+    cursor->xPos(cursor_pos.x - cursor->width() / 2);
+    cursor->yPos(cursor_pos.y - cursor->height() / 2);
+  }
 }
 
 void SceneManager::clickHandler(ASGE::SharedEventData data)
 {
-  auto event = static_cast<const ASGE::ClickEvent*>(data.get());
-  mouse_pos = { float(event->xpos), float(event->ypos) };
-
-  if (event->action == ASGE::MOUSE::BUTTON_RELEASED)
+  if (!controller_connected)
   {
-    mouse_click = true;
+    auto event = static_cast<const ASGE::ClickEvent*>(data.get());
+    cursor_pos = { float(event->xpos), float(event->ypos) };
+
+    if (event->action == ASGE::MOUSE::BUTTON_RELEASED)
+    {
+      selected_pressed = true;
+    }
+  }
+}
+
+void SceneManager::controllerHandler(double delta_time, ASGE::Input* input)
+{
+  if (input->getGamePad(0).is_connected)
+  {
+    controller_connected = true;
+    ASGE::GamePadData data = input->getGamePad(0);
+
+    cursor_pos.x += data.axis[0] * delta_time * 300;
+    cursor_pos.y -= data.axis[1] * delta_time * 300;
+
+    cursor->xPos(cursor_pos.x);
+    cursor->yPos(cursor_pos.y);
+
+    if (!already_pressed && data.buttons[0])
+    {
+      selected_pressed = true;
+      already_pressed = true;
+    }
+
+    if (!data.buttons[0])
+    {
+      selected_pressed = false;
+      already_pressed = false;
+    }
+  }
+  else
+  {
+    controller_connected = false;
   }
 }
