@@ -8,8 +8,6 @@
 
 bool Items::hasCollidedWithPlayer()
 {
-  Item.collisionComponent()->hasCollided(Item.collisionComponent());
-
   return false;
 }
 void Items::hasPickedUpItem()
@@ -26,8 +24,6 @@ bool Items::setUpItems(ASGE::Renderer* renderer)
 {
   // set up all the items
   Item.addSpriteComponent(renderer, "data/Items/Item1.PNG");
-  Item.addCollisionComponenet();
-
   Item.spriteComponent()->getSprite()->width(32);
   Item.spriteComponent()->getSprite()->height(32);
 
