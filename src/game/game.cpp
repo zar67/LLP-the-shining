@@ -173,7 +173,8 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   }
   else
   {
-    SceneManager::ReturnValue return_value = scene_handler.update(game_time);
+    SceneManager::ReturnValue return_value =
+      scene_handler.update(delta_time, inputs.get());
     switch (return_value)
     {
       case SceneManager::ReturnValue::START_GAME:

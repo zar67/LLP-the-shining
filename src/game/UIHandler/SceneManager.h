@@ -46,7 +46,7 @@ class SceneManager
             ASGE::Renderer* renderer,
             float game_width,
             float game_height);
-  ReturnValue update(const ASGE::GameTime& game_time);
+  ReturnValue update(double delta_time, ASGE::Input* input);
   void render(ASGE::Renderer* renderer,
               int floor,
               int coins,
@@ -65,6 +65,7 @@ class SceneManager
  private:
   void mouseHandler(ASGE::SharedEventData data);
   void clickHandler(ASGE::SharedEventData data);
+  void controllerHandler(double delta_time, ASGE::Input* input);
 
   MainMenu main_menu;
   GameScene game_scene;
@@ -75,8 +76,10 @@ class SceneManager
 
   ASGE::Sprite* cursor = nullptr;
 
-  Point2D mouse_pos;
-  bool mouse_click = false;
+  bool controller_connected = false;
+  Point2D cursor_pos;
+  bool selected_pressed = false;
+  bool already_pressed = false;
   int mouse_handler_idx = -1;
   int mouse_click_handle = -1;
 };
