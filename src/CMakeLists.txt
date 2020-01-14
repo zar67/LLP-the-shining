@@ -36,6 +36,7 @@ set(SOURCE_FILES
         game/UIHandler/Scenes/GameScene.cpp)
 
 set(HEADER_FILES
+"game/game.h" map/Room.cpp map/Room.h map/Map.cpp map/Map.h "game/game.h" game/SceneObjects/GameObject.cpp game/SceneObjects/GameObject.h game/Components/SpriteComponent.cpp game/Components/SpriteComponent.h game/Components/CollisionComponent.cpp game/Components/CollisionComponent.h game/SceneObjects/Player.cpp game/SceneObjects/Player.h game/SceneObjects/Enemies/Enemy.cpp game/SceneObjects/Enemies/Enemy.h game/SceneObjects/Enemies/Demon.cpp game/SceneObjects/Enemies/Demon.h game/SceneObjects/Projectile.cpp game/SceneObjects/Projectile.h game/SceneObjects/Enemies/Ghost.cpp game/SceneObjects/Enemies/Ghost.h game/SceneObjects/Enemies/AxePsycho.cpp game/SceneObjects/Enemies/AxePsycho.h game/Components/ShootingComponent.cpp game/Components/ShootingComponent.h)
         "game/game.h"
         map/Room.h
         map/Map.h

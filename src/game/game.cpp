@@ -67,6 +67,13 @@ bool MyASGEGame::init()
     return false;
   }
 
+  player.init(renderer.get(),
+              "/data/Characters/Demon.png",
+              player_x,
+              player_y,
+              50.0f,
+              50.0f);
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -133,6 +140,13 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
   }
+  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    map.getCurrentRoom()->removeGhostFromRoom(0);
+  }
+
+  // player movement
+  playerInput(data);
 }
 
 /**
@@ -167,7 +181,9 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
   double delta_time = game_time.delta.count() / 1000.0;
 
-  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
+  map.updateCurrentRoom(delta_time, player_x, player_y);
+
+  if (!in_menu)
   {
     map.updateCurrentRoom(delta_time, player_x, player_y);
   }
@@ -215,7 +231,10 @@ void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
 
-  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
+  map.renderCurrentRoom(renderer.get());
+  map.renderMiniMap(renderer.get());
+
+  if (in_menu)
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
@@ -223,4 +242,59 @@ void MyASGEGame::render(const ASGE::GameTime&)
 
   bool abilities[5] = { true, true, true, true, true };
   scene_handler.render(renderer.get(), 1, 10, 50, abilities);
+}
+
+void MyASGEGame::playerInput(ASGE::SharedEventData data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  // vertical movement
+  if (key->key == ASGE::KEYS::KEY_DOWN &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[1] = 1.0f;
+    player.weaponComponent()->setLastDirection(0.0f, vec[1]);
+  }
+  else if (key->key == ASGE::KEYS::KEY_UP &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[1] = -1.0f;
+    player.weaponComponent()->setLastDirection(0.0f, vec[1]);
+  }
+  else if ((key->key == ASGE::KEYS::KEY_DOWN ||
+            key->key == ASGE::KEYS::KEY_UP) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    vec[1] = 0.0f;
+  }
+  // Horizontal movement
+  if (key->key == ASGE::KEYS::KEY_RIGHT &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[0] = 1.0f;
+    player.weaponComponent()->setLastDirection(vec[0], 0.0f);
+  }
+  else if (key->key == ASGE::KEYS::KEY_LEFT &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    vec[0] = -1.0f;
+    player.weaponComponent()->setLastDirection(vec[0], 0.0f);
+  }
+  else if ((key->key == ASGE::KEYS::KEY_LEFT ||
+            key->key == ASGE::KEYS::KEY_RIGHT) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    vec[0] = 0.0f;
+  }
+  player.setMovementVec(vec);
+
+  if (key->key == ASGE::KEYS::KEY_SPACE &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    // fire bullet using players vector
+    player.weaponComponent()->Fire(
+      renderer.get(),
+      player.spriteComponent()->getSprite()->xPos(),
+      player.spriteComponent()->getSprite()->yPos());
+  }
 }

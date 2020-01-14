@@ -31,3 +31,13 @@ bool Enemy::takeDamage(int hit)
 
   return hp <= 0;
 }
+
+bool Enemy::isAlive()
+{
+  return is_alive;
+}
+
+void Enemy::isAlive(bool value)
+{
+  is_alive = value;
+}

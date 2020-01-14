@@ -17,6 +17,11 @@ GameObject::~GameObject()
     delete (collision_component);
     collision_component = nullptr;
   }
+  // if (weapon_component)
+  // {
+  //   delete (weapon_component);
+  //   weapon_component = nullptr;
+  // }
 }
 
 /*
@@ -80,7 +85,7 @@ void GameObject::updateCollisionComponent()
   collision_component->updateBoundingBox(bounding_box);
 }
 
-void GameObject::move(double delta_time, float x_dir, float y_dir, float speed)
+void GameObject::move(float delta_time, float x_dir, float y_dir, float speed)
 {
   if (sprite_component)
   {
