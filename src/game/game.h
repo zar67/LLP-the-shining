@@ -2,6 +2,7 @@
 #include "../map/Map.h"
 #include "SceneObjects/Enemies/Demon.h"
 #include "UIHandler/SceneManager.h"
+
 #include <Engine/OGLGame.h>
 #include <string>
 #include <vector>
@@ -28,6 +29,7 @@ class MyASGEGame : public ASGE::OGLGame
 
   SceneManager scene_handler;
   Map map = Map();
+
   int floor = 0;
 
   float player_x = 500;

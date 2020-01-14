@@ -36,6 +36,7 @@ set(SOURCE_FILES
         game/UIHandler/Scenes/GameScene.cpp)
 
 set(HEADER_FILES
+
         "game/game.h"
         map/Room.h
         map/Map.h
@@ -48,12 +49,15 @@ set(HEADER_FILES
         game/SceneObjects/Projectile.h
         game/SceneObjects/Enemies/Ghost.h
         game/SceneObjects/Enemies/AxePsycho.h
+        game/SceneObjects/Items.cpp
+        game/SceneObjects/Items.h
         game/UIHandler/Scene.h
         game/UIHandler/SceneManager.h
         game/UIHandler/Scenes/MainMenu.h
         game/UIHandler/Scenes/ShopMenu.h
         game/UIHandler/Scenes/GameOverMenu.h
         game/UIHandler/Scenes/GameScene.h)
+
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
