@@ -25,6 +25,7 @@ class MyASGEGame : public ASGE::OGLGame
   void render(const ASGE::GameTime&) override;
 
   void playerInput(ASGE::SharedEventData data);
+  void collision();
 
   Map map = Map();
   float player_x = 500;

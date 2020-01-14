@@ -17,15 +17,16 @@ class ShootingComponent
   ShootingComponent();
 
   void Fire(ASGE::Renderer* renderer, float player_x, float player_y);
-  void maintainProjectiles(float delta_time);
+  void
+  maintainProjectiles(float delta_time, std::vector<GameObject*> colliders);
   void render(ASGE::Renderer* renderer);
 
   void setLastDirection(float x, float y);
   void setSpeed(int value);
-  // std::vector<Projectile> getProjectiles();
+
  private:
-  int speed = 250;
-  int range = 200;
+  float speed = 250.0f;
+  float range = 200.0f;
   std::vector<Projectile*> projectiles;
   Projectile* p = nullptr;
 

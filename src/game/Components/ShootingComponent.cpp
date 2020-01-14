@@ -3,6 +3,7 @@
 //
 
 #include "ShootingComponent.h"
+#include "../SceneObjects/Enemies/Enemy.h"
 
 ShootingComponent::ShootingComponent()
 {
@@ -24,16 +25,41 @@ void ShootingComponent::Fire(ASGE::Renderer* renderer,
   projectiles.push_back(bullet);
 }
 
-void ShootingComponent::maintainProjectiles(float delta_time)
+// detect collision for game objects
+void ShootingComponent::maintainProjectiles(float delta_time,
+                                            std::vector<GameObject*> colliders)
 {
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
   {
+    bullet->updateCollisionComponent();
     if (bullet->update(delta_time))
     {
       delete (bullet);
       bullet = nullptr;
       projectiles.erase(itr);
+      continue;
+    }
+    for (auto& col : colliders)
+    {
+      col->updateCollisionComponent();
+      if (bullet->collisionComponent()->hasCollided(*col->collisionComponent()))
+      {
+        // collision
+        delete (bullet);
+        bullet = nullptr;
+        projectiles.erase(itr);
+        try
+        {
+          Enemy* enemy = static_cast<Enemy*>(col);
+          enemy->takeDamage(25);
+        }
+        catch (const std::exception&)
+        {
+          break;
+        }
+        break;
+      }
     }
     itr++;
   }

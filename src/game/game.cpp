@@ -179,7 +179,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   double delta_time = game_time.delta.count() / 1000.0;
 
   map.updateCurrentRoom(delta_time, player_x, player_y);
-  player.Movement(delta_time);
+  player.Movement(delta_time, map.getEnemies());
 
   if (!in_menu)
   {

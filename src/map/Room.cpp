@@ -110,6 +110,9 @@ void Room::updateObjectsInRoom(double delta_time,
   {
     ghosts.at(i)->update(delta_time, player_x, player_y);
   }
+
+  // check if any enemies have beeb killed
+  checkEnemyHealth();
 }
 
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
@@ -139,5 +142,50 @@ void Room::removeGhostFromRoom(int ghost_index)
   if (ghost_index < ghosts.size())
   {
     ghosts.erase(ghosts.begin() + ghost_index);
+  }
+}
+
+/*
+ * pass enemy memory location up to game.cpp
+ * this is so player can access and detect collison
+ */
+std::vector<GameObject*> Room::getEnemies()
+{
+  std::vector<GameObject*> enemies;
+  for (auto& demon : demons)
+  {
+    enemies.push_back(demon);
+  }
+  for (auto& ghost : ghosts)
+  {
+    enemies.push_back(ghost);
+  }
+  return enemies;
+}
+
+void Room::checkEnemyHealth()
+{
+  auto itr_ghost = ghosts.begin();
+  for (auto& ghost : ghosts)
+  {
+    if (ghost->health() <= 0)
+    {
+      delete (ghost);
+      ghost = nullptr;
+      ghosts.erase(itr_ghost);
+    }
+    itr_ghost++;
+  }
+
+  auto itr_demon = demons.begin();
+  for (auto& demon : demons)
+  {
+    if (demon->health() <= 0)
+    {
+      delete (demon);
+      demon = nullptr;
+      demons.erase(itr_demon);
+    }
+    itr_demon++;
   }
 }

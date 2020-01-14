@@ -25,8 +25,8 @@ class Projectile : public GameObject
              float y_dir);
 
  private:
-  int speed = 0;
-  int range = 100;
+  float speed = 0.0f;
+  float range = 0.0f;
   float target[2] = { 0.0f, 0.0f };
   float startPosition[2] = { 0.0f, 0.0f };
 };

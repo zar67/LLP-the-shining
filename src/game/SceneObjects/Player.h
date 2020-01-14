@@ -20,7 +20,7 @@ class Player : public GameObject
             float width,
             float height);
   void Movement(float x, float y);
-  void Movement(float delta_time);
+  void Movement(float delta_time, std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
 

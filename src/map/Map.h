@@ -30,6 +30,8 @@ class Map
   bool generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   bool setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
+  std::vector<GameObject*> getEnemies();
+
  private:
   void generateItemRooms();
   void generateShopRoom();

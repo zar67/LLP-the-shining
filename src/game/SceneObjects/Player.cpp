@@ -19,6 +19,10 @@ void Player::init(ASGE::Renderer* renderer,
   {
     addWeaponCompononet();
   }
+  if (!collision_component)
+  {
+    addCollisionComponent();
+  }
   sprite_component->getSprite()->xPos(x_pos);
   sprite_component->getSprite()->yPos(y_pos);
   sprite_component->getSprite()->width(width);
@@ -29,7 +33,7 @@ void Player::init(ASGE::Renderer* renderer,
  * move the player depending on which keys are pressed
  */
 
-void Player::Movement(float delta_time)
+void Player::Movement(float delta_time, std::vector<GameObject*> enemies)
 {
   if (!spriteComponent())
   {
@@ -50,7 +54,7 @@ void Player::Movement(float delta_time)
   // bullet movement
   if (weapon_component)
   {
-    weaponComponent()->maintainProjectiles(delta_time);
+    weaponComponent()->maintainProjectiles(delta_time, enemies);
   }
 }
 
