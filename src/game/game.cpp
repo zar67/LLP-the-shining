@@ -16,7 +16,7 @@
 MyASGEGame::MyASGEGame()
 {
   game_name = "ASGE Game";
-  srand(time(0));
+  srand(time(nullptr));
 }
 
 /**
@@ -29,6 +29,8 @@ MyASGEGame::~MyASGEGame()
 
   this->inputs->unregisterCallback(
     static_cast<unsigned int>(mouse_callback_id));
+
+  scene_handler.disableInputs(inputs.get());
 }
 
 /**
@@ -46,7 +48,7 @@ bool MyASGEGame::init()
     return false;
   }
 
-  toggleFPS();
+  // toggleFPS();
 
   // input handling functions
   inputs->use_threads = false;
@@ -57,12 +59,10 @@ bool MyASGEGame::init()
   mouse_callback_id = inputs->addCallbackFnc(
     ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
-  if (!map.generateRooms(renderer.get()))
-  {
-    return false;
-  }
+  renderer->setClearColour(ASGE::COLOURS::BLACK);
 
-  if (!map.setupMinimap(renderer.get(), game_width, game_height))
+  if (!scene_handler.init(
+        inputs.get(), renderer.get(), game_width, game_height))
   {
     return false;
   }
@@ -117,18 +117,26 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveNorth();
+    // player_y -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveWest();
+    // player_x -= 10;
   }
   if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveSouth();
+    // player_y += 10;
   }
   if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     map.moveEast();
+    // player_x += 10;
+  }
+  if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
   }
 }
 
@@ -149,8 +157,8 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
   double x_pos = click->xpos;
   double y_pos = click->ypos;
 
-  ASGE::DebugPrinter{} << "x_pos: " << x_pos << std::endl;
-  ASGE::DebugPrinter{} << "y_pos: " << y_pos << std::endl;
+  ASGE::DebugPrinter() << x_pos << std::endl;
+  ASGE::DebugPrinter() << y_pos << std::endl;
 }
 
 /**
@@ -162,11 +170,42 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
  */
 void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
-  // auto dt_sec = game_time.delta.count() / 1000.0;;
-  // make sure you use delta time in any movement calculations!
+  double delta_time = game_time.delta.count() / 1000.0;
 
-  if (!in_menu)
+  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
   {
+    map.updateCurrentRoom(delta_time, player_x, player_y);
+  }
+  else
+  {
+    SceneManager::ReturnValue return_value =
+      scene_handler.update(delta_time, inputs.get());
+    switch (return_value)
+    {
+      case SceneManager::ReturnValue::START_GAME:
+        map.generateRooms(renderer.get(), game_width, game_height);
+        break;
+      case SceneManager::ReturnValue::EXIT_GAME:
+        signalExit();
+        break;
+      case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
+        scene_handler.hideDamagePowerup();
+        break;
+      case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
+        scene_handler.hideHealthPowerup();
+        break;
+      case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
+        scene_handler.hideMoveSpeedPowerup();
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
+        scene_handler.hideShotSizePowerup();
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
+        scene_handler.hideShotSpeedPowerup();
+        break;
+      default:
+        break;
+    }
   }
 }
 
@@ -181,10 +220,12 @@ void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
 
-  map.renderCurrentRoom(renderer.get());
-  map.renderMiniMap(renderer.get());
-
-  if (in_menu)
+  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
   {
+    map.renderCurrentRoom(renderer.get());
+    map.renderMiniMap(renderer.get());
   }
+
+  bool abilities[5] = { true, true, true, true, true };
+  scene_handler.render(renderer.get(), 1, 10, 50, abilities);
 }

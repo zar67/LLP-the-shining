@@ -3,6 +3,7 @@
 //
 
 #include "GameObject.h"
+#include <math.h>
 
 GameObject::~GameObject()
 {
@@ -47,7 +48,7 @@ SpriteComponent* GameObject::spriteComponent()
   return sprite_component;
 }
 
-void GameObject::addCollisionComponenet()
+void GameObject::addCollisionComponent()
 {
   if (collision_component)
   {
@@ -77,4 +78,42 @@ void GameObject::updateCollisionComponent()
     sprite->xPos(), sprite->yPos(), sprite->width(), sprite->height()
   };
   collision_component->updateBoundingBox(bounding_box);
+}
+
+void GameObject::move(double delta_time, float x_dir, float y_dir, float speed)
+{
+  if (sprite_component)
+  {
+    sprite_component->getSprite()->xPos(sprite_component->getSprite()->xPos() +
+                                        (x_dir * speed * delta_time));
+    sprite_component->getSprite()->yPos(sprite_component->getSprite()->yPos() +
+                                        (y_dir * speed * delta_time));
+  }
+
+  updateCollisionComponent();
+}
+
+std::vector<float> GameObject::getDirectionFromTo(float from_x,
+                                                  float from_y,
+                                                  float to_x,
+                                                  float to_y)
+{
+  float length = getDistanceBetween(from_x, from_y, to_x, to_y);
+  std::vector<float> dir = { to_x - from_x, to_y - from_y };
+
+  dir[0] /= length;
+  dir[1] /= length;
+
+  return dir;
+}
+
+float GameObject::getDistanceBetween(float from_x,
+                                     float from_y,
+                                     float to_x,
+                                     float to_y)
+{
+  float x_dir = to_x - from_x;
+  float y_dir = to_y - from_y;
+
+  return sqrt((x_dir * x_dir) + (y_dir * y_dir));
 }

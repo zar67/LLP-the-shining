@@ -3,6 +3,7 @@
 //
 
 #include "SpriteComponent.h"
+#include <iostream>
 
 SpriteComponent::~SpriteComponent()
 {

@@ -6,6 +6,8 @@
 
 #include "../Components/CollisionComponent.h"
 #include "../Components/SpriteComponent.h"
+#include <tuple>
+#include <vector>
 
 class GameObject
 {
@@ -17,10 +19,14 @@ class GameObject
   addSpriteComponent(ASGE::Renderer* renderer, std::string texture_location);
   SpriteComponent* spriteComponent();
 
-  void addCollisionComponenet();
+  void addCollisionComponent();
   CollisionComponent* collisionComponent();
 
   void updateCollisionComponent();
+  void move(double delta_time, float x_dir, float y_dir, float speed);
+  std::vector<float>
+  getDirectionFromTo(float from_x, float from_y, float to_x, float to_y);
+  float getDistanceBetween(float from_x, float from_y, float to_x, float to_y);
 
  private:
   SpriteComponent* sprite_component = nullptr;
