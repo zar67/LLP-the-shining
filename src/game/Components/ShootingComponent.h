@@ -24,7 +24,8 @@ class ShootingComponent
   void setSpeed(int value);
   // std::vector<Projectile> getProjectiles();
  private:
-  int speed = 500;
+  int speed = 250;
+  int range = 200;
   std::vector<Projectile*> projectiles;
   Projectile* p = nullptr;
 

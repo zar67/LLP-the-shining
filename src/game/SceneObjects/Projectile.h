@@ -15,9 +15,10 @@ class Projectile : public GameObject
   Projectile() = default;
   ~Projectile() = default;
 
-  void update(double delta_time);
+  bool update(double delta_time);
   bool setup(ASGE::Renderer* renderer,
              float move_speed,
+             float range,
              float x_pos,
              float y_pos,
              float x_dir,
@@ -25,7 +26,9 @@ class Projectile : public GameObject
 
  private:
   int speed = 0;
+  int range = 100;
   float target[2] = { 0.0f, 0.0f };
+  float startPosition[2] = { 0.0f, 0.0f };
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_PROJECTILE_H

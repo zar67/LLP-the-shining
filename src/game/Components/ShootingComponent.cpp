@@ -13,23 +13,29 @@ void ShootingComponent::Fire(ASGE::Renderer* renderer,
                              float player_x,
                              float player_y)
 {
-  Projectile* bullet = new Projectile();
-  bullet->setup(
-    renderer, speed, player_x, player_y, last_direction[0], last_direction[1]);
-  // bullet->addSpriteComponent(renderer, "/data/projectile.png");
-  // bullet->spriteComponent()->getSprite()->xPos(300);
-  // bullet->spriteComponent()->getSprite()->yPos(300);
-  // bullet->spriteComponent()->getSprite()->width(50);
-  // bullet->spriteComponent()->getSprite()->height(50);
-
+  auto bullet = new Projectile();
+  bullet->setup(renderer,
+                speed,
+                range,
+                player_x,
+                player_y,
+                last_direction[0],
+                last_direction[1]);
   projectiles.push_back(bullet);
 }
 
 void ShootingComponent::maintainProjectiles(float delta_time)
 {
+  auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
   {
-    bullet->update(delta_time);
+    if (bullet->update(delta_time))
+    {
+      delete (bullet);
+      bullet = nullptr;
+      projectiles.erase(itr);
+    }
+    itr++;
   }
 }
 
@@ -37,11 +43,6 @@ void ShootingComponent::setSpeed(int value)
 {
   speed = value;
 }
-/*
-std::vector<Projectile> ShootingComponent::getProjectiles()
-{
-    return projectiles;
-}*/
 
 void ShootingComponent::render(ASGE::Renderer* renderer)
 {
