@@ -183,7 +183,6 @@ void MyASGEGame::render(const ASGE::GameTime&)
 
   map.renderCurrentRoom(renderer.get());
   map.renderMiniMap(renderer.get());
-  item1.renderItem(renderer.get());
 
   if (in_menu)
   {
