@@ -10,6 +10,7 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   damage = 5;
   speed = 150;
 
+  addCollisionComponent();
   if (addSpriteComponent(renderer, "data/Characters/Ghost.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
