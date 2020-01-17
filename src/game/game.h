@@ -3,6 +3,7 @@
 #include "SceneObjects/Enemies/Demon.h"
 #include "SceneObjects/Player.h"
 #include "UIHandler/SceneManager.h"
+
 #include <Engine/OGLGame.h>
 #include <string>
 #include <vector>
@@ -34,6 +35,7 @@ class MyASGEGame : public ASGE::OGLGame
   void collision();
 
   Map map = Map();
+
   int floor = 0;
 
   float player_x = 500;
