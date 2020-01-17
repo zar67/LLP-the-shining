@@ -27,6 +27,8 @@ class MyASGEGame : public ASGE::OGLGame
   void update(const ASGE::GameTime&) override;
   void render(const ASGE::GameTime&) override;
 
+  bool in_menu = true;
+
   SceneManager scene_handler;
   void playerInput(ASGE::SharedEventData data);
   void collision();
