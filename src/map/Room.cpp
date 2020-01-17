@@ -141,3 +141,17 @@ void Room::removeGhostFromRoom(int ghost_index)
     ghosts.erase(ghosts.begin() + ghost_index);
   }
 }
+
+void Room::removeItemToRoom(int item_index)
+{
+  if (item_index < items.size())
+  {
+    items.erase(items.begin() + item_index);
+  }
+}
+void Room::addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
+{
+  Items* new_Item = new Items();
+  items.push_back(new_Item);
+  items.at(items.size() - 1)->setUpItems(renderer);
+}

@@ -31,7 +31,8 @@ class Map
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
  private:
-  void generateItemRooms();
+  void
+  generateItemRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   void
   generateEnemies(ASGE::Renderer* renderer, int game_width, int game_height);
   void updateMiniMap();
