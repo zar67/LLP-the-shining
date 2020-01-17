@@ -52,6 +52,9 @@ class Room : public GameObject
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void removeGhostFromRoom(int ghost_index);
 
+  std::vector<GameObject*> getEnemies();
+  void checkEnemyHealth();
+
  private:
   int ID = -1;
   RoomType type = NORMAL;
@@ -61,6 +64,8 @@ class Room : public GameObject
   bool west = false;
   bool movement_enabled = true;
 
+  // zoe remeber to delete the eneimes when you change room/ memory leak other
+  // wise
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;
   // std::vector<Item> items;

@@ -412,3 +412,8 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
 
   return valid;
 }
+
+std::vector<GameObject*> Map::getEnemies()
+{
+  return getCurrentRoom()->getEnemies();
+}

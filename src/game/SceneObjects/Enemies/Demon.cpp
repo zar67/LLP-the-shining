@@ -12,6 +12,7 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   damage = 10;
   speed = 80;
 
+  addCollisionComponent();
   if (addSpriteComponent(renderer, "data/Characters/Demon.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
