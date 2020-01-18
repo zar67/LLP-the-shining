@@ -67,8 +67,8 @@ bool MyASGEGame::init()
     return false;
   }
 
-  player.init(
-    renderer.get(), "/data/Characters/Demon.png", 300, 300, 50.0f, 50.0f);
+  std::string texture = "/data/Characters/Demon.png";
+  player.init(renderer.get(), texture, 300, 300, 50.0f, 50.0f);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -138,7 +138,7 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
   if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    map.getCurrentRoom()->removeGhostFromRoom(0);
+    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
   }
 
   // player movement
@@ -190,19 +190,34 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         signalExit();
         break;
       case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
-        scene_handler.hideDamagePowerup();
+        if (player.addDamagePowerup())
+        {
+          scene_handler.hideDamagePowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
-        scene_handler.hideHealthPowerup();
+        if (player.addHealthPowerup())
+        {
+          scene_handler.hideHealthPowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
-        scene_handler.hideMoveSpeedPowerup();
+        if (player.addMoveSpeedPowerup())
+        {
+          scene_handler.hideMoveSpeedPowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
-        scene_handler.hideShotSizePowerup();
+        if (player.addShotSizePowerup())
+        {
+          scene_handler.hideShotSizePowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
-        scene_handler.hideShotSpeedPowerup();
+        if (player.addShotSpeedPowerup())
+        {
+          scene_handler.hideShotSpeedPowerup();
+        }
         break;
       default:
         break;
@@ -238,8 +253,7 @@ void MyASGEGame::render(const ASGE::GameTime&)
     renderer->renderSprite(*player.spriteComponent()->getSprite());
   }
 
-  bool abilities[5] = { true, true, true, true, true };
-  scene_handler.render(renderer.get(), 1, 10, 50, abilities);
+  scene_handler.render(renderer.get(), 1, 10, 50, player.getPowerups());
 }
 
 void MyASGEGame::playerKeyboardInput(ASGE::SharedEventData data)

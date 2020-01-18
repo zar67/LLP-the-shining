@@ -27,21 +27,30 @@ class Player : public GameObject
 
   void moveVertical(float move);
   void moveHorizontal(float move);
-
   void setMovementVec(float vec[2]);
   float* getDirectionVector();
 
   bool addWeaponCompononet();
   ShootingComponent* weaponComponent();
 
+  bool addDamagePowerup();
+  bool addHealthPowerup();
+  bool addMoveSpeedPowerup();
+  bool addShotSizePowerup();
+  bool addShotSpeedPowerup();
+  bool* getPowerups();
+
  private:
+  bool addPowerup(int index);
+
+  int coins = 100;
   int speed = 100;
   int health = 100;
   int damage = 20;
   float input_vector[2] = { 0.0f, 0.0f };
   float vector_movement[2] = { 0.0f, 0.0f };
 
-  std::vector<int> abilities;
+  bool powerups[5] = { false, false, false, false, false };
   ShootingComponent* weapon_component = nullptr;
 };
 

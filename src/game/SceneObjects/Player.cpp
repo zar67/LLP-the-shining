@@ -122,3 +122,44 @@ ShootingComponent* Player::weaponComponent()
 {
   return weapon_component;
 }
+
+bool Player::addDamagePowerup()
+{
+  return addPowerup(0);
+}
+
+bool Player::addHealthPowerup()
+{
+  return addPowerup(1);
+}
+
+bool Player::addMoveSpeedPowerup()
+{
+  return addPowerup(2);
+}
+
+bool Player::addShotSizePowerup()
+{
+  return addPowerup(3);
+}
+
+bool Player::addShotSpeedPowerup()
+{
+  return addPowerup(4);
+}
+
+bool* Player::getPowerups()
+{
+  return powerups;
+}
+
+bool Player::addPowerup(int index)
+{
+  if (coins >= 20)
+  {
+    powerups[index] = true;
+    coins -= 20;
+    return true;
+  }
+  return false;
+}
