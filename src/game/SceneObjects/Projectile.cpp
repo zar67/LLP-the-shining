@@ -30,10 +30,6 @@ bool Projectile::setup(ASGE::Renderer* renderer,
   speed = move_speed;
   this->range = range;
 
-  // std::vector<float> dir = getDirectionFromTo(x_pos, y_pos, target_x,
-  // target_y);
-  // target[0] = dir[0];
-  // target[1] = dir[1];
   target[0] = target_x;
   target[1] = target_y;
   startPosition[0] = x_pos;

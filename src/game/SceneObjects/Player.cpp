@@ -68,8 +68,6 @@ bool Player::update(float delta_time, std::vector<GameObject*> enemies)
     weaponComponent()->maintainProjectiles(delta_time, enemies);
   }
 
-  std::cout << health << std::endl;
-
   return health <= 0;
 }
 

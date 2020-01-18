@@ -107,7 +107,6 @@ bool Demon::addWeaponComponent()
     delete (weapon_component);
   }
   weapon_component = new ShootingComponent();
-  std::cout << "HERE" << std::endl;
 
   return true;
 }
