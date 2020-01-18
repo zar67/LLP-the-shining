@@ -5,6 +5,7 @@
 #ifndef PROJECT_PLAYER_H
 #define PROJECT_PLAYER_H
 
+#include <Engine/InputEvents.h>
 #include <vector>
 
 #include "../Components/ShootingComponent.h"
@@ -24,6 +25,9 @@ class Player : public GameObject
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
 
+  void moveVertical(float move);
+  void moveHorizontal(float move);
+
   void setMovementVec(float vec[2]);
   float* getDirectionVector();
 
@@ -31,9 +35,10 @@ class Player : public GameObject
   ShootingComponent* weaponComponent();
 
  private:
-  int speed = 50;
+  int speed = 100;
   int health = 100;
   int damage = 20;
+  float input_vector[2] = { 0.0f, 0.0f };
   float vector_movement[2] = { 0.0f, 0.0f };
 
   std::vector<int> abilities;

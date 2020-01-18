@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11.4)
 project(TheShining)
 set(GAMEDATA_FOLDER "data")
 set(ENABLE_ENET  OFF  CACHE BOOL "Adds Networking"   FORCE)
-set(ENABLE_SOUND ON   CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_SOUND OFF   CACHE BOOL "Adds SoLoud Audio" FORCE)
 set(ENABLE_JSON  ON   CACHE BOOL "Adds JSON to the Project" FORCE)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 

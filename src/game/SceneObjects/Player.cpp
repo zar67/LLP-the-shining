@@ -41,15 +41,7 @@ void Player::Movement(float delta_time, std::vector<GameObject*> enemies)
     return;
   }
 
-  ASGE::Sprite* sprite = spriteComponent()->getSprite();
-
-  //             currnt pos         direction        speed   stop frame rate
-  //             dependent
-  float new_x = sprite->xPos() + vector_movement[0] * speed * delta_time;
-  float new_y = sprite->yPos() + vector_movement[1] * speed * delta_time;
-
-  sprite->xPos(new_x);
-  sprite->yPos(new_y);
+  move(delta_time, vector_movement[0], vector_movement[1], speed);
 
   // bullet movement
   if (weapon_component)
@@ -78,6 +70,28 @@ void Player::Movement(float x, float y)
 void Player::takeDamage(int hit_damage)
 {
   damage -= hit_damage;
+}
+
+void Player::moveVertical(float move)
+{
+  input_vector[1] = move;
+  setMovementVec(input_vector);
+
+  if (move != 0)
+  {
+    weapon_component->setLastDirection(input_vector[0], move);
+  }
+}
+
+void Player::moveHorizontal(float move)
+{
+  input_vector[0] = move;
+  setMovementVec(input_vector);
+
+  if (move != 0)
+  {
+    weapon_component->setLastDirection(move, input_vector[1]);
+  }
 }
 
 void Player::setMovementVec(float* vec)

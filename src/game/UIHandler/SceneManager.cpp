@@ -212,6 +212,11 @@ void SceneManager::screenOpen(SceneManager::ScreenOpen screen)
   screen_open = screen;
 }
 
+bool SceneManager::inMenu()
+{
+  return screen_open != ScreenOpen::GAME;
+}
+
 void SceneManager::hideDamagePowerup()
 {
   shop_menu.disableDamage();

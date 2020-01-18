@@ -40,7 +40,7 @@ bool Projectile::setup(ASGE::Renderer* renderer,
   startPosition[1] = y_pos;
 
   addCollisionComponent();
-  if (addSpriteComponent(renderer, "/data/projectile.png"))
+  if (addSpriteComponent(renderer, "/data/Projectile.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
     spriteComponent()->getSprite()->yPos(y_pos);

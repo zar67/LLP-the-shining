@@ -8,6 +8,7 @@
 ShootingComponent::ShootingComponent()
 {
   last_direction.reserve(2);
+  setLastDirection(0, -1);
 }
 
 void ShootingComponent::Fire(ASGE::Renderer* renderer,

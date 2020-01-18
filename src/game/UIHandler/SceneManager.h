@@ -55,6 +55,7 @@ class SceneManager
 
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
+  bool inMenu();
 
   void hideDamagePowerup();
   void hideHealthPowerup();
