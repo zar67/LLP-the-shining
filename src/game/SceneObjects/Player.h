@@ -15,7 +15,7 @@ class Player : public GameObject
  public:
   Player() = default;
   void init(ASGE::Renderer* renderer,
-            std::string tex_directory,
+            std::string& tex_directory,
             float x_pos,
             float y_pos,
             float width,

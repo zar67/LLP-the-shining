@@ -5,7 +5,7 @@
 #include "Player.h"
 
 void Player::init(ASGE::Renderer* renderer,
-                  std::string tex_directory,
+                  std::string& tex_directory,
                   float x_pos,
                   float y_pos,
                   float width,

@@ -36,7 +36,7 @@ class MyASGEGame : public ASGE::OGLGame
   Map map = Map();
   Player player = Player();
 
-  bool controller_connected;
+  bool controller_connected = false;
   bool shoot_pressed = true;
   int floor = 0;
 
