@@ -104,11 +104,8 @@ bool GameScene::init(ASGE::Renderer* renderer,
                      40);
 }
 
-void GameScene::render(ASGE::Renderer* renderer,
-                       int floor,
-                       int coins,
-                       int health,
-                       bool (&abilities)[5])
+void GameScene::render(
+  ASGE::Renderer* renderer, int floor, int coins, int health, bool* abilities)
 {
   renderer->renderText("Floor " + std::to_string(floor), 10, 20);
   renderer->renderText("$" + std::to_string(coins), 10, 50);

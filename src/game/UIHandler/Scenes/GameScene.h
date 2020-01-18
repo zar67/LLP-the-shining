@@ -19,7 +19,7 @@ class GameScene : public Scene
               int floor,
               int coins,
               int health,
-              bool (&abilities)[5]);
+              bool* abilities);
 
  private:
   ASGE::Sprite* health_bar = nullptr;

@@ -4,6 +4,8 @@
 
 #include "CollisionComponent.h"
 
+#include <iostream>
+#include <string>
 /*
  * pass in the objects colliderc_componenet so you can check collision status
  */
@@ -11,6 +13,16 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
 {
   float collided_box[4];
   collided.getBoundingBox(collided_box);
+
+  std::string s = std::to_string(collided_box[0]) + " (bullet) " +
+                  std::to_string(collided_box[1]) + " : " +
+                  std::to_string(collided_box[2]) + " (bullet) " +
+                  std::to_string(collided_box[3]);
+  std::string t = std::to_string(bounding_box[0]) + " (enemy) " +
+                  std::to_string(bounding_box[1]) + " : " +
+                  std::to_string(bounding_box[2]) + " (enemy) " +
+                  std::to_string(bounding_box[3]);
+  std::cout << s << std::endl << t << std::endl;
 
   if ((bounding_box[0] >= collided_box[0] &&
          bounding_box[0] <= collided_box[0] + collided_box[2] ||

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11.4)
 project(TheShining)
 set(GAMEDATA_FOLDER "data")
 set(ENABLE_ENET  OFF  CACHE BOOL "Adds Networking"   FORCE)
-set(ENABLE_SOUND ON   CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_SOUND OFF   CACHE BOOL "Adds SoLoud Audio" FORCE)
 set(ENABLE_JSON  ON   CACHE BOOL "Adds JSON to the Project" FORCE)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -36,27 +36,7 @@ set(SOURCE_FILES
         game/UIHandler/Scenes/GameScene.cpp)
 
 set(HEADER_FILES
-
-        "game/game.h"
-        map/Room.h
-        map/Map.h
-        game/SceneObjects/GameObject.h
-        game/Components/SpriteComponent.h
-        game/Components/CollisionComponent.h
-        game/SceneObjects/Player.h
-        game/SceneObjects/Enemies/Enemy.h
-        game/SceneObjects/Enemies/Demon.h
-        game/SceneObjects/Projectile.h
-        game/SceneObjects/Enemies/Ghost.h
-        game/SceneObjects/Enemies/AxePsycho.h
-        game/SceneObjects/Items.cpp
-        game/SceneObjects/Items.h
-        game/UIHandler/Scene.h
-        game/UIHandler/SceneManager.h
-        game/UIHandler/Scenes/MainMenu.h
-        game/UIHandler/Scenes/ShopMenu.h
-        game/UIHandler/Scenes/GameOverMenu.h
-        game/UIHandler/Scenes/GameScene.h)
+"game/game.h" map/Room.cpp map/Room.h map/Map.cpp map/Map.h "game/game.h" game/SceneObjects/GameObject.cpp game/SceneObjects/GameObject.h game/Components/SpriteComponent.cpp game/Components/SpriteComponent.h game/Components/CollisionComponent.cpp game/Components/CollisionComponent.h game/SceneObjects/Player.cpp game/SceneObjects/Player.h game/SceneObjects/Enemies/Enemy.cpp game/SceneObjects/Enemies/Enemy.h game/SceneObjects/Enemies/Demon.cpp game/SceneObjects/Enemies/Demon.h game/SceneObjects/Projectile.cpp game/SceneObjects/Projectile.h game/SceneObjects/Enemies/Ghost.cpp game/SceneObjects/Enemies/Ghost.h game/SceneObjects/Enemies/AxePsycho.cpp game/SceneObjects/Enemies/AxePsycho.h game/Components/ShootingComponent.cpp game/Components/ShootingComponent.h)
 
 
 ## the executable

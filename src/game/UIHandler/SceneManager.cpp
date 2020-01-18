@@ -172,11 +172,8 @@ SceneManager::update(double delta_time, ASGE::Input* input)
   return return_value;
 }
 
-void SceneManager::render(ASGE::Renderer* renderer,
-                          int floor,
-                          int coins,
-                          int health,
-                          bool (&abilities)[5])
+void SceneManager::render(
+  ASGE::Renderer* renderer, int floor, int coins, int health, bool* abilities)
 {
   if (screen_open == ScreenOpen::MAIN_MENU)
   {
@@ -210,6 +207,11 @@ SceneManager::ScreenOpen SceneManager::screenOpen()
 void SceneManager::screenOpen(SceneManager::ScreenOpen screen)
 {
   screen_open = screen;
+}
+
+bool SceneManager::inMenu()
+{
+  return screen_open != ScreenOpen::GAME;
 }
 
 void SceneManager::hideDamagePowerup()

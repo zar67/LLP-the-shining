@@ -51,10 +51,11 @@ class SceneManager
               int floor,
               int coins,
               int health,
-              bool (&abilities)[5]);
+              bool* abilities);
 
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
+  bool inMenu();
 
   void hideDamagePowerup();
   void hideHealthPowerup();
