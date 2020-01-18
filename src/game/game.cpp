@@ -176,7 +176,7 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
 }
 
-void MyASGEGame::playerControllerInput(double delta_time, ASGE::Input* input)
+void MyASGEGame::playerControllerInput(ASGE::Input* input)
 {
   if (input->getGamePad(0).is_connected)
   {
@@ -317,7 +317,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   }
   else // In Game
   {
-    playerControllerInput(delta_time, inputs.get());
+    playerControllerInput(inputs.get());
     if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);

@@ -223,9 +223,7 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
   }
 }
 
-void Map::generateRooms(ASGE::Renderer* renderer,
-                        int game_width,
-                        int game_height)
+void Map::generateStartingRoom(ASGE::Renderer* renderer)
 {
   // Set All Rooms To Empty
   current_room = STARTING_ROOM;
@@ -243,6 +241,13 @@ void Map::generateRooms(ASGE::Renderer* renderer,
     Room(STARTING_ROOM, Room::NORMAL, true, true, true, true);
   rooms[map_size / 2][map_size / 2].setup(renderer, &file);
   rooms[map_size / 2][map_size / 2].canMove(true);
+}
+
+void Map::generateRooms(ASGE::Renderer* renderer,
+                        int game_width,
+                        int game_height)
+{
+  generateStartingRoom(renderer);
 
   // Create Queue of Rooms From Open Doors
   std::queue<std::array<int, 2>> rooms_to_generate;
@@ -346,31 +351,31 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
 
   int count = 0;
   // For Each Valid Room, Setup Mini Map Room With a Sprite Component
-  for (int i = 0; i < map_size; i++)
+  for (int i = 0; i < map_size * map_size; i++)
   {
-    for (int j = 0; j < map_size; j++)
+    if (getRoom(i)->getId() != -1)
     {
-      if (rooms[i][j].getId() != -1)
+      std::string file = "data/MiniMap/";
+      file += getRoom(i)->getNorth() ? "N" : "_";
+      file += getRoom(i)->getEast() ? "E" : "_";
+      file += getRoom(i)->getSouth() ? "S" : "_";
+      file += getRoom(i)->getWest() ? "W" : "_";
+      file += ".png";
+
+      GameObject* new_room = new GameObject();
+      mini_map.push_back(new_room);
+      mini_map_ids.push_back(getRoom(i)->getId());
+
+      if (mini_map.at(count)->addSpriteComponent(renderer, file))
       {
-        std::string file = "data/MiniMap/";
-        file += rooms[i][j].getNorth() ? "N" : "_";
-        file += rooms[i][j].getEast() ? "E" : "_";
-        file += rooms[i][j].getSouth() ? "S" : "_";
-        file += rooms[i][j].getWest() ? "W" : "_";
-        file += ".png";
+        int column = i % map_size;
+        int row = (i - column) / map_size;
 
-        GameObject* new_room = new GameObject();
-        mini_map.push_back(new_room);
-        mini_map_ids.push_back(rooms[i][j].getId());
-
-        if (mini_map.at(count)->addSpriteComponent(renderer, file))
-        {
-          mini_map.at(count)->spriteComponent()->getSprite()->xPos(
-            game_width - (20 * map_size) + (j * 20));
-          mini_map.at(count)->spriteComponent()->getSprite()->yPos(
-            game_height - (20 * map_size) + (i * 20));
-          count += 1;
-        }
+        mini_map.at(count)->spriteComponent()->getSprite()->xPos(
+          game_width - (20 * map_size) + (column * 20));
+        mini_map.at(count)->spriteComponent()->getSprite()->yPos(
+          game_height - (20 * map_size) + (row * 20));
+        count += 1;
       }
     }
   }

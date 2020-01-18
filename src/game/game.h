@@ -22,7 +22,7 @@ class MyASGEGame : public ASGE::OGLGame
 
  private:
   void keyHandler(ASGE::SharedEventData data);
-  void playerControllerInput(double delta_time, ASGE::Input* input);
+  void playerControllerInput(ASGE::Input* input);
   void clickHandler(ASGE::SharedEventData data);
   void setupResolution();
 

@@ -36,6 +36,7 @@ class Map
                          double delta_time,
                          Player* player);
   void renderMiniMap(ASGE::Renderer* renderer);
+  void generateStartingRoom(ASGE::Renderer* renderer);
   void generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
