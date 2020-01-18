@@ -14,6 +14,7 @@ class Player : public GameObject
 {
  public:
   Player() = default;
+  ~Player();
   void init(ASGE::Renderer* renderer,
             std::string& tex_directory,
             float x_pos,
@@ -21,7 +22,7 @@ class Player : public GameObject
             float width,
             float height);
   void Movement(float x, float y);
-  void Movement(float delta_time, std::vector<GameObject*> enemies);
+  bool update(float delta_time, std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
 
@@ -30,7 +31,7 @@ class Player : public GameObject
   void setMovementVec(float vec[2]);
   float* getDirectionVector();
 
-  bool addWeaponCompononet();
+  bool addWeaponComponent();
   ShootingComponent* weaponComponent();
 
   bool addDamagePowerup();
@@ -44,7 +45,7 @@ class Player : public GameObject
   bool addPowerup(int index);
 
   int coins = 100;
-  int speed = 100;
+  float speed = 100;
   int health = 100;
   int damage = 20;
   float input_vector[2] = { 0.0f, 0.0f };

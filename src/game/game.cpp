@@ -226,11 +226,12 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(delta_time, inputs.get());
-    player.Movement(delta_time, map.getCurrentRoom()->getEnemies());
+    if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
+    {
+      scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+    }
 
-    map.updateCurrentRoom(delta_time,
-                          player.spriteComponent()->getSprite()->xPos(),
-                          player.spriteComponent()->getSprite()->yPos());
+    map.updateCurrentRoom(renderer.get(), delta_time, &player);
   }
 }
 

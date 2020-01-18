@@ -83,7 +83,7 @@ void GameObject::updateCollisionComponent()
   }
 }
 
-void GameObject::move(float delta_time, float x_dir, float y_dir, float speed)
+void GameObject::move(double delta_time, float x_dir, float y_dir, float speed)
 {
   if (sprite_component)
   {

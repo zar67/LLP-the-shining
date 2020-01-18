@@ -3,6 +3,16 @@
 //
 
 #include "Player.h"
+#include <iostream>
+
+Player::~Player()
+{
+  if (weapon_component)
+  {
+    delete weapon_component;
+    weapon_component = nullptr;
+  }
+}
 
 void Player::init(ASGE::Renderer* renderer,
                   std::string& tex_directory,
@@ -17,7 +27,7 @@ void Player::init(ASGE::Renderer* renderer,
   }
   if (!weapon_component)
   {
-    addWeaponCompononet();
+    addWeaponComponent();
   }
   if (!collision_component)
   {
@@ -33,21 +43,22 @@ void Player::init(ASGE::Renderer* renderer,
  * move the player depending on which keys are pressed
  */
 
-void Player::Movement(float delta_time, std::vector<GameObject*> enemies)
+bool Player::update(float delta_time, std::vector<GameObject*> enemies)
 {
-  if (!spriteComponent())
+  if (sprite_component)
   {
-    // show error
-    return;
+    move(delta_time, vector_movement[0], vector_movement[1], speed);
   }
-
-  move(delta_time, vector_movement[0], vector_movement[1], speed);
 
   // bullet movement
   if (weapon_component)
   {
     weaponComponent()->maintainProjectiles(delta_time, enemies);
   }
+
+  std::cout << health << std::endl;
+
+  return health <= 0;
 }
 
 void Player::Movement(float x, float y)
@@ -69,7 +80,7 @@ void Player::Movement(float x, float y)
 
 void Player::takeDamage(int hit_damage)
 {
-  damage -= hit_damage;
+  health -= hit_damage;
 }
 
 void Player::moveVertical(float move)
@@ -79,7 +90,7 @@ void Player::moveVertical(float move)
 
   if (move != 0)
   {
-    weapon_component->setLastDirection(input_vector[0], move);
+    weapon_component->setMoveDirection(input_vector[0], move);
   }
 }
 
@@ -90,7 +101,7 @@ void Player::moveHorizontal(float move)
 
   if (move != 0)
   {
-    weapon_component->setLastDirection(move, input_vector[1]);
+    weapon_component->setMoveDirection(move, input_vector[1]);
   }
 }
 
@@ -107,7 +118,7 @@ float* Player::getDirectionVector()
   return vector_movement;
 }
 
-bool Player::addWeaponCompononet()
+bool Player::addWeaponComponent()
 {
   if (weapon_component)
   {

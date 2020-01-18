@@ -7,27 +7,27 @@
 
 ShootingComponent::ShootingComponent()
 {
-  last_direction.reserve(2);
-  setLastDirection(0, -1);
+  move_direction.reserve(2);
+  setMoveDirection(0, -1);
 }
 
 void ShootingComponent::Fire(ASGE::Renderer* renderer,
-                             float player_x,
-                             float player_y)
+                             float start_x,
+                             float start_y)
 {
   auto bullet = new Projectile();
   bullet->setup(renderer,
                 speed,
                 range,
-                player_x,
-                player_y,
-                last_direction[0],
-                last_direction[1]);
+                start_x,
+                start_y,
+                move_direction[0],
+                move_direction[1]);
   projectiles.push_back(bullet);
 }
 
 // detect collision for game objects
-void ShootingComponent::maintainProjectiles(float delta_time,
+void ShootingComponent::maintainProjectiles(double delta_time,
                                             std::vector<GameObject*> colliders)
 {
   auto itr = projectiles.begin();
@@ -66,6 +66,37 @@ void ShootingComponent::maintainProjectiles(float delta_time,
   }
 }
 
+bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
+{
+  auto itr = projectiles.begin();
+  for (auto& bullet : projectiles)
+  {
+    bullet->updateCollisionComponent();
+    if (bullet->update(delta_time))
+    {
+      delete (bullet);
+      bullet = nullptr;
+      projectiles.erase(itr);
+      continue;
+    }
+
+    collider->updateCollisionComponent();
+    if (bullet->collisionComponent()->hasCollided(
+          *collider->collisionComponent()))
+    {
+      // collision
+      delete (bullet);
+      bullet = nullptr;
+      projectiles.erase(itr);
+      return true;
+    }
+
+    itr++;
+  }
+
+  return false;
+}
+
 void ShootingComponent::setSpeed(int value)
 {
   speed = value;
@@ -80,9 +111,9 @@ void ShootingComponent::render(ASGE::Renderer* renderer)
   }
 }
 
-void ShootingComponent::setLastDirection(float x, float y)
+void ShootingComponent::setMoveDirection(float x, float y)
 {
-  last_direction.clear();
-  last_direction.push_back(x);
-  last_direction.push_back(y);
+  move_direction.clear();
+  move_direction.push_back(x);
+  move_direction.push_back(y);
 }

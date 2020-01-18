@@ -16,12 +16,13 @@ class ShootingComponent
  public:
   ShootingComponent();
 
-  void Fire(ASGE::Renderer* renderer, float player_x, float player_y);
+  void Fire(ASGE::Renderer* renderer, float start_x, float start_y);
   void
-  maintainProjectiles(float delta_time, std::vector<GameObject*> colliders);
+  maintainProjectiles(double delta_time, std::vector<GameObject*> colliders);
+  bool hitPlayer(double delta_time, GameObject* collider);
   void render(ASGE::Renderer* renderer);
 
-  void setLastDirection(float x, float y);
+  void setMoveDirection(float x, float y);
   void setSpeed(int value);
 
  private:
@@ -30,7 +31,7 @@ class ShootingComponent
   std::vector<Projectile*> projectiles;
   Projectile* p = nullptr;
 
-  std::vector<float> last_direction;
+  std::vector<float> move_direction;
 };
 
 #endif // PROJECT_SHOOTINGCOMPONENT_H

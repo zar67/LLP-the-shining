@@ -45,12 +45,12 @@ class Room : public GameObject
   void canMove(bool movement);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
-  void updateObjectsInRoom(double delta_time, float player_x, float player_y);
+  void updateObjectsInRoom(ASGE::Renderer* renderer,
+                           double delta_time,
+                           Player* player);
 
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
-  void removeDemonFromRoom(int demon_index);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
-  void removeGhostFromRoom(int ghost_index);
 
   std::vector<GameObject*> getEnemies();
   void checkEnemyHealth();

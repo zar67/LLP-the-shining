@@ -25,7 +25,9 @@ class Map
   Room* getRoom(int id);
   Room* getCurrentRoom();
   void renderCurrentRoom(ASGE::Renderer* renderer);
-  void updateCurrentRoom(double delta_time, float player_x, float player_y);
+  void updateCurrentRoom(ASGE::Renderer* renderer,
+                         double delta_time,
+                         Player* player);
   void renderMiniMap(ASGE::Renderer* renderer);
   void generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);

@@ -12,13 +12,22 @@ class Demon : public Enemy
 {
  public:
   Demon() = default;
-  ~Demon() = default;
+  ~Demon();
 
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
-  void update(double delta_time, float player_x, float player_y) override;
+  void update(ASGE::Renderer* renderer, double delta_time, Player* player);
+  void render(ASGE::Renderer* renderer) override;
+
+  bool addWeaponComponent();
+  ShootingComponent* weaponComponent();
 
  private:
-  float distance_to_keep = 200;
+  float distance_to_keep = 100;
+
+  double shoot_timer = 0;
+  float shoot_delay = 2;
+
+  ShootingComponent* weapon_component = nullptr;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_DEMON_H
