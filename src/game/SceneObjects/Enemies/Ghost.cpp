@@ -23,6 +23,6 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 void Ghost::update(double delta_time, float player_x, float player_y)
 {
-  // Random Movement
+  // Random update
   // Move Object Randomly
 }

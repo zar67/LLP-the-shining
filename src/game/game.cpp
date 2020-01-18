@@ -67,8 +67,15 @@ bool MyASGEGame::init()
     return false;
   }
 
-  std::string texture = "/data/Characters/Demon.png";
-  player.init(renderer.get(), texture, 300, 300, 50.0f, 50.0f);
+  map.setupRoomCollision();
+
+  std::string texture = "/data/Characters/Danny.png";
+  player.init(renderer.get(),
+              texture,
+              game_width / 2 - 17,
+              game_height / 2 - 24.5f,
+              34.0f,
+              49.0f);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -112,153 +119,6 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     signalExit();
   }
-  if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveNorth();
-    // player_y -= 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveWest();
-    // player_x -= 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveSouth();
-    // player_y += 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveEast();
-    // player_x += 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
-  }
-  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
-  }
-
-  // player movement
-  playerKeyboardInput(data);
-}
-
-/**
- *   @brief   Processes any click inputs
- *   @details This function is added as a callback to handle the game's
- *            mouse button input. For this game, calls to this function
- *            are thread safe, so you may alter the game's state as you
- *            see fit.
- *   @param   data The event data relating to key input.
- *   @see     ClickEvent
- *   @return  void
- */
-void MyASGEGame::clickHandler(ASGE::SharedEventData data)
-{
-  auto click = static_cast<const ASGE::ClickEvent*>(data.get());
-
-  double x_pos = click->xpos;
-  double y_pos = click->ypos;
-
-  ASGE::DebugPrinter() << x_pos << std::endl;
-  ASGE::DebugPrinter() << y_pos << std::endl;
-}
-
-/**
- *   @brief   Updates the scene
- *   @details Prepares the renderer subsystem before drawing the
- *            current frame. Once the current frame is has finished
- *            the buffers are swapped accordingly and the image shown.
- *   @return  void
- */
-void MyASGEGame::update(const ASGE::GameTime& game_time)
-{
-  double delta_time = game_time.delta.count() / 1000.0;
-
-  if (scene_handler.inMenu())
-  {
-    SceneManager::ReturnValue return_value =
-      scene_handler.update(delta_time, inputs.get());
-    switch (return_value)
-    {
-      case SceneManager::ReturnValue::START_GAME:
-        map.generateRooms(renderer.get(), game_width, game_height);
-        break;
-      case SceneManager::ReturnValue::EXIT_GAME:
-        signalExit();
-        break;
-      case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
-        if (player.addDamagePowerup())
-        {
-          scene_handler.hideDamagePowerup();
-        }
-        break;
-      case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
-        if (player.addHealthPowerup())
-        {
-          scene_handler.hideHealthPowerup();
-        }
-        break;
-      case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
-        if (player.addMoveSpeedPowerup())
-        {
-          scene_handler.hideMoveSpeedPowerup();
-        }
-        break;
-      case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
-        if (player.addShotSizePowerup())
-        {
-          scene_handler.hideShotSizePowerup();
-        }
-        break;
-      case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
-        if (player.addShotSpeedPowerup())
-        {
-          scene_handler.hideShotSpeedPowerup();
-        }
-        break;
-      default:
-        break;
-    }
-  }
-  else // In Game
-  {
-    playerControllerInput(delta_time, inputs.get());
-    player.Movement(delta_time, map.getCurrentRoom()->getEnemies());
-
-    map.updateCurrentRoom(delta_time,
-                          player.spriteComponent()->getSprite()->xPos(),
-                          player.spriteComponent()->getSprite()->yPos());
-  }
-}
-
-/**
- *   @brief   Renders the scene
- *   @details Renders all the game objects to the current frame.
- *            Once the current frame is has finished the buffers are
- *            swapped accordingly and the image shown.
- *   @return  void
- */
-void MyASGEGame::render(const ASGE::GameTime&)
-{
-  renderer->setFont(0);
-
-  if (!scene_handler.inMenu())
-  {
-    map.renderCurrentRoom(renderer.get());
-    map.renderMiniMap(renderer.get());
-    player.weaponComponent()->render(renderer.get());
-    renderer->renderSprite(*player.spriteComponent()->getSprite());
-  }
-
-  scene_handler.render(renderer.get(), 1, 10, 50, player.getPowerups());
-}
-
-void MyASGEGame::playerKeyboardInput(ASGE::SharedEventData data)
-{
-  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
 
   if (!controller_connected)
   {
@@ -309,9 +169,14 @@ void MyASGEGame::playerKeyboardInput(ASGE::SharedEventData data)
           player.spriteComponent()->getSprite()->height() / 2);
     }
   }
+
+  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
+  }
 }
 
-void MyASGEGame::playerControllerInput(double delta_time, ASGE::Input* input)
+void MyASGEGame::playerControllerInput(ASGE::Input* input)
 {
   if (input->getGamePad(0).is_connected)
   {
@@ -364,4 +229,129 @@ void MyASGEGame::playerControllerInput(double delta_time, ASGE::Input* input)
   {
     controller_connected = false;
   }
+}
+
+/**
+ *   @brief   Processes any click inputs
+ *   @details This function is added as a callback to handle the game's
+ *            mouse button input. For this game, calls to this function
+ *            are thread safe, so you may alter the game's state as you
+ *            see fit.
+ *   @param   data The event data relating to key input.
+ *   @see     ClickEvent
+ *   @return  void
+ */
+void MyASGEGame::clickHandler(ASGE::SharedEventData data)
+{
+  auto click = static_cast<const ASGE::ClickEvent*>(data.get());
+
+  double x_pos = click->xpos;
+  double y_pos = click->ypos;
+
+  ASGE::DebugPrinter() << x_pos << std::endl;
+  ASGE::DebugPrinter() << y_pos << std::endl;
+}
+
+void MyASGEGame::resetGame()
+{
+  map.generateRooms(renderer.get(), game_width, game_height);
+  player.reset(game_width, game_height);
+}
+
+/**
+ *   @brief   Updates the scene
+ *   @details Prepares the renderer subsystem before drawing the
+ *            current frame. Once the current frame is has finished
+ *            the buffers are swapped accordingly and the image shown.
+ *   @return  void
+ */
+void MyASGEGame::update(const ASGE::GameTime& game_time)
+{
+  double delta_time = game_time.delta.count() / 1000.0;
+
+  if (scene_handler.inMenu())
+  {
+    SceneManager::ReturnValue return_value =
+      scene_handler.update(delta_time, inputs.get());
+    switch (return_value)
+    {
+      case SceneManager::ReturnValue::START_GAME:
+        resetGame();
+        break;
+      case SceneManager::ReturnValue::EXIT_GAME:
+        signalExit();
+        break;
+      case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
+        if (player.addDamagePowerup())
+        {
+          scene_handler.hideDamagePowerup();
+        }
+        break;
+      case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
+        if (player.addHealthPowerup())
+        {
+          scene_handler.hideHealthPowerup();
+        }
+        break;
+      case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
+        if (player.addMoveSpeedPowerup())
+        {
+          scene_handler.hideMoveSpeedPowerup();
+        }
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
+        if (player.addShotSizePowerup())
+        {
+          scene_handler.hideShotSizePowerup();
+        }
+        break;
+      case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
+        if (player.addShotSpeedPowerup())
+        {
+          scene_handler.hideShotSpeedPowerup();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  else // In Game
+  {
+    playerControllerInput(inputs.get());
+    if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
+    {
+      scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+    }
+    map.handlePlayerCollision(&player);
+
+    std::vector<GameObject*> colliders = map.getEnemies();
+    map.handleObjectCollision(colliders);
+    map.updateCurrentRoom(renderer.get(), delta_time, &player);
+  }
+}
+
+/**
+ *   @brief   Renders the scene
+ *   @details Renders all the game objects to the current frame.
+ *            Once the current frame is has finished the buffers are
+ *            swapped accordingly and the image shown.
+ *   @return  void
+ */
+void MyASGEGame::render(const ASGE::GameTime&)
+{
+  renderer->setFont(0);
+
+  if (!scene_handler.inMenu())
+  {
+    map.renderCurrentRoom(renderer.get());
+    map.renderMiniMap(renderer.get());
+    player.weaponComponent()->render(renderer.get());
+    renderer->renderSprite(*player.spriteComponent()->getSprite());
+  }
+
+  scene_handler.render(renderer.get(),
+                       floor,
+                       player.getCoins(),
+                       player.getHealth(),
+                       player.getPowerups());
 }

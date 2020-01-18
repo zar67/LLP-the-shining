@@ -79,6 +79,98 @@ bool SceneManager::init(ASGE::Input* input,
   return game_over_menu.init(renderer, game_width, game_height);
 }
 
+SceneManager::ReturnValue SceneManager::updateMainMenu()
+{
+  ReturnValue return_value = ReturnValue::NONE;
+  MainMenu::MenuItem main_menu_item = main_menu.update(cursor_pos);
+  if (selected_pressed)
+  {
+    switch (main_menu_item)
+    {
+      case MainMenu::MenuItem::START_GAME:
+        screen_open = ScreenOpen::GAME;
+        return_value = ReturnValue::START_GAME;
+        break;
+      case MainMenu::MenuItem::OPEN_SHOP:
+        screen_open = ScreenOpen::SHOP;
+        break;
+      case MainMenu::MenuItem::EXIT_GAME:
+        return_value = ReturnValue::EXIT_GAME;
+        break;
+      default:
+        break;
+    }
+    selected_pressed = false;
+  }
+
+  return return_value;
+}
+
+SceneManager::ReturnValue SceneManager::updateShop()
+{
+  ReturnValue return_value = ReturnValue::NONE;
+  ShopMenu::MenuItem shop_menu_item = shop_menu.update(cursor_pos);
+  if (selected_pressed)
+  {
+    switch (shop_menu_item)
+    {
+      case ShopMenu::MenuItem::OPEN_MAIN_MENU:
+        screen_open = ScreenOpen::MAIN_MENU;
+        break;
+      case ShopMenu::MenuItem::DAMAGE_POWERUP:
+        return_value = ReturnValue::BUY_DAMAGE_POWERUP;
+        break;
+      case ShopMenu::MenuItem::HEALTH_POWERUP:
+        return_value = ReturnValue::BUY_HEALTH_POWERUP;
+        break;
+      case ShopMenu::MenuItem::MOVE_SPEED_POWERUP:
+        return_value = ReturnValue::BUY_MOVE_SPEED_POWERUP;
+        break;
+      case ShopMenu::MenuItem::SHOT_SIZE_POWERUP:
+        return_value = ReturnValue::BUY_SHOT_SIZE_POWERUP;
+        break;
+      case ShopMenu::MenuItem::SHOT_SPEED_POWERUP:
+        return_value = ReturnValue::BUY_SHOT_SPEED_POWERUP;
+        break;
+      default:
+        break;
+    }
+    selected_pressed = false;
+  }
+
+  return return_value;
+}
+
+SceneManager::ReturnValue SceneManager::updateGameOver()
+{
+  ReturnValue return_value = ReturnValue::NONE;
+  GameOverMenu::MenuItem game_over_item = game_over_menu.update(cursor_pos);
+  if (selected_pressed)
+  {
+    switch (game_over_item)
+    {
+      case GameOverMenu::MenuItem::START_GAME:
+        screen_open = ScreenOpen::GAME;
+        return_value = ReturnValue::START_GAME;
+        break;
+      case GameOverMenu::MenuItem::OPEN_SHOP:
+        screen_open = ScreenOpen::SHOP;
+        break;
+      case GameOverMenu::MenuItem::MAIN_MENU:
+        screen_open = ScreenOpen::MAIN_MENU;
+        break;
+      case GameOverMenu::MenuItem::EXIT_GAME:
+        return_value = ReturnValue::EXIT_GAME;
+        break;
+      default:
+        break;
+    }
+    selected_pressed = false;
+  }
+
+  return return_value;
+}
+
 SceneManager::ReturnValue
 SceneManager::update(double delta_time, ASGE::Input* input)
 {
@@ -87,86 +179,18 @@ SceneManager::update(double delta_time, ASGE::Input* input)
 
   if (screen_open == ScreenOpen::MAIN_MENU)
   {
-    MainMenu::MenuItem main_menu_item = main_menu.update(cursor_pos);
-    if (selected_pressed)
-    {
-      switch (main_menu_item)
-      {
-        case MainMenu::MenuItem::START_GAME:
-          screen_open = ScreenOpen::GAME;
-          return_value = ReturnValue::START_GAME;
-          break;
-        case MainMenu::MenuItem::OPEN_SHOP:
-          screen_open = ScreenOpen::SHOP;
-          break;
-        case MainMenu::MenuItem::EXIT_GAME:
-          return_value = ReturnValue::EXIT_GAME;
-          break;
-        default:
-          break;
-      }
-      selected_pressed = false;
-    }
+    return_value = updateMainMenu();
   }
 
   if (screen_open == ScreenOpen::SHOP)
   {
-    ShopMenu::MenuItem shop_menu_item = shop_menu.update(cursor_pos);
-    if (selected_pressed)
-    {
-      switch (shop_menu_item)
-      {
-        case ShopMenu::MenuItem::OPEN_MAIN_MENU:
-          screen_open = ScreenOpen::MAIN_MENU;
-          break;
-        case ShopMenu::MenuItem::DAMAGE_POWERUP:
-          return_value = ReturnValue::BUY_DAMAGE_POWERUP;
-          break;
-        case ShopMenu::MenuItem::HEALTH_POWERUP:
-          return_value = ReturnValue::BUY_HEALTH_POWERUP;
-          break;
-        case ShopMenu::MenuItem::MOVE_SPEED_POWERUP:
-          return_value = ReturnValue::BUY_MOVE_SPEED_POWERUP;
-          break;
-        case ShopMenu::MenuItem::SHOT_SIZE_POWERUP:
-          return_value = ReturnValue::BUY_SHOT_SIZE_POWERUP;
-          break;
-        case ShopMenu::MenuItem::SHOT_SPEED_POWERUP:
-          return_value = ReturnValue::BUY_SHOT_SPEED_POWERUP;
-          break;
-        default:
-          break;
-      }
-      selected_pressed = false;
-    }
+    return_value = updateShop();
   }
 
   if (screen_open == ScreenOpen::GAME_OVER ||
       screen_open == ScreenOpen::GAME_WON)
   {
-    GameOverMenu::MenuItem game_over_item = game_over_menu.update(cursor_pos);
-    if (selected_pressed)
-    {
-      switch (game_over_item)
-      {
-        case GameOverMenu::MenuItem::START_GAME:
-          screen_open = ScreenOpen::GAME;
-          return_value = ReturnValue::START_GAME;
-          break;
-        case GameOverMenu::MenuItem::OPEN_SHOP:
-          screen_open = ScreenOpen::SHOP;
-          break;
-        case GameOverMenu::MenuItem::MAIN_MENU:
-          screen_open = ScreenOpen::MAIN_MENU;
-          break;
-        case GameOverMenu::MenuItem::EXIT_GAME:
-          return_value = ReturnValue::EXIT_GAME;
-          break;
-        default:
-          break;
-      }
-      selected_pressed = false;
-    }
+    return_value = updateGameOver();
   }
 
   return return_value;

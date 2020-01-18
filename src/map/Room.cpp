@@ -18,6 +18,7 @@ Room::Room(int id,
   east = e_door;
   south = s_door;
   west = w_door;
+  movement_enabled = false;
 }
 
 Room::~Room()
@@ -97,18 +98,20 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   }
 }
 
-void Room::updateObjectsInRoom(double delta_time,
-                               float player_x,
-                               float player_y)
+void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
+                               double delta_time,
+                               Player* player)
 {
   for (int i = 0; i < demons.size(); i++)
   {
-    demons.at(i)->update(delta_time, player_x, player_y);
+    demons.at(i)->update(renderer, delta_time, player);
   }
 
   for (int i = 0; i < ghosts.size(); i++)
   {
-    ghosts.at(i)->update(delta_time, player_x, player_y);
+    ghosts.at(i)->update(delta_time,
+                         player->spriteComponent()->getSprite()->xPos(),
+                         player->spriteComponent()->getSprite()->yPos());
   }
 
   // check if any enemies have beeb killed
@@ -122,27 +125,11 @@ void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
   demons.at(demons.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
-void Room::removeDemonFromRoom(int demon_index)
-{
-  if (demon_index < demons.size())
-  {
-    demons.erase(demons.begin() + demon_index);
-  }
-}
-
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   Ghost* new_ghost = new Ghost();
   ghosts.push_back(new_ghost);
   ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
-}
-
-void Room::removeGhostFromRoom(int ghost_index)
-{
-  if (ghost_index < ghosts.size())
-  {
-    ghosts.erase(ghosts.begin() + ghost_index);
-  }
 }
 
 /*

@@ -14,14 +14,16 @@ class Player : public GameObject
 {
  public:
   Player() = default;
+  ~Player();
   void init(ASGE::Renderer* renderer,
             std::string& tex_directory,
             float x_pos,
             float y_pos,
             float width,
             float height);
-  void Movement(float x, float y);
-  void Movement(float delta_time, std::vector<GameObject*> enemies);
+  void reset(float game_width, float game_height);
+  void Movement(float x_pos, float y_pos);
+  bool update(double delta_time, std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
 
@@ -30,7 +32,7 @@ class Player : public GameObject
   void setMovementVec(float vec[2]);
   float* getDirectionVector();
 
-  bool addWeaponCompononet();
+  bool addWeaponComponent();
   ShootingComponent* weaponComponent();
 
   bool addDamagePowerup();
@@ -40,18 +42,34 @@ class Player : public GameObject
   bool addShotSpeedPowerup();
   bool* getPowerups();
 
+  void addCoins(int amount);
+  int getCoins();
+  int getHealth();
+
  private:
   bool addPowerup(int index);
 
+  const int starting_health = 100;
+  const float starting_speed = 120;
+  const int starting_damage = 20;
+  const float starting_shot_speed = 250;
+  const float starting_shot_size = 8;
+
   int coins = 100;
-  int speed = 100;
-  int health = 100;
-  int damage = 20;
+  int health = starting_health;
+  float speed = starting_speed;
+  int damage = starting_damage;
   float input_vector[2] = { 0.0f, 0.0f };
   float vector_movement[2] = { 0.0f, 0.0f };
 
   bool powerups[5] = { false, false, false, false, false };
   ShootingComponent* weapon_component = nullptr;
+
+  const int damage_powerup_index = 0;
+  const int health_powerup_index = 1;
+  const int move_speed_powerup_index = 2;
+  const int shot_size_powerup_index = 3;
+  const int shot_speed_powerup_index = 4;
 };
 
 #endif // PROJECT_PLAYER_H

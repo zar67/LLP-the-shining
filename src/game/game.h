@@ -22,15 +22,13 @@ class MyASGEGame : public ASGE::OGLGame
 
  private:
   void keyHandler(ASGE::SharedEventData data);
+  void playerControllerInput(ASGE::Input* input);
   void clickHandler(ASGE::SharedEventData data);
   void setupResolution();
 
+  void resetGame();
   void update(const ASGE::GameTime&) override;
   void render(const ASGE::GameTime&) override;
-
-  void playerKeyboardInput(ASGE::SharedEventData data);
-  void playerControllerInput(double delta_time, ASGE::Input* input);
-  void collision();
 
   SceneManager scene_handler;
   Map map = Map();
