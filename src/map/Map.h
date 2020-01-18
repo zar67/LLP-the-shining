@@ -37,6 +37,7 @@ class Map
                          Player* player);
   void renderMiniMap(ASGE::Renderer* renderer);
   void generateStartingRoom(ASGE::Renderer* renderer);
+  void generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index);
   void generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
@@ -48,7 +49,10 @@ class Map
                         float y_pos,
                         float width,
                         float height);
-  void checkDoorCollision(Player* player);
+  void checkNorthDoorCollision(Player* player);
+  void checkEastDoorCollision(Player* player);
+  void checkSouthDoorCollision(Player* player);
+  void checkWestDoorCollision(Player* player);
 
   void generateItemRooms();
   void

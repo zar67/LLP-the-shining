@@ -73,7 +73,10 @@ void Map::handlePlayerCollision(Player* player)
     }
   }
 
-  checkDoorCollision(player);
+  checkNorthDoorCollision(player);
+  checkEastDoorCollision(player);
+  checkSouthDoorCollision(player);
+  checkWestDoorCollision(player);
 }
 
 void Map::handleObjectCollision(std::vector<GameObject*> colliders)
@@ -243,6 +246,45 @@ void Map::generateStartingRoom(ASGE::Renderer* renderer)
   rooms[map_size / 2][map_size / 2].canMove(true);
 }
 
+void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
+{
+  // Calculate Required Doors (NESW)
+  std::string doors_needed =
+    needNorthDoor(x_index, y_index) + needEastDoor(x_index, y_index) +
+    needSouthDoor(x_index, y_index) + needWestDoor(x_index, y_index);
+
+  // Randomly Select Room with Correct Doors
+  // Directory: data/Rooms/NESW.png
+  // _ = No Door
+  std::vector<std::string> possible_rooms;
+
+  // For Each File
+  std::vector<std::string> files = ASGE::FILEIO::enumerateFiles("data/"
+                                                                "Rooms");
+  for (auto name : files)
+  {
+    // Check If File is Valid
+    if (checkRoomName(name, doors_needed))
+    {
+      // Add File to Possible Rooms
+      possible_rooms.push_back(name);
+    }
+  }
+
+  // Generate Random Room
+  int index = static_cast<int>(rand() % possible_rooms.size());
+
+  // Setup Room
+  std::string file = "data/Rooms/" + possible_rooms[index];
+  rooms[x_index][y_index] = Room(x_index * map_size + y_index,
+                                 Room::NORMAL,
+                                 possible_rooms[index][0] == 'N',
+                                 possible_rooms[index][1] == 'E',
+                                 possible_rooms[index][2] == 'S',
+                                 possible_rooms[index][3] == 'W');
+  rooms[x_index][y_index].setup(renderer, &file);
+}
+
 void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
@@ -266,41 +308,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
 
     if (rooms[x_index][y_index].getId() == -1)
     {
-      // Calculate Required Doors (NESW)
-      std::string doors_needed =
-        needNorthDoor(x_index, y_index) + needEastDoor(x_index, y_index) +
-        needSouthDoor(x_index, y_index) + needWestDoor(x_index, y_index);
-
-      // Randomly Select Room with Correct Doors
-      // Directory: data/Rooms/NESW.png
-      // _ = No Door
-      std::vector<std::string> possible_rooms;
-
-      // For Each File
-      std::vector<std::string> files = ASGE::FILEIO::enumerateFiles("data/"
-                                                                    "Rooms");
-      for (auto name : files)
-      {
-        // Check If File is Valid
-        if (checkRoomName(name, doors_needed))
-        {
-          // Add File to Possible Rooms
-          possible_rooms.push_back(name);
-        }
-      }
-
-      // Generate Random Room
-      int index = static_cast<int>(rand() % possible_rooms.size());
-
-      // Setup Room
-      std::string file = "data/Rooms/" + possible_rooms[index];
-      rooms[x_index][y_index] = Room(x_index * map_size + y_index,
-                                     Room::NORMAL,
-                                     possible_rooms[index][0] == 'N',
-                                     possible_rooms[index][1] == 'E',
-                                     possible_rooms[index][2] == 'S',
-                                     possible_rooms[index][3] == 'W');
-      rooms[x_index][y_index].setup(renderer, &file);
+      generateNewRoom(renderer, x_index, y_index);
       last_room = &rooms[x_index][y_index];
 
       // Add New Rooms To Generate To Queue
@@ -393,7 +401,7 @@ void Map::setupBoundingBox(CollisionComponent* component,
   component->updateBoundingBox(bounding_box);
 }
 
-void Map::checkDoorCollision(Player* player)
+void Map::checkNorthDoorCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
   ASGE::Sprite* player_sprite = player->spriteComponent()->getSprite();
@@ -421,6 +429,12 @@ void Map::checkDoorCollision(Player* player)
       fixCollision(player, room_door_collision[0], side);
     }
   }
+}
+
+void Map::checkEastDoorCollision(Player* player)
+{
+  CollisionComponent* player_collider = player->collisionComponent();
+  ASGE::Sprite* player_sprite = player->spriteComponent()->getSprite();
 
   if (player_collider->hasCollided(*room_door_collision[1]))
   {
@@ -445,6 +459,12 @@ void Map::checkDoorCollision(Player* player)
       fixCollision(player, room_door_collision[1], side);
     }
   }
+}
+
+void Map::checkSouthDoorCollision(Player* player)
+{
+  CollisionComponent* player_collider = player->collisionComponent();
+  ASGE::Sprite* player_sprite = player->spriteComponent()->getSprite();
 
   if (player_collider->hasCollided(*room_door_collision[2]))
   {
@@ -469,6 +489,12 @@ void Map::checkDoorCollision(Player* player)
       fixCollision(player, room_door_collision[2], side);
     }
   }
+}
+
+void Map::checkWestDoorCollision(Player* player)
+{
+  CollisionComponent* player_collider = player->collisionComponent();
+  ASGE::Sprite* player_sprite = player->spriteComponent()->getSprite();
 
   if (player_collider->hasCollided(*room_door_collision[3]))
   {
