@@ -61,7 +61,6 @@ void Demon::update(ASGE::Renderer* renderer, double delta_time, Player* player)
   if (weapon_component)
   {
     shoot_timer += delta_time;
-    std::cout << shoot_timer << std::endl;
 
     if (shoot_timer >= shoot_delay)
     {

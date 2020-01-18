@@ -67,8 +67,15 @@ bool MyASGEGame::init()
     return false;
   }
 
-  std::string texture = "/data/Characters/Demon.png";
-  player.init(renderer.get(), texture, 300, 300, 50.0f, 50.0f);
+  map.setupRoomCollision();
+
+  std::string texture = "/data/Characters/Danny.png";
+  player.init(renderer.get(),
+              texture,
+              game_width / 2 - 17,
+              game_height / 2 - 24.5f,
+              34.0f,
+              49.0f);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -169,7 +176,7 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
 void MyASGEGame::resetGame()
 {
   map.generateRooms(renderer.get(), game_width, game_height);
-  player.reset();
+  player.reset(game_width, game_height);
 }
 
 /**
@@ -236,7 +243,10 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
+    map.handlePlayerCollision(&player);
 
+    std::vector<GameObject*> colliders = map.getEnemies();
+    map.handleObjectCollision(colliders);
     map.updateCurrentRoom(renderer.get(), delta_time, &player);
   }
 }

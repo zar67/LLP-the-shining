@@ -17,6 +17,13 @@ class Map
   Map() = default;
   ~Map();
 
+  void setupRoomCollision();
+  void handlePlayerCollision(Player* player);
+  void handleObjectCollision(std::vector<GameObject*> colliders);
+  void fixCollision(GameObject* object,
+                    CollisionComponent* collided,
+                    CollisionComponent::CollisionSide side);
+
   void moveNorth();
   void moveEast();
   void moveSouth();
@@ -35,6 +42,10 @@ class Map
   std::vector<GameObject*> getEnemies();
 
  private:
+  void setupBoundingBox(
+    CollisionComponent* component, float x, float y, float width, float height);
+  void checkDoorCollision(Player* player);
+
   void generateItemRooms();
   void
   generateEnemies(ASGE::Renderer* renderer, int game_width, int game_height);
@@ -50,6 +61,9 @@ class Map
   std::vector<GameObject*> mini_map;
   std::vector<int> mini_map_ids;
   int current_room = STARTING_ROOM;
+
+  CollisionComponent* room_wall_collision[8];
+  CollisionComponent* room_door_collision[4];
 };
 
 #endif // PROJECT_MAP_H

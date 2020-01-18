@@ -39,7 +39,7 @@ void Player::init(ASGE::Renderer* renderer,
   sprite_component->getSprite()->height(height);
 }
 
-void Player::reset()
+void Player::reset(float game_width, float game_height)
 {
   if (powerups[damage_powerup_index])
   {
@@ -49,6 +49,9 @@ void Player::reset()
   {
     health = starting_health;
   }
+
+  sprite_component->getSprite()->xPos(game_width / 2 - 17);
+  sprite_component->getSprite()->yPos(game_height / 2 - 24.5f);
 }
 
 /*

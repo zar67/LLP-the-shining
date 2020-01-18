@@ -16,6 +16,126 @@ Map::~Map()
     delete room;
   }
   mini_map.clear();
+
+  for (int i = 0; i < 8; i++)
+  {
+    delete room_wall_collision[i];
+    room_wall_collision[i] = nullptr;
+  }
+
+  for (int i = 0; i < 4; i++)
+  {
+    delete room_door_collision[i];
+    room_door_collision[i] = nullptr;
+  }
+}
+
+void Map::setupRoomCollision()
+{
+  for (int i = 0; i < 8; i++)
+  {
+    room_wall_collision[i] = new CollisionComponent();
+  }
+
+  for (int i = 0; i < 4; i++)
+  {
+    room_door_collision[i] = new CollisionComponent();
+  }
+
+  setupBoundingBox(room_wall_collision[0], 0, 0, 64, 192);
+  setupBoundingBox(room_wall_collision[1], 0, 0, 320, 64);
+  setupBoundingBox(room_wall_collision[2], 384, 0, 320, 64);
+  setupBoundingBox(room_wall_collision[3], 640, 0, 64, 192);
+
+  setupBoundingBox(room_wall_collision[4], 0, 256, 64, 192);
+  setupBoundingBox(room_wall_collision[5], 0, 384, 320, 64);
+  setupBoundingBox(room_wall_collision[6], 384, 384, 320, 64);
+  setupBoundingBox(room_wall_collision[7], 640, 256, 64, 192);
+
+  setupBoundingBox(room_door_collision[0], 320, 0, 64, 64);
+  setupBoundingBox(room_door_collision[1], 640, 192, 64, 64);
+  setupBoundingBox(room_door_collision[2], 320, 384, 64, 64);
+  setupBoundingBox(room_door_collision[3], 0, 192, 64, 64);
+}
+
+void Map::handlePlayerCollision(Player* player)
+{
+  CollisionComponent* player_collider = player->collisionComponent();
+  player->updateCollisionComponent();
+
+  for (auto& wall : room_wall_collision)
+  {
+    if (player_collider->hasCollided(*wall))
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*wall);
+      fixCollision(player, wall, side);
+    }
+  }
+
+  checkDoorCollision(player);
+}
+
+void Map::handleObjectCollision(std::vector<GameObject*> colliders)
+{
+  for (auto& col : colliders)
+  {
+    col->updateCollisionComponent();
+
+    for (auto& wall : room_wall_collision)
+    {
+      if (col->collisionComponent()->hasCollided(*wall))
+      {
+        CollisionComponent::CollisionSide side =
+          col->collisionComponent()->getCollisionSide(*wall);
+        fixCollision(col, wall, side);
+      }
+    }
+
+    for (auto& door : room_door_collision)
+    {
+      if (col->collisionComponent()->hasCollided(*door))
+      {
+        CollisionComponent::CollisionSide side =
+          col->collisionComponent()->getCollisionSide(*door);
+        fixCollision(col, door, side);
+      }
+    }
+  }
+}
+
+void Map::fixCollision(GameObject* object,
+                       CollisionComponent* collided,
+                       CollisionComponent::CollisionSide side)
+{
+  float col_bounding_box[4];
+  collided->getBoundingBox(col_bounding_box);
+
+  ASGE::Sprite* object_sprite = object->spriteComponent()->getSprite();
+
+  if (side == CollisionComponent::CollisionSide::SIDE_LEFT)
+  {
+    float x_pos = col_bounding_box[0] - object_sprite->width();
+    object_sprite->xPos(x_pos);
+  }
+
+  else if (side == CollisionComponent::CollisionSide::SIDE_RIGHT)
+  {
+    float x_pos = col_bounding_box[0] + col_bounding_box[2];
+    object_sprite->xPos(x_pos);
+  }
+
+  else if (side == CollisionComponent::CollisionSide::SIDE_TOP)
+  {
+    float y_pos = col_bounding_box[1] - object_sprite->height();
+    object_sprite->yPos(y_pos);
+  }
+
+  else if (side == CollisionComponent::CollisionSide::SIDE_BOTTOM)
+  {
+    float y_pos = col_bounding_box[1] + col_bounding_box[3];
+    object_sprite->yPos(y_pos);
+  }
 }
 
 void Map::moveNorth()
@@ -239,6 +359,91 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
   }
 
   updateMiniMap();
+}
+
+void Map::setupBoundingBox(
+  CollisionComponent* component, float x, float y, float width, float height)
+{
+  float bounding_box[4] = { x, y, width, height };
+  component->updateBoundingBox(bounding_box);
+}
+
+void Map::checkDoorCollision(Player* player)
+{
+  CollisionComponent* player_collider = player->collisionComponent();
+  ASGE::Sprite* player_sprite = player->spriteComponent()->getSprite();
+
+  if (player_collider->hasCollided(*room_door_collision[0]))
+  {
+    if (getCurrentRoom()->getNorth())
+    {
+      if (player_sprite->yPos() < 10)
+      {
+        moveNorth();
+        player_sprite->yPos(384);
+      }
+    }
+    else
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*room_door_collision[0]);
+      fixCollision(player, room_door_collision[0], side);
+    }
+  }
+
+  if (player_collider->hasCollided(*room_door_collision[1]))
+  {
+    if (getCurrentRoom()->getEast())
+    {
+      if (player_sprite->xPos() > 694)
+      {
+        moveEast();
+        player_sprite->xPos(15);
+      }
+    }
+    else
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*room_door_collision[1]);
+      fixCollision(player, room_door_collision[1], side);
+    }
+  }
+
+  if (player_collider->hasCollided(*room_door_collision[2]))
+  {
+    if (getCurrentRoom()->getSouth())
+    {
+      if (player_sprite->yPos() > 438)
+      {
+        moveSouth();
+        player_sprite->yPos(15);
+      }
+    }
+    else
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*room_door_collision[2]);
+      fixCollision(player, room_door_collision[2], side);
+    }
+  }
+
+  if (player_collider->hasCollided(*room_door_collision[3]))
+  {
+    if (getCurrentRoom()->getWest())
+    {
+      if (player_sprite->xPos() < 10)
+      {
+        moveWest();
+        player_sprite->xPos(640);
+      }
+    }
+    else
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*room_door_collision[3]);
+      fixCollision(player, room_door_collision[3], side);
+    }
+  }
 }
 
 void Map::generateItemRooms()

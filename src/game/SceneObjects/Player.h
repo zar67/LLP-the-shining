@@ -21,7 +21,7 @@ class Player : public GameObject
             float y_pos,
             float width,
             float height);
-  void reset();
+  void reset(float game_width, float game_height);
   void Movement(float x, float y);
   bool update(float delta_time, std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do

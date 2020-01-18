@@ -22,7 +22,6 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
                   std::to_string(bounding_box[1]) + " : " +
                   std::to_string(bounding_box[2]) + " (enemy) " +
                   std::to_string(bounding_box[3]);
-  std::cout << s << std::endl << t << std::endl;
 
   if ((bounding_box[0] >= collided_box[0] &&
          bounding_box[0] <= collided_box[0] + collided_box[2] ||
@@ -38,6 +37,47 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
     return true;
   }
   return false;
+}
+
+CollisionComponent::CollisionSide
+CollisionComponent::getCollisionSide(const CollisionComponent& collided)
+{
+  if (hasCollided(collided))
+  {
+    float other_box[4];
+    collided.getBoundingBox(other_box);
+
+    float left_depth = bounding_box[0] + bounding_box[2] - other_box[0];
+    float right_depth = other_box[0] + other_box[2] - bounding_box[0];
+    float top_depth = bounding_box[1] + bounding_box[3] - other_box[1];
+    float bottom_depth = other_box[1] + other_box[3] - bounding_box[1];
+
+    if (left_depth < right_depth && left_depth < top_depth &&
+        left_depth < bottom_depth)
+    {
+      return CollisionSide::SIDE_LEFT;
+    }
+
+    if (right_depth < left_depth && right_depth < top_depth &&
+        right_depth < bottom_depth)
+    {
+      return CollisionSide::SIDE_RIGHT;
+    }
+
+    if (top_depth < left_depth && top_depth < right_depth &&
+        top_depth < bottom_depth)
+    {
+      return CollisionSide::SIDE_TOP;
+    }
+
+    if (bottom_depth < left_depth && bottom_depth < right_depth &&
+        bottom_depth < top_depth)
+    {
+      return CollisionSide::SIDE_BOTTOM;
+    }
+  }
+
+  return CollisionSide::SIDE_NONE;
 }
 
 void CollisionComponent::setIsTrigger(bool value)
