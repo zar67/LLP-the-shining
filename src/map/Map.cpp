@@ -516,32 +516,29 @@ void Map::generateEnemies(ASGE::Renderer* renderer,
                           int game_width,
                           int game_height)
 {
-  for (int i = 0; i < map_size; i++)
+  for (int i = 0; i < map_size * map_size; i++)
   {
-    for (int j = 0; j < map_size; j++)
+    if (getRoom(i)->getId() != -1 && getRoom(i)->getId() != STARTING_ROOM &&
+        getRoom(i)->getType() == Room::NORMAL)
     {
-      if (rooms[i][j].getId() != -1 && rooms[i][j].getId() != STARTING_ROOM &&
-          rooms[i][j].getType() == Room::NORMAL)
+      // Generate Demons
+      int demon_num = rand() % 2 + 1;
+      for (int x = 0; x < demon_num; x++)
       {
-        // Generate Demons
-        int demon_num = rand() % 2 + 1;
-        for (int x = 0; x < demon_num; x++)
-        {
-          float rand_x = rand() % (game_width - 204) + 102;
-          float rand_y = rand() % (game_height - 236) + 118;
+        float rand_x = rand() % (game_width - 204) + 102;
+        float rand_y = rand() % (game_height - 236) + 118;
 
-          rooms[i][j].addDemonToRoom(renderer, rand_x, rand_y);
-        }
+        getRoom(i)->addDemonToRoom(renderer, rand_x, rand_y);
+      }
 
-        // Generate Ghosts
-        int ghost_num = rand() % 2;
-        for (int x = 0; x < ghost_num; x++)
-        {
-          float rand_x = rand() % (game_width - 204) + 102;
-          float rand_y = rand() % (game_height - 236) + 118;
+      // Generate Ghosts
+      int ghost_num = rand() % 2;
+      for (int x = 0; x < ghost_num; x++)
+      {
+        float rand_x = rand() % (game_width - 204) + 102;
+        float rand_y = rand() % (game_height - 236) + 118;
 
-          rooms[i][j].addGhostToRoom(renderer, rand_x, rand_y);
-        }
+        getRoom(i)->addGhostToRoom(renderer, rand_x, rand_y);
       }
     }
   }
