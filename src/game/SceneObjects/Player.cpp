@@ -7,11 +7,8 @@
 
 Player::~Player()
 {
-  if (weapon_component)
-  {
-    delete weapon_component;
-    weapon_component = nullptr;
-  }
+  delete weapon_component;
+  weapon_component = nullptr;
 }
 
 void Player::init(ASGE::Renderer* renderer,
@@ -41,24 +38,29 @@ void Player::init(ASGE::Renderer* renderer,
 
 void Player::reset(float game_width, float game_height)
 {
-  if (powerups[damage_powerup_index])
-  {
-    health = starting_health * 2;
-  }
-  else
-  {
-    health = starting_health;
-  }
-
   sprite_component->getSprite()->xPos(game_width / 2 - 17);
   sprite_component->getSprite()->yPos(game_height / 2 - 24.5f);
+
+  health = powerups[health_powerup_index] ? starting_health * 2
+                                          : starting_health;
+  damage = powerups[damage_powerup_index] ? starting_damage * 2
+                                          : starting_damage;
+  speed = powerups[move_speed_powerup_index] ? starting_speed * 2
+                                             : starting_speed;
+
+  weapon_component->setSpeed(powerups[shot_speed_powerup_index]
+                               ? starting_shot_speed * 2
+                               : starting_shot_speed);
+  weapon_component->setSize(powerups[shot_size_powerup_index]
+                              ? starting_shot_size * 2
+                              : starting_shot_size);
 }
 
 /*
  * move the player depending on which keys are pressed
  */
 
-bool Player::update(float delta_time, std::vector<GameObject*> enemies)
+bool Player::update(double delta_time, std::vector<GameObject*> enemies)
 {
   if (sprite_component)
   {
@@ -68,7 +70,7 @@ bool Player::update(float delta_time, std::vector<GameObject*> enemies)
   // bullet movement
   if (weapon_component)
   {
-    weaponComponent()->maintainProjectiles(delta_time, enemies);
+    weaponComponent()->maintainProjectiles(delta_time, enemies, damage);
   }
 
   return health <= 0;
@@ -149,27 +151,57 @@ ShootingComponent* Player::weaponComponent()
 
 bool Player::addDamagePowerup()
 {
-  return addPowerup(damage_powerup_index);
+  if (addPowerup(damage_powerup_index))
+  {
+    damage = starting_damage * 2;
+    return true;
+  }
+
+  return false;
 }
 
 bool Player::addHealthPowerup()
 {
-  return addPowerup(health_powerup_index);
+  if (addPowerup(health_powerup_index))
+  {
+    health = starting_health * 2;
+    return true;
+  }
+
+  return false;
 }
 
 bool Player::addMoveSpeedPowerup()
 {
-  return addPowerup(move_speed_powerup_index);
+  if (addPowerup(move_speed_powerup_index))
+  {
+    speed = starting_speed * 2;
+    return true;
+  }
+
+  return false;
 }
 
 bool Player::addShotSizePowerup()
 {
-  return addPowerup(shot_size_powerup_index);
+  if (addPowerup(shot_size_powerup_index))
+  {
+    weapon_component->setSize(starting_shot_size * 2);
+    return true;
+  }
+
+  return false;
 }
 
 bool Player::addShotSpeedPowerup()
 {
-  return addPowerup(shot_speed_powerup_index);
+  if (addPowerup(shot_speed_powerup_index))
+  {
+    weapon_component->setSpeed(starting_shot_speed * 2);
+    return true;
+  }
+
+  return false;
 }
 
 bool* Player::getPowerups()

@@ -361,10 +361,13 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
   updateMiniMap();
 }
 
-void Map::setupBoundingBox(
-  CollisionComponent* component, float x, float y, float width, float height)
+void Map::setupBoundingBox(CollisionComponent* component,
+                           float x_pos,
+                           float y_pos,
+                           float width,
+                           float height)
 {
-  float bounding_box[4] = { x, y, width, height };
+  float bounding_box[4] = { x_pos, y_pos, width, height };
   component->updateBoundingBox(bounding_box);
 }
 

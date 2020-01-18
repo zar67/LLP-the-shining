@@ -42,8 +42,11 @@ class Map
   std::vector<GameObject*> getEnemies();
 
  private:
-  void setupBoundingBox(
-    CollisionComponent* component, float x, float y, float width, float height);
+  void setupBoundingBox(CollisionComponent* component,
+                        float x_pos,
+                        float y_pos,
+                        float width,
+                        float height);
   void checkDoorCollision(Player* player);
 
   void generateItemRooms();

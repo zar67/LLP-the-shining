@@ -23,12 +23,15 @@ void ShootingComponent::Fire(ASGE::Renderer* renderer,
                 start_y,
                 move_direction[0],
                 move_direction[1]);
+  bullet->spriteComponent()->getSprite()->width(size);
+  bullet->spriteComponent()->getSprite()->height(size);
   projectiles.push_back(bullet);
 }
 
 // detect collision for game objects
 void ShootingComponent::maintainProjectiles(double delta_time,
-                                            std::vector<GameObject*> colliders)
+                                            std::vector<GameObject*> colliders,
+                                            int damage)
 {
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
@@ -53,7 +56,7 @@ void ShootingComponent::maintainProjectiles(double delta_time,
         try
         {
           Enemy* enemy = static_cast<Enemy*>(col);
-          enemy->takeDamage(25);
+          enemy->takeDamage(damage);
         }
         catch (const std::exception&)
         {
@@ -97,7 +100,7 @@ bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
   return false;
 }
 
-void ShootingComponent::setSpeed(int value)
+void ShootingComponent::setSpeed(float value)
 {
   speed = value;
 }
@@ -106,14 +109,19 @@ void ShootingComponent::render(ASGE::Renderer* renderer)
 {
   for (auto& bullet : projectiles)
   {
-    ASGE::Sprite* s = bullet->spriteComponent()->getSprite();
-    renderer->renderSprite(*s);
+    ASGE::Sprite* sprite = bullet->spriteComponent()->getSprite();
+    renderer->renderSprite(*sprite);
   }
 }
 
-void ShootingComponent::setMoveDirection(float x, float y)
+void ShootingComponent::setMoveDirection(float x_dir, float y_dir)
 {
   move_direction.clear();
-  move_direction.push_back(x);
-  move_direction.push_back(y);
+  move_direction.push_back(x_dir);
+  move_direction.push_back(y_dir);
+}
+
+void ShootingComponent::setSize(float value)
+{
+  size = value;
 }
