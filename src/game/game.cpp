@@ -166,6 +166,12 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
   ASGE::DebugPrinter() << y_pos << std::endl;
 }
 
+void MyASGEGame::resetGame()
+{
+  map.generateRooms(renderer.get(), game_width, game_height);
+  player.reset();
+}
+
 /**
  *   @brief   Updates the scene
  *   @details Prepares the renderer subsystem before drawing the
@@ -184,7 +190,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     switch (return_value)
     {
       case SceneManager::ReturnValue::START_GAME:
-        map.generateRooms(renderer.get(), game_width, game_height);
+        resetGame();
         break;
       case SceneManager::ReturnValue::EXIT_GAME:
         signalExit();
@@ -254,7 +260,11 @@ void MyASGEGame::render(const ASGE::GameTime&)
     renderer->renderSprite(*player.spriteComponent()->getSprite());
   }
 
-  scene_handler.render(renderer.get(), 1, 10, 50, player.getPowerups());
+  scene_handler.render(renderer.get(),
+                       floor,
+                       player.getCoins(),
+                       player.getHealth(),
+                       player.getPowerups());
 }
 
 void MyASGEGame::playerKeyboardInput(ASGE::SharedEventData data)

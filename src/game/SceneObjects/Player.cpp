@@ -39,6 +39,18 @@ void Player::init(ASGE::Renderer* renderer,
   sprite_component->getSprite()->height(height);
 }
 
+void Player::reset()
+{
+  if (powerups[damage_powerup_index])
+  {
+    health = starting_health * 2;
+  }
+  else
+  {
+    health = starting_health;
+  }
+}
+
 /*
  * move the player depending on which keys are pressed
  */
@@ -136,32 +148,47 @@ ShootingComponent* Player::weaponComponent()
 
 bool Player::addDamagePowerup()
 {
-  return addPowerup(0);
+  return addPowerup(damage_powerup_index);
 }
 
 bool Player::addHealthPowerup()
 {
-  return addPowerup(1);
+  return addPowerup(health_powerup_index);
 }
 
 bool Player::addMoveSpeedPowerup()
 {
-  return addPowerup(2);
+  return addPowerup(move_speed_powerup_index);
 }
 
 bool Player::addShotSizePowerup()
 {
-  return addPowerup(3);
+  return addPowerup(shot_size_powerup_index);
 }
 
 bool Player::addShotSpeedPowerup()
 {
-  return addPowerup(4);
+  return addPowerup(shot_speed_powerup_index);
 }
 
 bool* Player::getPowerups()
 {
   return powerups;
+}
+
+void Player::addCoins(int amount)
+{
+  coins += amount;
+}
+
+int Player::getCoins()
+{
+  return coins;
+}
+
+int Player::getHealth()
+{
+  return health;
 }
 
 bool Player::addPowerup(int index)
