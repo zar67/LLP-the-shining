@@ -76,7 +76,7 @@ bool Player::update(double delta_time, std::vector<GameObject*> enemies)
   return health <= 0;
 }
 
-void Player::Movement(float x, float y)
+void Player::Movement(float x_pos, float y_pos)
 {
   if (!spriteComponent())
   {
@@ -86,8 +86,8 @@ void Player::Movement(float x, float y)
 
   ASGE::Sprite* sprite = spriteComponent()->getSprite();
 
-  float new_x = x + sprite->xPos() * speed;
-  float new_y = y + sprite->yPos() * speed;
+  float new_x = x_pos + sprite->xPos() * speed;
+  float new_y = y_pos + sprite->yPos() * speed;
 
   sprite->xPos(new_x);
   sprite->yPos(new_y);

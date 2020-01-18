@@ -30,7 +30,7 @@ class ShootingComponent
  private:
   float speed = 250.0f;
   float range = 200.0f;
-  float size = 16;
+  float size = 8;
   std::vector<Projectile*> projectiles;
   Projectile* p = nullptr;
 

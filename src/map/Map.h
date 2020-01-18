@@ -24,10 +24,10 @@ class Map
                     CollisionComponent* collided,
                     CollisionComponent::CollisionSide side);
 
-  void moveNorth();
-  void moveEast();
-  void moveSouth();
-  void moveWest();
+  bool moveNorth();
+  bool moveEast();
+  bool moveSouth();
+  bool moveWest();
 
   Room* getRoom(int id);
   Room* getCurrentRoom();

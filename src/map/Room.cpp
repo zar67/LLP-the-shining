@@ -18,6 +18,7 @@ Room::Room(int id,
   east = e_door;
   south = s_door;
   west = w_door;
+  movement_enabled = false;
 }
 
 Room::~Room()

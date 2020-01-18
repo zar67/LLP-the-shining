@@ -138,40 +138,52 @@ void Map::fixCollision(GameObject* object,
   }
 }
 
-void Map::moveNorth()
+bool Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
   {
     current_room -= map_size;
     updateMiniMap();
+    return true;
   }
+
+  return false;
 }
 
-void Map::moveEast()
+bool Map::moveEast()
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
     current_room += 1;
     updateMiniMap();
+    return true;
   }
+
+  return false;
 }
 
-void Map::moveSouth()
+bool Map::moveSouth()
 {
   if (getCurrentRoom()->getSouth() && getCurrentRoom()->canMove())
   {
     current_room += map_size;
     updateMiniMap();
+    return true;
   }
+
+  return false;
 }
 
-void Map::moveWest()
+bool Map::moveWest()
 {
   if (getCurrentRoom()->getWest() && getCurrentRoom()->canMove())
   {
     current_room -= 1;
     updateMiniMap();
+    return true;
   }
+
+  return false;
 }
 
 Room* Map::getRoom(int id)
@@ -196,6 +208,11 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             Player* player)
 {
   getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
+
+  if (getCurrentRoom()->getEnemies().empty())
+  {
+    getCurrentRoom()->canMove(true);
+  }
 }
 
 void Map::renderMiniMap(ASGE::Renderer* renderer)
@@ -225,6 +242,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
   rooms[map_size / 2][map_size / 2] =
     Room(STARTING_ROOM, Room::NORMAL, true, true, true, true);
   rooms[map_size / 2][map_size / 2].setup(renderer, &file);
+  rooms[map_size / 2][map_size / 2].canMove(true);
 
   // Create Queue of Rooms From Open Doors
   std::queue<std::array<int, 2>> rooms_to_generate;
@@ -313,7 +331,6 @@ void Map::generateRooms(ASGE::Renderer* renderer,
   }
 
   last_room->setType(Room::EXIT);
-  last_room->canMove(false);
   generateItemRooms();
   generateEnemies(renderer, game_width, game_height);
 
@@ -382,8 +399,14 @@ void Map::checkDoorCollision(Player* player)
     {
       if (player_sprite->yPos() < 10)
       {
-        moveNorth();
-        player_sprite->yPos(384);
+        if (moveNorth())
+        {
+          player_sprite->yPos(384);
+        }
+        else
+        {
+          player_sprite->yPos(10);
+        }
       }
     }
     else
@@ -398,10 +421,16 @@ void Map::checkDoorCollision(Player* player)
   {
     if (getCurrentRoom()->getEast())
     {
-      if (player_sprite->xPos() > 694)
+      if (player_sprite->xPos() > 694 - player_sprite->width())
       {
-        moveEast();
-        player_sprite->xPos(15);
+        if (moveEast())
+        {
+          player_sprite->xPos(15);
+        }
+        else
+        {
+          player_sprite->xPos(694 - player_sprite->width());
+        }
       }
     }
     else
@@ -416,10 +445,16 @@ void Map::checkDoorCollision(Player* player)
   {
     if (getCurrentRoom()->getSouth())
     {
-      if (player_sprite->yPos() > 438)
+      if (player_sprite->yPos() > 438 - player_sprite->height())
       {
-        moveSouth();
-        player_sprite->yPos(15);
+        if (moveSouth())
+        {
+          player_sprite->yPos(15);
+        }
+        else
+        {
+          player_sprite->yPos(438 - player_sprite->height());
+        }
       }
     }
     else
@@ -436,8 +471,14 @@ void Map::checkDoorCollision(Player* player)
     {
       if (player_sprite->xPos() < 10)
       {
-        moveWest();
-        player_sprite->xPos(640);
+        if (moveWest())
+        {
+          player_sprite->xPos(640);
+        }
+        else
+        {
+          player_sprite->xPos(10);
+        }
       }
     }
     else

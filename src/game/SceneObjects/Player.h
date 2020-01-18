@@ -22,7 +22,7 @@ class Player : public GameObject
             float width,
             float height);
   void reset(float game_width, float game_height);
-  void Movement(float x, float y);
+  void Movement(float x_pos, float y_pos);
   bool update(double delta_time, std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
@@ -50,7 +50,7 @@ class Player : public GameObject
   bool addPowerup(int index);
 
   const int starting_health = 100;
-  const float starting_speed = 100;
+  const float starting_speed = 120;
   const int starting_damage = 20;
   const float starting_shot_speed = 250;
   const float starting_shot_size = 8;

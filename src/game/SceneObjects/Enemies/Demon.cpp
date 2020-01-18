@@ -8,11 +8,8 @@
 
 Demon::~Demon()
 {
-  if (weapon_component)
-  {
-    delete weapon_component;
-    weapon_component = nullptr;
-  }
+  delete weapon_component;
+  weapon_component = nullptr;
 }
 
 bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)

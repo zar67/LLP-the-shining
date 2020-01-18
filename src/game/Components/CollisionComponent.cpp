@@ -14,29 +14,16 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
   float collided_box[4];
   collided.getBoundingBox(collided_box);
 
-  /*std::string s = std::to_string(collided_box[0]) + " (bullet) " +
-                  std::to_string(collided_box[1]) + " : " +
-                  std::to_string(collided_box[2]) + " (bullet) " +
-                  std::to_string(collided_box[3]);
-  std::string t = std::to_string(bounding_box[0]) + " (enemy) " +
-                  std::to_string(bounding_box[1]) + " : " +
-                  std::to_string(bounding_box[2]) + " (enemy) " +
-                  std::to_string(bounding_box[3]);*/
-
-  if ((bounding_box[0] >= collided_box[0] &&
-         bounding_box[0] <= collided_box[0] + collided_box[2] ||
-       bounding_box[0] + bounding_box[2] >= collided_box[0] &&
-         bounding_box[0] + bounding_box[2] <=
-           collided_box[0] + collided_box[2]) &&
-      (bounding_box[1] >= collided_box[1] &&
-         bounding_box[1] <= collided_box[1] + collided_box[3] ||
-       bounding_box[1] + bounding_box[3] >= collided_box[1] &&
-         bounding_box[1] + bounding_box[3] <=
-           collided_box[1] + collided_box[3]))
-  {
-    return true;
-  }
-  return false;
+  return (bounding_box[0] >= collided_box[0] &&
+            bounding_box[0] <= collided_box[0] + collided_box[2] ||
+          bounding_box[0] + bounding_box[2] >= collided_box[0] &&
+            bounding_box[0] + bounding_box[2] <=
+              collided_box[0] + collided_box[2]) &&
+         (bounding_box[1] >= collided_box[1] &&
+            bounding_box[1] <= collided_box[1] + collided_box[3] ||
+          bounding_box[1] + bounding_box[3] >= collided_box[1] &&
+            bounding_box[1] + bounding_box[3] <=
+              collided_box[1] + collided_box[3]);
 }
 
 CollisionComponent::CollisionSide
