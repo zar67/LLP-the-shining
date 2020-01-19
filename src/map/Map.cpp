@@ -192,7 +192,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
 
   last_room->setType(Room::EXIT);
   last_room->canMove(false);
-  generateItemRooms();
+  generateItemRooms(renderer, game_width / 2, game_height / 2);
   generateEnemies(renderer, game_width, game_height);
 
   setupMinimap(renderer, game_width, game_height);
