@@ -69,7 +69,9 @@ void ShootingComponent::maintainProjectiles(double delta_time,
   }
 }
 
-bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
+bool ShootingComponent::hitPlayer(double delta_time,
+                                  GameObject* collider,
+                                  std::vector<GameObject*> scene_objects)
 {
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
@@ -92,6 +94,16 @@ bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
       bullet = nullptr;
       projectiles.erase(itr);
       return true;
+    }
+    for (auto& obj : scene_objects)
+    {
+      if (bullet->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      {
+        delete (bullet);
+        bullet = nullptr;
+        projectiles.erase(itr);
+        return false;
+      }
     }
 
     itr++;

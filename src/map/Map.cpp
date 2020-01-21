@@ -73,6 +73,18 @@ void Map::handlePlayerCollision(Player* player)
     }
   }
 
+  std::vector<GameObject*> objects = getCurrentRoom()->getObjectsInRoom();
+  for (auto& obj : objects)
+  {
+    bool collision = player_collider->hasCollided(*obj->collisionComponent());
+    if (collision)
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*obj->collisionComponent());
+      fixCollision(player, obj->collisionComponent(), side);
+    }
+  }
+
   checkNorthDoorCollision(player);
   checkEastDoorCollision(player);
   checkSouthDoorCollision(player);
@@ -81,6 +93,7 @@ void Map::handlePlayerCollision(Player* player)
 
 void Map::handleObjectCollision(std::vector<GameObject*> colliders)
 {
+  std::vector<GameObject*> scene_objects = getCurrentRoom()->getObjectsInRoom();
   for (auto& col : colliders)
   {
     col->updateCollisionComponent();
@@ -102,6 +115,17 @@ void Map::handleObjectCollision(std::vector<GameObject*> colliders)
         CollisionComponent::CollisionSide side =
           col->collisionComponent()->getCollisionSide(*door);
         fixCollision(col, door, side);
+      }
+    }
+
+    for (auto& obj : scene_objects)
+    {
+      if (col->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      {
+        CollisionComponent::CollisionSide side =
+          col->collisionComponent()->getCollisionSide(
+            *obj->collisionComponent());
+        fixCollision(col, obj->collisionComponent(), side);
       }
     }
   }

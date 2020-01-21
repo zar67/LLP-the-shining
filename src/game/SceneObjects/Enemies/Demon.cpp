@@ -30,7 +30,10 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   return true;
 }
 
-void Demon::update(ASGE::Renderer* renderer, double delta_time, Player* player)
+void Demon::update(ASGE::Renderer* renderer,
+                   double delta_time,
+                   Player* player,
+                   std::vector<GameObject*> scene_objects)
 {
   ASGE::Sprite* sprite = player->spriteComponent()->getSprite();
 
@@ -79,7 +82,8 @@ void Demon::update(ASGE::Renderer* renderer, double delta_time, Player* player)
       shoot_timer = 0;
     }
 
-    if (weaponComponent()->hitPlayer(delta_time, player))
+    // pass in crates vector as well to detect collision
+    if (weaponComponent()->hitPlayer(delta_time, player, scene_objects))
     {
       player->takeDamage(damage);
     }

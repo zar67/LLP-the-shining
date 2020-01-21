@@ -52,6 +52,7 @@ class Room : public GameObject
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
 
+  std::vector<GameObject*> getObjectsInRoom();
   std::vector<GameObject*> getEnemies();
   void checkEnemyHealth();
 
@@ -69,6 +70,10 @@ class Room : public GameObject
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;
   // std::vector<Item> items;
+
+  // objects in the room
+  std::vector<GameObject*> interactable_objs;
+  std::string texture_dir = "data/Objects/crate2.png";
 };
 
 #endif // PROJECT_ROOM_H

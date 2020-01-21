@@ -20,7 +20,9 @@ class ShootingComponent
   void maintainProjectiles(double delta_time,
                            std::vector<GameObject*> colliders,
                            int damage);
-  bool hitPlayer(double delta_time, GameObject* collider);
+  bool hitPlayer(double delta_time,
+                 GameObject* collider,
+                 std::vector<GameObject*> scene_objects);
   void render(ASGE::Renderer* renderer);
 
   void setMoveDirection(float x_dir, float y_dir);

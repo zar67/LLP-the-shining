@@ -15,7 +15,10 @@ class Demon : public Enemy
   ~Demon();
 
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
-  void update(ASGE::Renderer* renderer, double delta_time, Player* player);
+  void update(ASGE::Renderer* renderer,
+              double delta_time,
+              Player* player,
+              std::vector<GameObject*> scene_objects);
   void render(ASGE::Renderer* renderer) override;
 
   bool addWeaponComponent();

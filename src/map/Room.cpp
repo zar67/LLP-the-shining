@@ -39,6 +39,39 @@ Room::~Room()
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
+
+  int num_objs = rand() % 4;
+  for (int i = 0; i < num_objs; ++i)
+  {
+    bool next_obj = false;
+    GameObject* object = new GameObject();
+    do
+    {
+      object->addCollisionComponent();
+      object->addSpriteComponent(renderer, texture_dir);
+
+      int x_rand = 100 + rand() % 450;
+      int y_rand = 100 + rand() % 250;
+      object->spriteComponent()->getSprite()->xPos(x_rand);
+      object->spriteComponent()->getSprite()->yPos(y_rand);
+      object->spriteComponent()->getSprite()->width(40);
+      object->spriteComponent()->getSprite()->height(40);
+
+      object->updateCollisionComponent();
+
+      for (auto& obj : interactable_objs)
+      {
+        if (object->collisionComponent()->hasCollided(
+              *obj->collisionComponent()))
+        {
+          break;
+        }
+      }
+      next_obj = true;
+    } while (!next_obj);
+
+    interactable_objs.push_back(object);
+  }
 }
 
 int Room::getId()
@@ -96,6 +129,10 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   {
     ghosts.at(i)->render(renderer);
   }
+  for (auto& obj : interactable_objs)
+  {
+    renderer->renderSprite(*obj->spriteComponent()->getSprite());
+  }
 }
 
 void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
@@ -104,7 +141,7 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
 {
   for (int i = 0; i < demons.size(); i++)
   {
-    demons.at(i)->update(renderer, delta_time, player);
+    demons.at(i)->update(renderer, delta_time, player, interactable_objs);
   }
 
   for (int i = 0; i < ghosts.size(); i++)
@@ -147,6 +184,10 @@ std::vector<GameObject*> Room::getEnemies()
   {
     enemies.push_back(ghost);
   }
+  for (auto& obj : interactable_objs)
+  {
+    enemies.push_back(obj);
+  }
   return enemies;
 }
 
@@ -175,4 +216,9 @@ void Room::checkEnemyHealth()
     }
     itr_demon++;
   }
+}
+
+std::vector<GameObject*> Room::getObjectsInRoom()
+{
+  return interactable_objs;
 }
