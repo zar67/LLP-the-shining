@@ -33,7 +33,7 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 void Demon::update(ASGE::Renderer* renderer,
                    double delta_time,
                    Player* player,
-                   std::vector<GameObject*> scene_objects)
+                   std::vector<InteractableObjects*> scene_objects)
 {
   ASGE::Sprite* sprite = player->spriteComponent()->getSprite();
 

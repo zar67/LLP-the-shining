@@ -5,8 +5,9 @@
 #ifndef THE_SHINING_GAME_GROUP_3_GHOST_H
 #define THE_SHINING_GAME_GROUP_3_GHOST_H
 
+#include "../InteractableObjects.h"
+#include "../Player.h"
 #include "Enemy.h"
-
 class Ghost : public Enemy
 {
  public:
@@ -17,17 +18,17 @@ class Ghost : public Enemy
   void update(double delta_time,
               float player_x,
               float player_y,
-              std::vector<GameObject*> objects,
+              std::vector<InteractableObjects*> objects,
               bool doors[4]);
 
-  GameObject* grabClosestObject(std::vector<GameObject*> objects);
+  GameObject* grabClosestObject(std::vector<InteractableObjects*> objects);
   void getMoveToDoor(const bool doors[4], float (&out_pos)[2]);
 
  private:
   GameObject* obj_grabbed = nullptr;
   float door_pos[2] = { 0.0f, 0.0f }; // door object grabbed moving to
   std::vector<float> direction;       // direction for object to door
-  int speed = 10;                     // speed of moving object
+  int speed = 7;                      // speed of moving object
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_GHOST_H

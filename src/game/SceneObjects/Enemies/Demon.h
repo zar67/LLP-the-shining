@@ -5,6 +5,8 @@
 #ifndef THE_SHINING_GAME_GROUP_3_DEMON_H
 #define THE_SHINING_GAME_GROUP_3_DEMON_H
 
+#include "../InteractableObjects.h"
+#include "../Player.h"
 #include "Enemy.h"
 #include <vector>
 
@@ -18,7 +20,7 @@ class Demon : public Enemy
   void update(ASGE::Renderer* renderer,
               double delta_time,
               Player* player,
-              std::vector<GameObject*> scene_objects);
+              std::vector<InteractableObjects*> scene_objects);
   void render(ASGE::Renderer* renderer) override;
 
   bool addWeaponComponent();

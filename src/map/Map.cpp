@@ -73,7 +73,8 @@ void Map::handlePlayerCollision(Player* player)
     }
   }
 
-  std::vector<GameObject*> objects = getCurrentRoom()->getObjectsInRoom();
+  std::vector<InteractableObjects*> objects =
+    getCurrentRoom()->getObjectsInRoom();
   for (auto& obj : objects)
   {
     bool collision = player_collider->hasCollided(*obj->collisionComponent());
@@ -93,7 +94,8 @@ void Map::handlePlayerCollision(Player* player)
 
 void Map::handleObjectCollision(std::vector<GameObject*> colliders)
 {
-  std::vector<GameObject*> scene_objects = getCurrentRoom()->getObjectsInRoom();
+  std::vector<InteractableObjects*> scene_objects =
+    getCurrentRoom()->getObjectsInRoom();
   for (auto& col : colliders)
   {
     col->updateCollisionComponent();

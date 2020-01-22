@@ -6,7 +6,8 @@
 #define THE_SHINING_GAME_GROUP_3_ENEMY_H
 
 #include "../GameObject.h"
-#include "../Player.h"
+//#include "../Player.h"
+//#include "../InteractableObjects.h"
 
 class Enemy : public GameObject
 {
@@ -27,7 +28,7 @@ class Enemy : public GameObject
 
  protected:
   bool is_alive = true;
-  int hp = 0;
+  int hp = 100;
   int damage = 0;
   float speed = 0;
 };

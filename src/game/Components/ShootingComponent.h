@@ -5,6 +5,7 @@
 #ifndef PROJECT_SHOOTINGCOMPONENT_H
 #define PROJECT_SHOOTINGCOMPONENT_H
 
+#include "../SceneObjects/InteractableObjects.h"
 #include "../SceneObjects/Projectile.h"
 #include <vector>
 
@@ -22,7 +23,7 @@ class ShootingComponent
                            int damage);
   bool hitPlayer(double delta_time,
                  GameObject* collider,
-                 std::vector<GameObject*> scene_objects);
+                 std::vector<InteractableObjects*> scene_objects);
   void render(ASGE::Renderer* renderer);
 
   void setMoveDirection(float x_dir, float y_dir);
@@ -30,6 +31,8 @@ class ShootingComponent
   void setSize(float value);
 
  private:
+  bool checkDownCast(GameObject* object);
+
   float speed = 250.0f;
   float range = 200.0f;
   float size = 8;

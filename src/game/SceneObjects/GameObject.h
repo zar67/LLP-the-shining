@@ -10,8 +10,6 @@
 #include "../Components/CollisionComponent.h"
 #include "../Components/SpriteComponent.h"
 
-//#include "../Components/WeaponComponent.h"
-
 class GameObject
 {
  public:

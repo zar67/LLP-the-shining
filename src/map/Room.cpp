@@ -40,24 +40,16 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
 
-  int num_objs = rand() % 4;
+  int num_objs = 1 + rand() % 3;
   for (int i = 0; i < num_objs; ++i)
   {
     bool next_obj = false;
-    GameObject* object = new GameObject();
+    auto* object = new InteractableObjects();
     do
     {
-      object->addCollisionComponent();
-      object->addSpriteComponent(renderer, texture_dir);
-
       int x_rand = 100 + rand() % 450;
       int y_rand = 100 + rand() % 250;
-      object->spriteComponent()->getSprite()->xPos(x_rand);
-      object->spriteComponent()->getSprite()->yPos(y_rand);
-      object->spriteComponent()->getSprite()->width(40);
-      object->spriteComponent()->getSprite()->height(40);
-
-      object->updateCollisionComponent();
+      object->setup(renderer, x_rand, y_rand);
 
       for (auto& obj : interactable_objs)
       {
@@ -71,6 +63,7 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
     } while (!next_obj);
 
     interactable_objs.push_back(object);
+    object = nullptr;
   }
 }
 
@@ -156,6 +149,18 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
 
   // check if any enemies have been killed
   checkEnemyHealth();
+
+  // check interactable objects health
+  auto itr = interactable_objs.begin();
+  for (auto& obj : interactable_objs)
+  {
+    bool is_destroyed = obj->checkHealth(renderer);
+    if (is_destroyed)
+    {
+      interactable_objs.erase(itr);
+    }
+    itr++;
+  }
 }
 
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
@@ -174,7 +179,8 @@ void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 /*
  * pass enemy memory location up to game.cpp
- * this is so player can access and detect collison
+ * this is so player can access and detect collision
+ * only include objects when detecting collision
  */
 std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
 {
@@ -224,7 +230,7 @@ void Room::checkEnemyHealth()
   }
 }
 
-std::vector<GameObject*> Room::getObjectsInRoom()
+std::vector<InteractableObjects*> Room::getObjectsInRoom()
 {
   return interactable_objs;
 }

@@ -24,7 +24,7 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 void Ghost::update(double delta_time,
                    float player_x,
                    float player_y,
-                   std::vector<GameObject*> objects,
+                   std::vector<InteractableObjects*> objects,
                    bool doors[4])
 {
   // Random update
@@ -52,7 +52,7 @@ void Ghost::update(double delta_time,
   }
 }
 
-GameObject* Ghost::grabClosestObject(std::vector<GameObject*> objects)
+GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
 {
   ASGE::Sprite* ghost_sprite = spriteComponent()->getSprite();
   GameObject* closest_obj;
