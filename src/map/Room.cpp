@@ -176,7 +176,7 @@ void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
  * pass enemy memory location up to game.cpp
  * this is so player can access and detect collison
  */
-std::vector<GameObject*> Room::getEnemies()
+std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
 {
   std::vector<GameObject*> enemies;
   for (auto& demon : demons)
@@ -187,9 +187,12 @@ std::vector<GameObject*> Room::getEnemies()
   {
     enemies.push_back(ghost);
   }
-  for (auto& obj : interactable_objs)
+  if (inlcude_objects)
   {
-    enemies.push_back(obj);
+    for (auto& obj : interactable_objs)
+    {
+      enemies.push_back(obj);
+    }
   }
   return enemies;
 }

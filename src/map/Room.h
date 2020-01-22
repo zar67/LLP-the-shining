@@ -53,7 +53,7 @@ class Room : public GameObject
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
 
   std::vector<GameObject*> getObjectsInRoom();
-  std::vector<GameObject*> getEnemies();
+  std::vector<GameObject*> getEnemies(bool inlcude_objects);
   void checkEnemyHealth();
 
  private:

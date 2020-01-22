@@ -236,7 +236,7 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
 {
   getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
 
-  if (getCurrentRoom()->getEnemies().empty())
+  if (getCurrentRoom()->getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
   }
@@ -716,7 +716,7 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
   return valid;
 }
 
-std::vector<GameObject*> Map::getEnemies()
+std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
-  return getCurrentRoom()->getEnemies();
+  return getCurrentRoom()->getEnemies(include_objects);
 }
