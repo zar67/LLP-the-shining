@@ -144,14 +144,17 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
     demons.at(i)->update(renderer, delta_time, player, interactable_objs);
   }
 
+  bool doors[4] = { north, east, south, west };
   for (int i = 0; i < ghosts.size(); i++)
   {
     ghosts.at(i)->update(delta_time,
                          player->spriteComponent()->getSprite()->xPos(),
-                         player->spriteComponent()->getSprite()->yPos());
+                         player->spriteComponent()->getSprite()->yPos(),
+                         interactable_objs,
+                         doors);
   }
 
-  // check if any enemies have beeb killed
+  // check if any enemies have been killed
   checkEnemyHealth();
 }
 
