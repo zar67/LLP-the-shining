@@ -16,8 +16,6 @@ class Ghost : public Enemy
 
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
   void update(double delta_time,
-              float player_x,
-              float player_y,
               std::vector<InteractableObjects*> objects,
               bool doors[4]);
 

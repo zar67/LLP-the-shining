@@ -22,8 +22,6 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 }
 
 void Ghost::update(double delta_time,
-                   float player_x,
-                   float player_y,
                    std::vector<InteractableObjects*> objects,
                    bool doors[4])
 {
@@ -63,16 +61,16 @@ GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
   float distance = -1.0f;
   for (auto& obj : objects)
   {
+    if (obj->isGrabbed())
+    {
+      continue;
+    }
     ASGE::Sprite* obj_sprite = obj->spriteComponent()->getSprite();
     float next_distance = getDistanceBetween(ghost_sprite->xPos(),
                                              ghost_sprite->yPos(),
                                              obj_sprite->xPos(),
                                              obj_sprite->yPos());
-    if (obj->isGrabbed())
-    {
-      continue;
-    }
-    if ((distance == -1.0f || distance > next_distance))
+    if (distance == -1.0f || distance > next_distance)
     {
       distance = next_distance;
       closest_obj = obj;
