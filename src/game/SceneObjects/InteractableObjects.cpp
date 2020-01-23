@@ -47,3 +47,13 @@ bool InteractableObjects::setup(ASGE::Renderer* renderer,
 
   return true;
 }
+
+void InteractableObjects::setIsGrabbed(bool value)
+{
+  is_grabbed = value;
+}
+
+bool InteractableObjects::isGrabbed()
+{
+  return is_grabbed;
+}

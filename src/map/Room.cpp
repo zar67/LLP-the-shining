@@ -40,10 +40,11 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
 
+  bool next_obj = false;
   int num_objs = 1 + rand() % 3;
   for (int i = 0; i < num_objs; ++i)
   {
-    bool next_obj = false;
+    next_obj = false;
     auto* object = new InteractableObjects();
     do
     {
@@ -63,7 +64,6 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
     } while (!next_obj);
 
     interactable_objs.push_back(object);
-    object = nullptr;
   }
 }
 
@@ -172,7 +172,7 @@ void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
-  Ghost* new_ghost = new Ghost();
+  auto* new_ghost = new Ghost();
   ghosts.push_back(new_ghost);
   ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
 }

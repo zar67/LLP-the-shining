@@ -49,13 +49,17 @@ void Ghost::update(double delta_time,
                            door_pos[1]);
       obj_grabbed->move(delta_time, direction[0], direction[1], speed);
     }
+    else
+    {
+      obj_grabbed = nullptr;
+    }
   }
 }
 
 GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
 {
   ASGE::Sprite* ghost_sprite = spriteComponent()->getSprite();
-  GameObject* closest_obj;
+  InteractableObjects* closest_obj = nullptr;
   float distance = -1.0f;
   for (auto& obj : objects)
   {
@@ -64,11 +68,19 @@ GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
                                              ghost_sprite->yPos(),
                                              obj_sprite->xPos(),
                                              obj_sprite->yPos());
-    if (distance == -1.0f || distance > next_distance)
+    if (obj->isGrabbed())
+    {
+      continue;
+    }
+    if ((distance == -1.0f || distance > next_distance))
     {
       distance = next_distance;
       closest_obj = obj;
     }
+  }
+  if (closest_obj)
+  {
+    closest_obj->setIsGrabbed(true);
   }
   return closest_obj;
 }
