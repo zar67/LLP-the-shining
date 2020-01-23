@@ -140,11 +140,7 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
   bool doors[4] = { north, east, south, west };
   for (int i = 0; i < ghosts.size(); i++)
   {
-    ghosts.at(i)->update(delta_time,
-                         player->spriteComponent()->getSprite()->xPos(),
-                         player->spriteComponent()->getSprite()->yPos(),
-                         interactable_objs,
-                         doors);
+    ghosts.at(i)->update(delta_time, interactable_objs, doors);
   }
 
   // check if any enemies have been killed
