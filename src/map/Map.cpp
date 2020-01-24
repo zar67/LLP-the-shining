@@ -538,7 +538,7 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
     }
 
     getRoom(id)->setType(Room::ITEM);
-    rooms[Room::ITEM]->addItemToRoom(renderer, game_width / 2, game_height / 2);
+    getRoom(id)->addItemToRoom(renderer, game_width / 2, game_height / 2);
   }
 }
 

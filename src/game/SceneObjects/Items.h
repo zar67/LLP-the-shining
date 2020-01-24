@@ -18,7 +18,7 @@ class Items : public GameObject
   bool hasCollidedWithPlayer();
   void hasPickedUpItem();
 
-  bool setUpItems(ASGE::Renderer* renderer);
+  bool setUpItems(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void renderItem(ASGE::Renderer* renderer);
 
  private:

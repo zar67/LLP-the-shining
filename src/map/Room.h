@@ -8,7 +8,7 @@
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
-#include "../game/sceneObjects/Items.h"
+#include "../game/SceneObjects/Items.h"
 #include <string>
 #include <vector>
 
