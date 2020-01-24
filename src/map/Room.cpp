@@ -45,6 +45,29 @@ Room::~Room()
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
+
+  int num_objs = 1 + rand() % 3;
+  for (int i = 0; i < num_objs; ++i)
+  {
+    auto* object = new InteractableObjects();
+    while (true)
+    {
+      int x_rand = 100 + rand() % 450;
+      int y_rand = 100 + rand() % 250;
+      object->setup(renderer, x_rand, y_rand);
+
+      for (auto& obj : interactable_objs)
+      {
+        if (object->collisionComponent()->hasCollided(
+              *obj->collisionComponent()))
+        {
+          continue;
+        }
+      }
+      break;
+    }
+    interactable_objs.push_back(object);
+  }
 }
 
 int Room::getId()
@@ -103,6 +126,11 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
     ghosts.at(i)->render(renderer);
   }
 
+  for (auto& obj : interactable_objs)
+  {
+    renderer->renderSprite(*obj->spriteComponent()->getSprite());
+  }
+
   for (int i = 0; i < items.size(); i++)
   {
     items.at(i)->renderItem(renderer);
@@ -115,18 +143,29 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
 {
   for (int i = 0; i < demons.size(); i++)
   {
-    demons.at(i)->update(renderer, delta_time, player);
+    demons.at(i)->update(renderer, delta_time, player, interactable_objs);
   }
 
+  bool doors[4] = { north, east, south, west };
   for (int i = 0; i < ghosts.size(); i++)
   {
-    ghosts.at(i)->update(delta_time,
-                         player->spriteComponent()->getSprite()->xPos(),
-                         player->spriteComponent()->getSprite()->yPos());
+    ghosts.at(i)->update(delta_time, interactable_objs, doors);
   }
 
-  // check if any enemies have beeb killed
+  // check if any enemies have been killed
   checkEnemyHealth();
+
+  // check interactable objects health
+  auto itr = interactable_objs.begin();
+  for (auto& obj : interactable_objs)
+  {
+    bool is_destroyed = obj->checkHealth(renderer);
+    if (is_destroyed)
+    {
+      interactable_objs.erase(itr);
+    }
+    itr++;
+  }
 }
 
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
@@ -138,16 +177,17 @@ void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
-  Ghost* new_ghost = new Ghost();
+  auto* new_ghost = new Ghost();
   ghosts.push_back(new_ghost);
   ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
 /*
  * pass enemy memory location up to game.cpp
- * this is so player can access and detect collison
+ * this is so player can access and detect collision
+ * only include objects when detecting collision
  */
-std::vector<GameObject*> Room::getEnemies()
+std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
 {
   std::vector<GameObject*> enemies;
   for (auto& demon : demons)
@@ -157,6 +197,13 @@ std::vector<GameObject*> Room::getEnemies()
   for (auto& ghost : ghosts)
   {
     enemies.push_back(ghost);
+  }
+  if (inlcude_objects)
+  {
+    for (auto& obj : interactable_objs)
+    {
+      enemies.push_back(obj);
+    }
   }
   return enemies;
 }
@@ -188,6 +235,11 @@ void Room::checkEnemyHealth()
   }
 }
 
+std::vector<InteractableObjects*> Room::getObjectsInRoom()
+{
+  return interactable_objs;
+}
+
 void Room::removeItemToRoom(int item_index)
 {
   if (item_index < items.size())
@@ -195,6 +247,7 @@ void Room::removeItemToRoom(int item_index)
     items.erase(items.begin() + item_index);
   }
 }
+
 void Room::addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   Items* new_Item = new Items();

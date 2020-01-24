@@ -14,7 +14,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ## out of source builds ##
 
 ## add the files to be compiled here
-
 set(HEADER_FILES
         game/main.cpp
         game/game.cpp
@@ -23,6 +22,7 @@ set(HEADER_FILES
         game/SceneObjects/GameObject.cpp
         game/Components/SpriteComponent.cpp
         game/Components/CollisionComponent.cpp
+        game/Components/ShootingComponent.cpp
         game/SceneObjects/Player.cpp
         game/SceneObjects/Enemies/Enemy.cpp
         game/SceneObjects/Enemies/Demon.cpp
@@ -35,8 +35,10 @@ set(HEADER_FILES
         game/UIHandler/Scenes/GameOverMenu.cpp
         game/UIHandler/Scenes/ShopMenu.cpp
         game/UIHandler/Scenes/GameScene.cpp
-        game/Components/ShootingComponent.cpp
+        game/SceneObjects/InteractableObjects.cpp
         game/SceneObjects/Items.cpp
+        game/Components/ShootingComponent.cpp
+        
         game/game.h
         map/Room.h
         map/Map.h
@@ -50,8 +52,14 @@ set(HEADER_FILES
         game/SceneObjects/Enemies/Ghost.h
         game/SceneObjects/Enemies/AxePsycho.h
         game/Components/ShootingComponent.h
-        game/SceneObjects/Items.h)
-
+        game/SceneObjects/Items.h
+        game/UIHandler/Scene.h
+        game/UIHandler/SceneManager.h
+        game/UIHandler/Scenes/MainMenu.h
+        game/UIHandler/Scenes/GameOverMenu.h
+        game/UIHandler/Scenes/ShopMenu.h
+        game/UIHandler/Scenes/GameScene.h
+        game/SceneObjects/InteractableObjects.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

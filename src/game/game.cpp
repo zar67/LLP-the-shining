@@ -318,13 +318,13 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(inputs.get());
-    if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
+    if (player.update(delta_time, map.getCurrentRoom()->getEnemies(true)))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
     map.handlePlayerCollision(&player);
 
-    std::vector<GameObject*> colliders = map.getEnemies();
+    std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
     map.updateCurrentRoom(renderer.get(), delta_time, &player);
   }

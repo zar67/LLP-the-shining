@@ -8,7 +8,9 @@
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
+#include "../game/SceneObjects/InteractableObjects.h"
 #include "../game/SceneObjects/Items.h"
+
 #include <string>
 #include <vector>
 
@@ -53,7 +55,8 @@ class Room : public GameObject
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
 
-  std::vector<GameObject*> getEnemies();
+  std::vector<InteractableObjects*> getObjectsInRoom();
+  std::vector<GameObject*> getEnemies(bool inlcude_objects);
   void checkEnemyHealth();
 
   void addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
@@ -72,6 +75,10 @@ class Room : public GameObject
   // wise
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;
+
+  // objects in the room
+  std::vector<InteractableObjects*> interactable_objs;
+  std::string texture_dir = "data/Objects/crate2.png";
   std::vector<Items*> items;
 };
 

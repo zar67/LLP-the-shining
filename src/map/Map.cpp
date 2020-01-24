@@ -73,6 +73,19 @@ void Map::handlePlayerCollision(Player* player)
     }
   }
 
+  std::vector<InteractableObjects*> objects =
+    getCurrentRoom()->getObjectsInRoom();
+  for (auto& obj : objects)
+  {
+    bool collision = player_collider->hasCollided(*obj->collisionComponent());
+    if (collision)
+    {
+      CollisionComponent::CollisionSide side =
+        player_collider->getCollisionSide(*obj->collisionComponent());
+      fixCollision(player, obj->collisionComponent(), side);
+    }
+  }
+
   checkNorthDoorCollision(player);
   checkEastDoorCollision(player);
   checkSouthDoorCollision(player);
@@ -81,6 +94,8 @@ void Map::handlePlayerCollision(Player* player)
 
 void Map::handleObjectCollision(std::vector<GameObject*> colliders)
 {
+  std::vector<InteractableObjects*> scene_objects =
+    getCurrentRoom()->getObjectsInRoom();
   for (auto& col : colliders)
   {
     col->updateCollisionComponent();
@@ -102,6 +117,17 @@ void Map::handleObjectCollision(std::vector<GameObject*> colliders)
         CollisionComponent::CollisionSide side =
           col->collisionComponent()->getCollisionSide(*door);
         fixCollision(col, door, side);
+      }
+    }
+
+    for (auto& obj : scene_objects)
+    {
+      if (col->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      {
+        CollisionComponent::CollisionSide side =
+          col->collisionComponent()->getCollisionSide(
+            *obj->collisionComponent());
+        fixCollision(col, obj->collisionComponent(), side);
       }
     }
   }
@@ -212,7 +238,7 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
 {
   getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
 
-  if (getCurrentRoom()->getEnemies().empty())
+  if (getCurrentRoom()->getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
   }
@@ -696,7 +722,7 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
   return valid;
 }
 
-std::vector<GameObject*> Map::getEnemies()
+std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
-  return getCurrentRoom()->getEnemies();
+  return getCurrentRoom()->getEnemies(include_objects);
 }

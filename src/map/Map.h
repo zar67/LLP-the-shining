@@ -41,7 +41,7 @@ class Map
   void generateRooms(ASGE::Renderer* renderer, int game_width, int game_height);
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
-  std::vector<GameObject*> getEnemies();
+  std::vector<GameObject*> getEnemies(bool include_objects);
 
  private:
   void

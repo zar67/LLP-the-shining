@@ -44,32 +44,32 @@ void ShootingComponent::maintainProjectiles(double delta_time,
       projectiles.erase(itr);
       continue;
     }
-    for (auto& col : colliders)
+    else
     {
-      col->updateCollisionComponent();
-      if (bullet->collisionComponent()->hasCollided(*col->collisionComponent()))
+      for (auto& col : colliders)
       {
-        // collision
-        delete (bullet);
-        bullet = nullptr;
-        projectiles.erase(itr);
-        try
+        col->updateCollisionComponent();
+        if (bullet->collisionComponent()->hasCollided(
+              *col->collisionComponent()))
         {
-          Enemy* enemy = static_cast<Enemy*>(col);
+          // collision
+          delete (bullet);
+          bullet = nullptr;
+          projectiles.erase(itr);
+          auto* enemy = static_cast<Enemy*>(col);
           enemy->takeDamage(damage);
-        }
-        catch (const std::exception&)
-        {
           break;
         }
-        break;
       }
     }
     itr++;
   }
 }
 
-bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
+bool ShootingComponent::hitPlayer(
+  double delta_time,
+  GameObject* collider,
+  std::vector<InteractableObjects*> scene_objects)
 {
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
@@ -92,6 +92,16 @@ bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
       bullet = nullptr;
       projectiles.erase(itr);
       return true;
+    }
+    for (auto& obj : scene_objects)
+    {
+      if (bullet->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      {
+        delete (bullet);
+        bullet = nullptr;
+        projectiles.erase(itr);
+        return false;
+      }
     }
 
     itr++;
