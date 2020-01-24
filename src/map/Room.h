@@ -46,12 +46,15 @@ class Room : public GameObject
   void canMove(bool movement);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
-  void updateObjectsInRoom(double delta_time, float player_x, float player_y);
+  void updateObjectsInRoom(ASGE::Renderer* renderer,
+                           double delta_time,
+                           Player* player);
 
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
-  void removeDemonFromRoom(int demon_index);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
-  void removeGhostFromRoom(int ghost_index);
+
+  std::vector<GameObject*> getEnemies();
+  void checkEnemyHealth();
 
   void addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void removeItemToRoom(int item_index);
@@ -65,6 +68,8 @@ class Room : public GameObject
   bool west = false;
   bool movement_enabled = true;
 
+  // zoe remeber to delete the eneimes when you change room/ memory leak other
+  // wise
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;
   std::vector<Items*> items;

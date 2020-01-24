@@ -18,6 +18,7 @@ Room::Room(int id,
   east = e_door;
   south = s_door;
   west = w_door;
+  movement_enabled = false;
 }
 
 Room::~Room()
@@ -97,19 +98,24 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   }
 }
 
-void Room::updateObjectsInRoom(double delta_time,
-                               float player_x,
-                               float player_y)
+void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
+                               double delta_time,
+                               Player* player)
 {
   for (int i = 0; i < demons.size(); i++)
   {
-    demons.at(i)->update(delta_time, player_x, player_y);
+    demons.at(i)->update(renderer, delta_time, player);
   }
 
   for (int i = 0; i < ghosts.size(); i++)
   {
-    ghosts.at(i)->update(delta_time, player_x, player_y);
+    ghosts.at(i)->update(delta_time,
+                         player->spriteComponent()->getSprite()->xPos(),
+                         player->spriteComponent()->getSprite()->yPos());
   }
+
+  // check if any enemies have beeb killed
+  checkEnemyHealth();
 }
 
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
@@ -119,14 +125,6 @@ void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
   demons.at(demons.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
-void Room::removeDemonFromRoom(int demon_index)
-{
-  if (demon_index < demons.size())
-  {
-    demons.erase(demons.begin() + demon_index);
-  }
-}
-
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   Ghost* new_ghost = new Ghost();
@@ -134,11 +132,48 @@ void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
   ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
-void Room::removeGhostFromRoom(int ghost_index)
+/*
+ * pass enemy memory location up to game.cpp
+ * this is so player can access and detect collison
+ */
+std::vector<GameObject*> Room::getEnemies()
 {
-  if (ghost_index < ghosts.size())
+  std::vector<GameObject*> enemies;
+  for (auto& demon : demons)
   {
-    ghosts.erase(ghosts.begin() + ghost_index);
+    enemies.push_back(demon);
+  }
+  for (auto& ghost : ghosts)
+  {
+    enemies.push_back(ghost);
+  }
+  return enemies;
+}
+
+void Room::checkEnemyHealth()
+{
+  auto itr_ghost = ghosts.begin();
+  for (auto& ghost : ghosts)
+  {
+    if (ghost->health() <= 0)
+    {
+      delete (ghost);
+      ghost = nullptr;
+      ghosts.erase(itr_ghost);
+    }
+    itr_ghost++;
+  }
+
+  auto itr_demon = demons.begin();
+  for (auto& demon : demons)
+  {
+    if (demon->health() <= 0)
+    {
+      delete (demon);
+      demon = nullptr;
+      demons.erase(itr_demon);
+    }
+    itr_demon++;
   }
 }
 

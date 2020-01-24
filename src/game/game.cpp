@@ -67,6 +67,16 @@ bool MyASGEGame::init()
     return false;
   }
 
+  map.setupRoomCollision();
+
+  std::string texture = "/data/Characters/Danny.png";
+  player.init(renderer.get(),
+              texture,
+              game_width / 2 - 17,
+              game_height / 2 - 24.5f,
+              34.0f,
+              49.0f);
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -109,29 +119,115 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   {
     signalExit();
   }
-  if (key->key == ASGE::KEYS::KEY_W && key->action == ASGE::KEYS::KEY_RELEASED)
+
+  if (!controller_connected)
   {
-    map.moveNorth();
-    // player_y -= 10;
+    // vertical movement
+    if (key->key == ASGE::KEYS::KEY_DOWN &&
+        key->action == ASGE::KEYS::KEY_PRESSED)
+    {
+      player.moveVertical(1.0f);
+    }
+    else if (key->key == ASGE::KEYS::KEY_UP &&
+             key->action == ASGE::KEYS::KEY_PRESSED)
+    {
+      player.moveVertical(-1.0f);
+    }
+    else if ((key->key == ASGE::KEYS::KEY_DOWN ||
+              key->key == ASGE::KEYS::KEY_UP) &&
+             key->action == ASGE::KEYS::KEY_RELEASED)
+    {
+      player.moveVertical(0.0f);
+    }
+    // Horizontal movement
+    if (key->key == ASGE::KEYS::KEY_RIGHT &&
+        key->action == ASGE::KEYS::KEY_PRESSED)
+    {
+      player.moveHorizontal(1.0f);
+    }
+    else if (key->key == ASGE::KEYS::KEY_LEFT &&
+             key->action == ASGE::KEYS::KEY_PRESSED)
+    {
+      player.moveHorizontal(-1.0f);
+    }
+    else if ((key->key == ASGE::KEYS::KEY_LEFT ||
+              key->key == ASGE::KEYS::KEY_RIGHT) &&
+             key->action == ASGE::KEYS::KEY_RELEASED)
+    {
+      player.moveHorizontal(0.0f);
+    }
+
+    if (key->key == ASGE::KEYS::KEY_SPACE &&
+        key->action == ASGE::KEYS::KEY_PRESSED)
+    {
+      // fire bullet using players vector
+      player.weaponComponent()->Fire(
+        renderer.get(),
+        player.spriteComponent()->getSprite()->xPos() +
+          player.spriteComponent()->getSprite()->width() / 2,
+        player.spriteComponent()->getSprite()->yPos() +
+          player.spriteComponent()->getSprite()->height() / 2);
+    }
   }
-  if (key->key == ASGE::KEYS::KEY_A && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveWest();
-    // player_x -= 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_S && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveSouth();
-    // player_y += 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_D && key->action == ASGE::KEYS::KEY_RELEASED)
-  {
-    map.moveEast();
-    // player_x += 10;
-  }
-  if (key->key == ASGE::KEYS::KEY_G && key->action == ASGE::KEYS::KEY_RELEASED)
+
+  if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
+  }
+}
+
+void MyASGEGame::playerControllerInput(ASGE::Input* input)
+{
+  if (input->getGamePad(0).is_connected)
+  {
+    controller_connected = true;
+    ASGE::GamePadData data = input->getGamePad(0);
+
+    if (data.axis[0] < -0.2f)
+    {
+      player.moveHorizontal(-1.0f);
+    }
+    else if (data.axis[0] > 0.2f)
+    {
+      player.moveHorizontal(1.0f);
+    }
+    else
+    {
+      player.moveHorizontal(0.0f);
+    }
+
+    if (data.axis[1] < -0.2f)
+    {
+      player.moveVertical(1.0f);
+    }
+    else if (data.axis[1] > 0.2f)
+    {
+      player.moveVertical(-1.0f);
+    }
+    else
+    {
+      player.moveVertical(0.0f);
+    }
+
+    if (!shoot_pressed && data.buttons[0])
+    {
+      shoot_pressed = true;
+      player.weaponComponent()->Fire(
+        renderer.get(),
+        player.spriteComponent()->getSprite()->xPos() +
+          player.spriteComponent()->getSprite()->width() / 2,
+        player.spriteComponent()->getSprite()->yPos() +
+          player.spriteComponent()->getSprite()->height() / 2);
+    }
+
+    if (!data.buttons[0])
+    {
+      shoot_pressed = false;
+    }
+  }
+  else
+  {
+    controller_connected = false;
   }
 }
 
@@ -156,6 +252,12 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
   ASGE::DebugPrinter() << y_pos << std::endl;
 }
 
+void MyASGEGame::resetGame()
+{
+  map.generateRooms(renderer.get(), game_width, game_height);
+  player.reset(game_width, game_height);
+}
+
 /**
  *   @brief   Updates the scene
  *   @details Prepares the renderer subsystem before drawing the
@@ -167,40 +269,64 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
   double delta_time = game_time.delta.count() / 1000.0;
 
-  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
-  {
-    map.updateCurrentRoom(delta_time, player_x, player_y);
-  }
-  else
+  if (scene_handler.inMenu())
   {
     SceneManager::ReturnValue return_value =
       scene_handler.update(delta_time, inputs.get());
     switch (return_value)
     {
       case SceneManager::ReturnValue::START_GAME:
-        map.generateRooms(renderer.get(), game_width, game_height);
+        resetGame();
         break;
       case SceneManager::ReturnValue::EXIT_GAME:
         signalExit();
         break;
       case SceneManager::ReturnValue::BUY_DAMAGE_POWERUP:
-        scene_handler.hideDamagePowerup();
+        if (player.addDamagePowerup())
+        {
+          scene_handler.hideDamagePowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
-        scene_handler.hideHealthPowerup();
+        if (player.addHealthPowerup())
+        {
+          scene_handler.hideHealthPowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
-        scene_handler.hideMoveSpeedPowerup();
+        if (player.addMoveSpeedPowerup())
+        {
+          scene_handler.hideMoveSpeedPowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
-        scene_handler.hideShotSizePowerup();
+        if (player.addShotSizePowerup())
+        {
+          scene_handler.hideShotSizePowerup();
+        }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
-        scene_handler.hideShotSpeedPowerup();
+        if (player.addShotSpeedPowerup())
+        {
+          scene_handler.hideShotSpeedPowerup();
+        }
         break;
       default:
         break;
     }
+  }
+  else // In Game
+  {
+    playerControllerInput(inputs.get());
+    if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
+    {
+      scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+    }
+    map.handlePlayerCollision(&player);
+
+    std::vector<GameObject*> colliders = map.getEnemies();
+    map.handleObjectCollision(colliders);
+    map.updateCurrentRoom(renderer.get(), delta_time, &player);
   }
 }
 
@@ -215,12 +341,17 @@ void MyASGEGame::render(const ASGE::GameTime&)
 {
   renderer->setFont(0);
 
-  if (scene_handler.screenOpen() == SceneManager::ScreenOpen::GAME)
+  if (!scene_handler.inMenu())
   {
     map.renderCurrentRoom(renderer.get());
     map.renderMiniMap(renderer.get());
+    player.weaponComponent()->render(renderer.get());
+    renderer->renderSprite(*player.spriteComponent()->getSprite());
   }
 
-  bool abilities[5] = { true, true, true, true, true };
-  scene_handler.render(renderer.get(), 1, 10, 50, abilities);
+  scene_handler.render(renderer.get(),
+                       floor,
+                       player.getCoins(),
+                       player.getHealth(),
+                       player.getPowerups());
 }

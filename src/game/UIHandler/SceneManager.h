@@ -46,15 +46,21 @@ class SceneManager
             ASGE::Renderer* renderer,
             float game_width,
             float game_height);
+
+  ReturnValue updateMainMenu();
+  ReturnValue updateShop();
+  ReturnValue updateGameOver();
+
   ReturnValue update(double delta_time, ASGE::Input* input);
   void render(ASGE::Renderer* renderer,
               int floor,
               int coins,
               int health,
-              bool (&abilities)[5]);
+              bool* abilities);
 
   ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
+  bool inMenu();
 
   void hideDamagePowerup();
   void hideHealthPowerup();

@@ -17,13 +17,16 @@ class Enemy : public GameObject
   int health();
   int attackDamage();
   int moveSpeed();
+  bool isAlive();
+  void isAlive(bool value);
 
   virtual void update(double delta_time, float player_x, float player_y){};
   virtual bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos){};
-  void render(ASGE::Renderer* renderer);
+  virtual void render(ASGE::Renderer* renderer);
   bool takeDamage(int hit);
 
  protected:
+  bool is_alive = true;
   int hp = 0;
   int damage = 0;
   float speed = 0;

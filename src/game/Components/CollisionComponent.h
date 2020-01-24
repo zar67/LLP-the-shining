@@ -8,9 +8,20 @@
 class CollisionComponent
 {
  public:
+  enum class CollisionSide
+  {
+    SIDE_NONE = 0,
+    SIDE_TOP = 1,
+    SIDE_BOTTOM = 2,
+    SIDE_LEFT = 3,
+    SIDE_RIGHT = 4
+  };
+
+ public:
   CollisionComponent() = default;
 
   bool hasCollided(const CollisionComponent& collided);
+  CollisionSide getCollisionSide(const CollisionComponent& collided);
 
   void updateBoundingBox(const float rect[4]);
 

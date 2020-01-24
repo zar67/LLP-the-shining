@@ -73,11 +73,14 @@ void GameObject::updateCollisionComponent()
     return;
   }
 
-  ASGE::Sprite* sprite = sprite_component->getSprite();
-  float bounding_box[4] = {
-    sprite->xPos(), sprite->yPos(), sprite->width(), sprite->height()
-  };
-  collision_component->updateBoundingBox(bounding_box);
+  if (sprite_component)
+  {
+    ASGE::Sprite* sprite = sprite_component->getSprite();
+    float bounding_box[4] = {
+      sprite->xPos(), sprite->yPos(), sprite->width(), sprite->height()
+    };
+    collision_component->updateBoundingBox(bounding_box);
+  }
 }
 
 void GameObject::move(double delta_time, float x_dir, float y_dir, float speed)
