@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11.4)
 project(TheShining)
 set(GAMEDATA_FOLDER "data")
 set(ENABLE_ENET  OFF  CACHE BOOL "Adds Networking"   FORCE)
-set(ENABLE_SOUND ON   CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_SOUND OFF   CACHE BOOL "Adds SoLoud Audio" FORCE)
 set(ENABLE_JSON  ON   CACHE BOOL "Adds JSON to the Project" FORCE)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -16,10 +16,28 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ## add the files to be compiled here
 set(SOURCE_FILES
         "game/main.cpp"
-        "game/game.cpp")
+        "game/game.cpp"
+        map/Room.cpp
+        map/Map.cpp
+        game/SceneObjects/GameObject.cpp
+        game/Components/SpriteComponent.cpp
+        game/Components/CollisionComponent.cpp
+        game/SceneObjects/Player.cpp
+        game/SceneObjects/Enemies/Enemy.cpp
+        game/SceneObjects/Enemies/Demon.cpp
+        game/SceneObjects/Projectile.cpp
+        game/SceneObjects/Enemies/Ghost.cpp
+        game/SceneObjects/Enemies/AxePsycho.cpp
+        game/UIHandler/Scene.cpp
+        game/UIHandler/SceneManager.cpp
+        game/UIHandler/Scenes/MainMenu.cpp
+        game/UIHandler/Scenes/GameOverMenu.cpp
+        game/UIHandler/Scenes/ShopMenu.cpp
+        game/UIHandler/Scenes/GameScene.cpp)
 
 set(HEADER_FILES
-"game/game.h" map/Room.cpp map/Room.h map/Map.cpp map/Map.h "game/game.h" game/SceneObjects/GameObject.cpp game/SceneObjects/GameObject.h game/Components/SpriteComponent.cpp game/Components/SpriteComponent.h game/Components/CollisionComponent.cpp game/Components/CollisionComponent.h game/SceneObjects/Player.cpp game/SceneObjects/Player.h)
+"game/game.h" map/Room.cpp map/Room.h map/Map.cpp map/Map.h "game/game.h" game/SceneObjects/GameObject.cpp game/SceneObjects/GameObject.h game/Components/SpriteComponent.cpp game/Components/SpriteComponent.h game/Components/CollisionComponent.cpp game/Components/CollisionComponent.h game/SceneObjects/Player.cpp game/SceneObjects/Player.h game/SceneObjects/Enemies/Enemy.cpp game/SceneObjects/Enemies/Enemy.h game/SceneObjects/Enemies/Demon.cpp game/SceneObjects/Enemies/Demon.h game/SceneObjects/Projectile.cpp game/SceneObjects/Projectile.h game/SceneObjects/Enemies/Ghost.cpp game/SceneObjects/Enemies/Ghost.h game/SceneObjects/Enemies/AxePsycho.cpp game/SceneObjects/Enemies/AxePsycho.h game/Components/ShootingComponent.cpp game/Components/ShootingComponent.h)
+
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

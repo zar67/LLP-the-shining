@@ -4,6 +4,8 @@
 
 #include "CollisionComponent.h"
 
+#include <iostream>
+#include <string>
 /*
  * pass in the objects colliderc_componenet so you can check collision status
  */
@@ -12,20 +14,54 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
   float collided_box[4];
   collided.getBoundingBox(collided_box);
 
-  if ((bounding_box[0] >= collided_box[0] &&
-         bounding_box[0] <= collided_box[0] + collided_box[2] ||
-       bounding_box[0] + bounding_box[2] >= collided_box[0] &&
-         bounding_box[0] + bounding_box[2] <=
-           collided_box[0] + collided_box[2]) &&
-      (bounding_box[1] >= collided_box[1] &&
-         bounding_box[1] <= collided_box[1] + collided_box[3] ||
-       bounding_box[1] + bounding_box[3] >= collided_box[1] &&
-         bounding_box[1] + bounding_box[3] <=
-           collided_box[1] + collided_box[3]))
+  return (bounding_box[0] >= collided_box[0] &&
+            bounding_box[0] <= collided_box[0] + collided_box[2] ||
+          bounding_box[0] + bounding_box[2] >= collided_box[0] &&
+            bounding_box[0] + bounding_box[2] <=
+              collided_box[0] + collided_box[2]) &&
+         (bounding_box[1] >= collided_box[1] &&
+            bounding_box[1] <= collided_box[1] + collided_box[3] ||
+          bounding_box[1] + bounding_box[3] >= collided_box[1] &&
+            bounding_box[1] + bounding_box[3] <=
+              collided_box[1] + collided_box[3]);
+}
+
+CollisionComponent::CollisionSide
+CollisionComponent::getCollisionSide(const CollisionComponent& collided)
+{
+  float other_box[4];
+  collided.getBoundingBox(other_box);
+
+  float left_depth = bounding_box[0] + bounding_box[2] - other_box[0];
+  float right_depth = other_box[0] + other_box[2] - bounding_box[0];
+  float top_depth = bounding_box[1] + bounding_box[3] - other_box[1];
+  float bottom_depth = other_box[1] + other_box[3] - bounding_box[1];
+
+  if (left_depth < right_depth && left_depth < top_depth &&
+      left_depth < bottom_depth)
   {
-    return true;
+    return CollisionSide::SIDE_LEFT;
   }
-  return false;
+
+  if (right_depth < left_depth && right_depth < top_depth &&
+      right_depth < bottom_depth)
+  {
+    return CollisionSide::SIDE_RIGHT;
+  }
+
+  if (top_depth < left_depth && top_depth < right_depth &&
+      top_depth < bottom_depth)
+  {
+    return CollisionSide::SIDE_TOP;
+  }
+
+  if (bottom_depth < left_depth && bottom_depth < right_depth &&
+      bottom_depth < top_depth)
+  {
+    return CollisionSide::SIDE_BOTTOM;
+  }
+
+  return CollisionSide::SIDE_NONE;
 }
 
 void CollisionComponent::setIsTrigger(bool value)
