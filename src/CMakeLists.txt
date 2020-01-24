@@ -14,31 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ## out of source builds ##
 
 ## add the files to be compiled here
-
-
 set(HEADER_FILES
-        game/game.h
-        map/Room.h
-        map/Map.h
-        game/SceneObjects/GameObject.h
-        game/Components/SpriteComponent.h
-        game/Components/CollisionComponent.h
-        game/SceneObjects/Player.h
-        game/SceneObjects/Enemies/Enemy.h
-        game/SceneObjects/Enemies/Demon.h
-        game/SceneObjects/Projectile.h
-        game/SceneObjects/Enemies/Ghost.h
-        game/SceneObjects/Enemies/AxePsycho.h
-        game/Components/ShootingComponent.h
-        game/SceneObjects/InteractableObjects.h
-        game/UIHandler/Scene.h
-        game/UIHandler/SceneManager.h
-        game/UIHandler/Scenes/MainMenu.h
-        game/UIHandler/Scenes/GameOverMenu.h
-        game/UIHandler/Scenes/ShopMenu.h
-        game/UIHandler/Scenes/GameScene.h
-        game/SceneObjects/Items.h
-
         game/main.cpp
         game/game.cpp
         map/Room.cpp
@@ -60,8 +36,30 @@ set(HEADER_FILES
         game/UIHandler/Scenes/ShopMenu.cpp
         game/UIHandler/Scenes/GameScene.cpp
         game/SceneObjects/InteractableObjects.cpp
-        game/SceneObjects/Items.cpp)
-
+        game/SceneObjects/Items.cpp
+        game/Components/ShootingComponent.cpp
+        
+        game/game.h
+        map/Room.h
+        map/Map.h
+        game/SceneObjects/GameObject.h
+        game/Components/SpriteComponent.h
+        game/Components/CollisionComponent.h
+        game/SceneObjects/Player.h
+        game/SceneObjects/Enemies/Enemy.h
+        game/SceneObjects/Enemies/Demon.h
+        game/SceneObjects/Projectile.h
+        game/SceneObjects/Enemies/Ghost.h
+        game/SceneObjects/Enemies/AxePsycho.h
+        game/Components/ShootingComponent.h
+        game/SceneObjects/Items.h
+        game/UIHandler/Scene.h
+        game/UIHandler/SceneManager.h
+        game/UIHandler/Scenes/MainMenu.h
+        game/UIHandler/Scenes/GameOverMenu.h
+        game/UIHandler/Scenes/ShopMenu.h
+        game/UIHandler/Scenes/GameScene.h
+        game/SceneObjects/InteractableObjects.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
