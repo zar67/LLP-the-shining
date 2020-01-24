@@ -40,13 +40,11 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
 
-  bool next_obj;
   int num_objs = 1 + rand() % 3;
   for (int i = 0; i < num_objs; ++i)
   {
-    next_obj = false;
     auto* object = new InteractableObjects();
-    do
+    while (true)
     {
       int x_rand = 100 + rand() % 450;
       int y_rand = 100 + rand() % 250;
@@ -60,9 +58,8 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
           continue;
         }
       }
-      next_obj = true;
-    } while (!next_obj);
-
+      break;
+    }
     interactable_objs.push_back(object);
   }
 }

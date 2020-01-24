@@ -22,7 +22,7 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 }
 
 void Ghost::update(double delta_time,
-                   std::vector<InteractableObjects*> objects,
+                   std::vector<InteractableObjects*>& objects,
                    bool doors[4])
 {
   // Random update
@@ -45,7 +45,8 @@ void Ghost::update(double delta_time,
                            obj_grabbed->spriteComponent()->getSprite()->yPos(),
                            door_pos[0],
                            door_pos[1]);
-      obj_grabbed->move(delta_time, direction[0], direction[1], speed);
+      obj_grabbed->move(
+        delta_time, direction[0], direction[1], jedi_force_speed);
     }
     else
     {
