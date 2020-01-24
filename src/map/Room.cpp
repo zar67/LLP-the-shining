@@ -235,7 +235,6 @@ void Room::checkEnemyHealth()
   }
 }
 
-
 std::vector<InteractableObjects*> Room::getObjectsInRoom()
 {
   return interactable_objs;
