@@ -40,7 +40,7 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
 
-  bool next_obj = false;
+  bool next_obj;
   int num_objs = 1 + rand() % 3;
   for (int i = 0; i < num_objs; ++i)
   {
@@ -57,7 +57,7 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
         if (object->collisionComponent()->hasCollided(
               *obj->collisionComponent()))
         {
-          break;
+          continue;
         }
       }
       next_obj = true;
