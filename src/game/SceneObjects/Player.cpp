@@ -176,6 +176,7 @@ bool Player::addMoveSpeedPowerup()
   if (addPowerup(move_speed_powerup_index))
   {
     speed = starting_speed * 2;
+    powerups[shot_speed_powerup_index] = true;
     return true;
   }
 

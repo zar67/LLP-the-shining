@@ -31,14 +31,10 @@ class ShootingComponent
   void setSize(float value);
 
  private:
-  bool checkDownCast(GameObject* object);
-
   float speed = 250.0f;
   float range = 200.0f;
   float size = 8;
   std::vector<Projectile*> projectiles;
-  Projectile* p = nullptr;
-
   std::vector<float> move_direction;
 };
 
