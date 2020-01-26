@@ -17,17 +17,17 @@ class Map
   Map() = default;
   ~Map();
 
-  void setupRoomCollision();
+  void setupRoomCollision(int game_width, int game_height);
   void handlePlayerCollision(Player* player);
   void handleObjectCollision(std::vector<GameObject*> colliders);
   void fixCollision(GameObject* object,
                     CollisionComponent* collided,
                     CollisionComponent::CollisionSide side);
 
-  bool moveNorth();
-  bool moveEast();
-  bool moveSouth();
-  bool moveWest();
+  bool moveNorth(AxePsycho* axe_psycho, int game_width, int game_height);
+  bool moveEast(AxePsycho* axe_psycho, int game_width, int game_height);
+  bool moveSouth(AxePsycho* axe_psycho, int game_width, int game_height);
+  bool moveWest(AxePsycho* axe_psycho, int game_width, int game_height);
 
   Room* getRoom(int id);
   Room* getCurrentRoom();
@@ -42,6 +42,7 @@ class Map
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
   std::vector<GameObject*> getEnemies(bool include_objects);
+  AxePsycho* axePsycho();
 
  private:
   void
@@ -72,6 +73,10 @@ class Map
 
   CollisionComponent* room_wall_collision[8];
   CollisionComponent* room_door_collision[4];
+
+  AxePsycho axe_psycho = AxePsycho();
+  int game_width = 0;
+  int game_height = 0;
 };
 
 #endif // PROJECT_MAP_H

@@ -30,8 +30,11 @@ Map::~Map()
   }
 }
 
-void Map::setupRoomCollision()
+void Map::setupRoomCollision(int game_width, int game_height)
 {
+  this->game_width = game_width;
+  this->game_height = game_height;
+
   for (int i = 0; i < 8; i++)
   {
     room_wall_collision[i] = new CollisionComponent();
@@ -62,6 +65,7 @@ void Map::handlePlayerCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
   player->updateCollisionComponent();
+  axe_psycho.updateCollisionComponent();
 
   for (auto& wall : room_wall_collision)
   {
@@ -70,6 +74,10 @@ void Map::handlePlayerCollision(Player* player)
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*wall);
       fixCollision(player, wall, side);
+    }
+    if (player_collider->hasCollided(*axe_psycho.collisionComponent()))
+    {
+      player->takeDamage(axe_psycho.attackDamage());
     }
   }
 
@@ -167,48 +175,55 @@ void Map::fixCollision(GameObject* object,
   }
 }
 
-bool Map::moveNorth()
+/*
+ * make these 4 functions into one and pass into direction of movement
+ */
+bool Map::moveNorth(AxePsycho* axe_psycho, int game_width, int game_height)
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
   {
     current_room -= map_size;
     updateMiniMap();
+    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveEast()
+bool Map::moveEast(AxePsycho* axe_psycho, int game_width, int game_height)
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
     current_room += 1;
     updateMiniMap();
+    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveSouth()
+bool Map::moveSouth(AxePsycho* axe_psycho, int game_width, int game_height)
 {
   if (getCurrentRoom()->getSouth() && getCurrentRoom()->canMove())
   {
     current_room += map_size;
     updateMiniMap();
+    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveWest()
+bool Map::moveWest(AxePsycho* axe_psycho, int game_width, int game_height)
 {
   if (getCurrentRoom()->getWest() && getCurrentRoom()->canMove())
   {
     current_room -= 1;
     updateMiniMap();
+    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
@@ -315,6 +330,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
 {
+  axe_psycho.setup(renderer, 0, 0, 64, 64);
   generateStartingRoom(renderer);
 
   // Create Queue of Rooms From Open Doors
@@ -439,7 +455,7 @@ void Map::checkNorthDoorCollision(Player* player)
     {
       if (player_sprite->yPos() < 10)
       {
-        if (moveNorth())
+        if (moveNorth(&axe_psycho, game_width, game_height))
         {
           player_sprite->yPos(384);
         }
@@ -469,7 +485,7 @@ void Map::checkEastDoorCollision(Player* player)
     {
       if (player_sprite->xPos() > 694 - player_sprite->width())
       {
-        if (moveEast())
+        if (moveEast(&axe_psycho, game_width, game_height))
         {
           player_sprite->xPos(15);
         }
@@ -499,7 +515,7 @@ void Map::checkSouthDoorCollision(Player* player)
     {
       if (player_sprite->yPos() > 438 - player_sprite->height())
       {
-        if (moveSouth())
+        if (moveSouth(&axe_psycho, game_width, game_height))
         {
           player_sprite->yPos(15);
         }
@@ -529,7 +545,7 @@ void Map::checkWestDoorCollision(Player* player)
     {
       if (player_sprite->xPos() < 10)
       {
-        if (moveWest())
+        if (moveWest(&axe_psycho, game_width, game_height))
         {
           player_sprite->xPos(640);
         }
@@ -725,4 +741,9 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
 std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
   return getCurrentRoom()->getEnemies(include_objects);
+}
+
+AxePsycho* Map::axePsycho()
+{
+  return &axe_psycho;
 }

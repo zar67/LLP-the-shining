@@ -13,8 +13,15 @@ class AxePsycho : public Enemy
   AxePsycho() = default;
   ~AxePsycho() = default;
 
-  bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
+  bool setup(ASGE::Renderer* renderer,
+             float x_pos,
+             float y_pos,
+             float width,
+             float height);
   void update(double delta_time, float player_x, float player_y) override;
+
+  bool inRoom();
+  void inRoom(bool value);
 
  private:
   bool in_room = false;

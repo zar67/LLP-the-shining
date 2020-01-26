@@ -4,16 +4,20 @@
 
 #include "AxePsycho.h"
 
-bool AxePsycho::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
+bool AxePsycho::setup(
+  ASGE::Renderer* renderer, float x_pos, float y_pos, float width, float height)
 {
   hp = 500;
   damage = 25;
   speed = 120;
 
-  if (addSpriteComponent(renderer, "data/Characters/Demon.png"))
+  addCollisionComponent();
+  if (addSpriteComponent(renderer, "data/Characters/axe-man.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
     spriteComponent()->getSprite()->yPos(y_pos);
+    spriteComponent()->getSprite()->width(width);
+    spriteComponent()->getSprite()->height(height);
     return true;
   }
 
@@ -35,4 +39,14 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
 
     move(delta_time, direction_to_player[0], direction_to_player[1], speed);
   }
+}
+
+bool AxePsycho::inRoom()
+{
+  return in_room;
+}
+
+void AxePsycho::inRoom(bool value)
+{
+  in_room = value;
 }
