@@ -44,6 +44,7 @@ class Player : public GameObject
 
   void addCoins(int amount);
   int getCoins();
+  void addHealth(int amount);
   int getHealth();
 
  private:
@@ -55,7 +56,7 @@ class Player : public GameObject
   const float starting_shot_speed = 250;
   const float starting_shot_size = 8;
 
-  int coins = 100;
+  int coins = 0;
   int health = starting_health;
   float speed = starting_speed;
   int damage = starting_damage;
