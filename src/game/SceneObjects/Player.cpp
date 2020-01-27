@@ -93,6 +93,18 @@ void Player::Movement(float x_pos, float y_pos)
   sprite->yPos(new_y);
 }
 
+void Player::addHealth(int amount)
+{
+  if (health + amount > 100)
+  {
+    health = 100;
+  }
+  else
+  {
+    health += amount;
+  }
+}
+
 void Player::takeDamage(int hit_damage)
 {
   health -= hit_damage;

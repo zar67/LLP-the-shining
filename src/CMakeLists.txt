@@ -36,7 +36,7 @@ set(HEADER_FILES
         game/UIHandler/Scenes/ShopMenu.cpp
         game/UIHandler/Scenes/GameScene.cpp
         game/SceneObjects/InteractableObjects.cpp
-        game/SceneObjects/Items.cpp
+        game/SceneObjects/Item.cpp
         game/Components/ShootingComponent.cpp
         
         game/game.h
@@ -52,7 +52,7 @@ set(HEADER_FILES
         game/SceneObjects/Enemies/Ghost.h
         game/SceneObjects/Enemies/AxePsycho.h
         game/Components/ShootingComponent.h
-        game/SceneObjects/Items.h
+        game/SceneObjects/Item.h
         game/UIHandler/Scene.h
         game/UIHandler/SceneManager.h
         game/UIHandler/Scenes/MainMenu.h
