@@ -14,7 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ## out of source builds ##
 
 ## add the files to be compiled here
-set(HEADER_FILES
+set(SOURCE_FILES
         game/main.cpp
         game/game.cpp
         map/Room.cpp
@@ -37,8 +37,9 @@ set(HEADER_FILES
         game/UIHandler/Scenes/GameScene.cpp
         game/SceneObjects/InteractableObjects.cpp
         game/SceneObjects/Item.cpp
-        game/Components/ShootingComponent.cpp
-        
+        game/Components/ShootingComponent.cpp)
+
+set(HEADER_FILES
         game/game.h
         map/Room.h
         map/Map.h
