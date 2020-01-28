@@ -342,7 +342,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     map.handleObjectCollision(colliders);
 
     if (map.updateCurrentRoom(
-      renderer.get(), delta_time, &player, game_width, game_height);)
+          renderer.get(), delta_time, &player, game_width, game_height))
     {
       // Descend Floor
       floor += 1;

@@ -11,7 +11,7 @@ bool AxePsycho::setup(
 {
   hp = START_HP;
   damage = 25;
-  speed = 100;
+  speed = 60;
   in_room = false;
 
   screen_warning = new FlashComponent(renderer, ASGE::COLOURS::RED);
