@@ -26,10 +26,10 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   menu_title = renderer->createRawSprite();
   if (!setupSprite(*menu_title,
                    "data/UI/MenuTitle.png",
-                   game_width / 2 - 200,
-                   38,
-                   400,
-                   100))
+                   game_width / 2 - 300,
+                   57,
+                   600,
+                   150))
   {
     return false;
   }
@@ -37,10 +37,10 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   start_game = renderer->createRawSprite();
   if (!setupSprite(*start_game,
                    "data/UI/MenuButtons/StartButton.png",
-                   game_width / 2 - 60,
-                   175,
-                   120,
-                   30))
+                   game_width / 2 - 90,
+                   262,
+                   180,
+                   45))
   {
     return false;
   }
@@ -48,10 +48,10 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   open_shop = renderer->createRawSprite();
   if (!setupSprite(*open_shop,
                    "data/UI/MenuButtons/ShopButton.png",
-                   game_width / 2 - 60,
-                   225,
-                   120,
-                   30))
+                   game_width / 2 - 90,
+                   337,
+                   180,
+                   45))
   {
     return false;
   }
@@ -59,10 +59,10 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   exit_game = renderer->createRawSprite();
   return setupSprite(*exit_game,
                      "data/UI/MenuButtons/ExitButton.png",
-                     game_width / 2 - 60,
-                     275,
-                     120,
-                     30);
+                     game_width / 2 - 90,
+                     412,
+                     180,
+                     45);
 }
 
 MainMenu::MenuItem MainMenu::update(Point2D point)

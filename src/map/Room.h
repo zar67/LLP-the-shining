@@ -47,6 +47,8 @@ class Room : public GameObject
 
   bool canMove();
   void canMove(bool movement);
+  bool found();
+  void found(bool found);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   bool updateObjectsInRoom(ASGE::Renderer* renderer,
@@ -78,6 +80,7 @@ class Room : public GameObject
   bool south = false;
   bool west = false;
   bool movement_enabled = true;
+  bool revealed = false;
 
   // wise
   std::vector<Demon*> demons;
@@ -85,7 +88,6 @@ class Room : public GameObject
 
   // objects in the room
   std::vector<InteractableObjects*> interactable_objs;
-  std::string texture_dir = "data/Objects/crate2.png";
   std::vector<Item*> items;
 };
 

@@ -115,6 +115,16 @@ void Room::canMove(bool movement)
   movement_enabled = movement;
 }
 
+bool Room::found()
+{
+  return revealed;
+}
+
+void Room::found(bool found)
+{
+  revealed = found;
+}
+
 void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < demons.size(); i++)
