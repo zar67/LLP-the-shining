@@ -14,9 +14,7 @@ Player::~Player()
 void Player::init(ASGE::Renderer* renderer,
                   std::string& tex_directory,
                   float x_pos,
-                  float y_pos,
-                  float width,
-                  float height)
+                  float y_pos)
 {
   if (!spriteComponent())
   {
@@ -32,8 +30,6 @@ void Player::init(ASGE::Renderer* renderer,
   }
   sprite_component->getSprite()->xPos(x_pos);
   sprite_component->getSprite()->yPos(y_pos);
-  sprite_component->getSprite()->width(width);
-  sprite_component->getSprite()->height(height);
 }
 
 void Player::reset(float game_width, float game_height)

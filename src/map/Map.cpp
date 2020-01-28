@@ -42,20 +42,20 @@ void Map::setupRoomCollision()
     room_door_collision[i] = new CollisionComponent();
   }
 
-  setupBoundingBox(room_wall_collision[0], 0, 0, 64, 192);
-  setupBoundingBox(room_wall_collision[1], 0, 0, 320, 64);
-  setupBoundingBox(room_wall_collision[2], 384, 0, 320, 64);
-  setupBoundingBox(room_wall_collision[3], 640, 0, 64, 192);
+  setupBoundingBox(room_wall_collision[0], 0, 0, 96, 288);
+  setupBoundingBox(room_wall_collision[1], 0, 0, 480, 96);
+  setupBoundingBox(room_wall_collision[2], 576, 0, 480, 96);
+  setupBoundingBox(room_wall_collision[3], 960, 0, 96, 288);
 
-  setupBoundingBox(room_wall_collision[4], 0, 256, 64, 192);
-  setupBoundingBox(room_wall_collision[5], 0, 384, 320, 64);
-  setupBoundingBox(room_wall_collision[6], 384, 384, 320, 64);
-  setupBoundingBox(room_wall_collision[7], 640, 256, 64, 192);
+  setupBoundingBox(room_wall_collision[4], 0, 384, 96, 288);
+  setupBoundingBox(room_wall_collision[5], 0, 576, 480, 96);
+  setupBoundingBox(room_wall_collision[6], 576, 576, 480, 96);
+  setupBoundingBox(room_wall_collision[7], 960, 384, 96, 288);
 
-  setupBoundingBox(room_door_collision[0], 320, 0, 64, 64);
-  setupBoundingBox(room_door_collision[1], 640, 192, 64, 64);
-  setupBoundingBox(room_door_collision[2], 320, 384, 64, 64);
-  setupBoundingBox(room_door_collision[3], 0, 192, 64, 64);
+  setupBoundingBox(room_door_collision[0], 480, 0, 96, 96);
+  setupBoundingBox(room_door_collision[1], 960, 288, 96, 96);
+  setupBoundingBox(room_door_collision[2], 480, 576, 96, 96);
+  setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);
 }
 
 void Map::handlePlayerCollision(Player* player)
@@ -172,6 +172,7 @@ bool Map::moveNorth()
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
   {
     current_room -= map_size;
+    getCurrentRoom()->found(true);
     updateMiniMap();
     return true;
   }
@@ -184,6 +185,7 @@ bool Map::moveEast()
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
     current_room += 1;
+    getCurrentRoom()->found(true);
     updateMiniMap();
     return true;
   }
@@ -196,6 +198,7 @@ bool Map::moveSouth()
   if (getCurrentRoom()->getSouth() && getCurrentRoom()->canMove())
   {
     current_room += map_size;
+    getCurrentRoom()->found(true);
     updateMiniMap();
     return true;
   }
@@ -208,6 +211,7 @@ bool Map::moveWest()
   if (getCurrentRoom()->getWest() && getCurrentRoom()->canMove())
   {
     current_room -= 1;
+    getCurrentRoom()->found(true);
     updateMiniMap();
     return true;
   }
@@ -254,7 +258,10 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
+    if (getRoom(mini_map_ids.at(i))->found())
+    {
+      renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
+    }
   }
 }
 
@@ -276,6 +283,7 @@ void Map::generateStartingRoom(ASGE::Renderer* renderer)
     Room(STARTING_ROOM, Room::NORMAL, true, true, true, true);
   rooms[map_size / 2][map_size / 2].setup(renderer, &file);
   rooms[map_size / 2][map_size / 2].canMove(true);
+  rooms[map_size / 2][map_size / 2].found(true);
 }
 
 void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
@@ -376,7 +384,6 @@ void Map::generateRooms(ASGE::Renderer* renderer,
   }
 
   last_room->setType(Room::EXIT);
-  last_room->canMove(false);
 
   Item* staircase = new Item();
   staircase->setUpItem(renderer,
@@ -422,9 +429,9 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
         int row = (i - column) / map_size;
 
         mini_map.at(count)->spriteComponent()->getSprite()->xPos(
-          game_width - (20 * map_size) + (column * 20));
+          game_width - (30 * map_size) + (column * 30));
         mini_map.at(count)->spriteComponent()->getSprite()->yPos(
-          game_height - (20 * map_size) + (row * 20));
+          game_height - (30 * map_size) + (row * 30));
         count += 1;
       }
     }
@@ -456,7 +463,7 @@ void Map::checkNorthDoorCollision(Player* player)
       {
         if (moveNorth())
         {
-          player_sprite->yPos(384);
+          player_sprite->yPos(576);
         }
         else
         {
@@ -482,7 +489,7 @@ void Map::checkEastDoorCollision(Player* player)
   {
     if (getCurrentRoom()->getEast())
     {
-      if (player_sprite->xPos() > 694 - player_sprite->width())
+      if (player_sprite->xPos() > 1041 - player_sprite->width())
       {
         if (moveEast())
         {
@@ -490,7 +497,7 @@ void Map::checkEastDoorCollision(Player* player)
         }
         else
         {
-          player_sprite->xPos(694 - player_sprite->width());
+          player_sprite->xPos(1041 - player_sprite->width());
         }
       }
     }
@@ -512,7 +519,7 @@ void Map::checkSouthDoorCollision(Player* player)
   {
     if (getCurrentRoom()->getSouth())
     {
-      if (player_sprite->yPos() > 438 - player_sprite->height())
+      if (player_sprite->yPos() > 657 - player_sprite->height())
       {
         if (moveSouth())
         {
@@ -520,7 +527,7 @@ void Map::checkSouthDoorCollision(Player* player)
         }
         else
         {
-          player_sprite->yPos(438 - player_sprite->height());
+          player_sprite->yPos(657 - player_sprite->height());
         }
       }
     }
@@ -546,7 +553,7 @@ void Map::checkWestDoorCollision(Player* player)
       {
         if (moveWest())
         {
-          player_sprite->xPos(640);
+          player_sprite->xPos(960);
         }
         else
         {
@@ -640,26 +647,29 @@ void Map::updateMiniMap()
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    // Update The Current Room To Red and The Rest to Black
+    // Update The Current Room To Red
     if (mini_map_ids.at(i) == current_room)
     {
       mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::RED);
     }
+    // Set Exit Room To Blue
     else if (getRoom(mini_map_ids.at(i))->getType() == Room::EXIT)
     {
       mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::BLUE);
     }
+    // Set Item Rooms To Green
     else if (getRoom(mini_map_ids.at(i))->getType() == Room::ITEM)
     {
       mini_map.at(i)->spriteComponent()->getSprite()->colour(
         ASGE::COLOURS::GREEN);
     }
+    // Set Every Other Room To Grey
     else
     {
       mini_map.at(i)->spriteComponent()->getSprite()->colour(
-        ASGE::COLOURS::BLACK);
+        ASGE::COLOURS::GREY);
     }
   }
 }

@@ -36,10 +36,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shop_title = renderer->createRawSprite();
   if (!setupSprite(*shop_title,
                    "data/UI/ShopTitle.png",
-                   game_width / 2 - 200,
-                   38,
-                   400,
-                   100))
+                   game_width / 2 - 300,
+                   57,
+                   600,
+                   150))
   {
     return false;
   }
@@ -47,10 +47,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   damage_powerup = renderer->createRawSprite();
   if (!setupSprite(*damage_powerup,
                    "data/UI/Shop/DamagePowerup.png",
-                   42,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   63,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -58,10 +58,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   health_powerup = renderer->createRawSprite();
   if (!setupSprite(*health_powerup,
                    "data/UI/Shop/HealthPowerup.png",
-                   172,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   258,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -69,10 +69,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   move_speed_powerup = renderer->createRawSprite();
   if (!setupSprite(*move_speed_powerup,
                    "data/UI/Shop/MoveSpeedPowerup.png",
-                   302,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   453,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -80,10 +80,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shot_size_powerup = renderer->createRawSprite();
   if (!setupSprite(*shot_size_powerup,
                    "data/UI/Shop/ShotSizePowerup.png",
-                   432,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   648,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -91,10 +91,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shot_speed_powerup = renderer->createRawSprite();
   if (!setupSprite(*shot_speed_powerup,
                    "data/UI/Shop/ShotSpeedPowerup.png",
-                   562,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   843,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -102,10 +102,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   open_main_menu = renderer->createRawSprite();
   return setupSprite(*open_main_menu,
                      "data/UI/MenuButtons/MenuButton.png",
-                     game_width / 2 - 60,
-                     game_height - 50,
-                     120,
-                     30);
+                     game_width / 2 - 90,
+                     game_height - 100,
+                     180,
+                     45);
 }
 
 ShopMenu::MenuItem ShopMenu::update(Point2D point)
