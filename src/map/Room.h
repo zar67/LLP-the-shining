@@ -10,7 +10,7 @@
 #include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
 #include "../game/SceneObjects/InteractableObjects.h"
-#include "../game/SceneObjects/Items.h"
+#include "../game/SceneObjects/Item.h"
 
 #include <string>
 #include <vector>
@@ -49,7 +49,7 @@ class Room : public GameObject
   void canMove(bool movement);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
-  void updateObjectsInRoom(ASGE::Renderer* renderer,
+  bool updateObjectsInRoom(ASGE::Renderer* renderer,
                            double delta_time,
                            Player* player);
 
@@ -60,8 +60,13 @@ class Room : public GameObject
   std::vector<GameObject*> getEnemies(bool inlcude_objects);
   void checkEnemyHealth();
 
-  void addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
-  void removeItemToRoom(int item_index);
+  void addItemToRoom(ASGE::Renderer* renderer,
+                     std::string filename,
+                     Item::GameItems item_type,
+                     float x_pos,
+                     float y_pos);
+  void addItemToRoom(Item* new_item);
+  void removeItemFromRoom(int item_index);
 
   bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
 
@@ -81,7 +86,7 @@ class Room : public GameObject
   // objects in the room
   std::vector<InteractableObjects*> interactable_objs;
   std::string texture_dir = "data/Objects/crate2.png";
-  std::vector<Items*> items;
+  std::vector<Item*> items;
 };
 
 #endif // PROJECT_ROOM_H

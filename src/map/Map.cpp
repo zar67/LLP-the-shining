@@ -255,18 +255,23 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
   }
 }
 
-void Map::updateCurrentRoom(ASGE::Renderer* renderer,
+bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             double delta_time,
                             Player* player,
                             int game_width,
                             int game_height)
 {
-  getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
+  bool descend = false;
+  if (getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player))
+  {
+    descend = true;
+  }
 
   if (getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
   }
+
 
   if (roomChanged())
   {
@@ -295,6 +300,8 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
     std::cout << axe_psycho.spriteComponent()->getSprite()->xPos() << " : "
               << axe_psycho.spriteComponent()->getSprite()->yPos() << std::endl;
   }
+  
+  return descend;
 }
 
 void Map::renderMiniMap(ASGE::Renderer* renderer)
@@ -425,6 +432,15 @@ void Map::generateRooms(ASGE::Renderer* renderer,
 
   last_room->setType(Room::EXIT);
   last_room->canMove(false);
+
+  Item* staircase = new Item();
+  staircase->setUpItem(renderer,
+                       "data/Items/staircase.png",
+                       Item::GameItems::STAIRCASE,
+                       game_width / 2,
+                       game_height / 2);
+  last_room->addItemToRoom(staircase);
+
   generateItemRooms(renderer, game_width / 2, game_height / 2);
   generateEnemies(renderer, game_width, game_height);
 
@@ -618,7 +634,28 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
     }
 
     getRoom(id)->setType(Room::ITEM);
-    getRoom(id)->addItemToRoom(renderer, game_width / 2, game_height / 2);
+
+    // Generate Coins
+    int coin_num = rand() & 2 + 1;
+    for (int j = 0; j < coin_num; j++)
+    {
+      getRoom(id)->addItemToRoom(renderer,
+                                 "data/Items/coin.png",
+                                 Item::GameItems::COIN,
+                                 (rand() & (game_width - 128)) + 64,
+                                 (rand() & (game_height - 128)) + 64);
+    }
+
+    // Generate Hearts
+    int heart_num = rand() & 1;
+    for (int j = 0; j < heart_num; j++)
+    {
+      getRoom(id)->addItemToRoom(renderer,
+                                 "data/Items/heart.png",
+                                 Item::GameItems::HEART,
+                                 (rand() & (game_width - 128)) + 64,
+                                 (rand() & (game_height - 128)) + 64);
+    }
   }
 }
 

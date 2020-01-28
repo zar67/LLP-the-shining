@@ -254,6 +254,7 @@ void MyASGEGame::clickHandler(ASGE::SharedEventData data)
 
 void MyASGEGame::resetGame()
 {
+  floor = 1;
   map.generateRooms(renderer.get(), game_width, game_height);
   player.reset(game_width, game_height);
 }
@@ -339,8 +340,19 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 
     std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
-    map.updateCurrentRoom(
-      renderer.get(), delta_time, &player, game_width, game_height);
+
+    if (map.updateCurrentRoom(
+      renderer.get(), delta_time, &player, game_width, game_height);)
+    {
+      // Descend Floor
+      floor += 1;
+      map.generateRooms(renderer.get(), game_width, game_height);
+
+      if (floor == MAX_FLOOR)
+      {
+        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+      }
+    }
   }
 }
 

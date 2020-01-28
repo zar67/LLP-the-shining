@@ -9,8 +9,6 @@
 #include <string>
 #include <vector>
 
-const int MAX_FLOOR = 3;
-
 /**
  *  An OpenGL Game based on ASGE.
  */
@@ -35,9 +33,11 @@ class MyASGEGame : public ASGE::OGLGame
   Map map = Map();
   Player player = Player();
 
+  const int MAX_FLOOR = 3;
+  int floor = 0;
+
   bool controller_connected = false;
   bool shoot_pressed = true;
-  int floor = 0;
 
   int key_callback_id = -1;   /**< Key Input Callback ID. */
   int mouse_callback_id = -1; /**< Mouse Input Callback ID. */

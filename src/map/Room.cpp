@@ -4,6 +4,7 @@
 
 #include "Room.h"
 #include <iostream>
+#include <utility>
 
 Room::Room(int id,
            RoomType room_type,
@@ -137,10 +138,12 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   }
 }
 
-void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
+bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
                                double delta_time,
                                Player* player)
 {
+  bool descend = false;
+
   for (int i = 0; i < demons.size(); i++)
   {
     demons.at(i)->update(renderer, delta_time, player, interactable_objs);
@@ -150,6 +153,27 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
   for (int i = 0; i < ghosts.size(); i++)
   {
     ghosts.at(i)->update(delta_time, interactable_objs, doors);
+  }
+
+  for (int i = 0; i < items.size(); i++)
+  {
+    if (items.at(i)->hasCollidedWithPlayer(player))
+    {
+      items.at(i)->hasPickedUpItem();
+
+      if (items.at(i)->itemType() == Item::GameItems::COIN)
+      {
+        player->addCoins(5);
+      }
+      else if (items.at(i)->itemType() == Item::GameItems::HEART)
+      {
+        player->addHealth(20);
+      }
+      else if (items.at(i)->itemType() == Item::GameItems::STAIRCASE)
+      {
+        descend = true;
+      }
+    }
   }
 
   // check if any enemies have been killed
@@ -166,20 +190,22 @@ void Room::updateObjectsInRoom(ASGE::Renderer* renderer,
     }
     itr++;
   }
+
+  return descend;
 }
 
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   Demon* new_demon = new Demon();
+  new_demon->setup(renderer, x_pos, y_pos);
   demons.push_back(new_demon);
-  demons.at(demons.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
-  auto* new_ghost = new Ghost();
+  Ghost* new_ghost = new Ghost();
+  new_ghost->setup(renderer, x_pos, y_pos);
   ghosts.push_back(new_ghost);
-  ghosts.at(ghosts.size() - 1)->setup(renderer, x_pos, y_pos);
 }
 
 /*
@@ -240,7 +266,7 @@ std::vector<InteractableObjects*> Room::getObjectsInRoom()
   return interactable_objs;
 }
 
-void Room::removeItemToRoom(int item_index)
+void Room::removeItemFromRoom(int item_index)
 {
   if (item_index < items.size())
   {
@@ -248,12 +274,17 @@ void Room::removeItemToRoom(int item_index)
   }
 }
 
-void Room::addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
+void Room::addItemToRoom(ASGE::Renderer* renderer,
+                         std::string filename,
+                         Item::GameItems item_type,
+                         float x_pos,
+                         float y_pos)
 {
-  Items* new_Item = new Items();
-  items.push_back(new_Item);
-  items.at(items.size() - 1)->setUpItems(renderer, x_pos, y_pos);
+  Item* new_item = new Item();
+  new_item->setUpItem(renderer, std::move(filename), item_type, x_pos, y_pos);
+  items.push_back(new_item);
 }
+
 
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
@@ -304,3 +335,9 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
   }
   return false;
 }
+
+void Room::addItemToRoom(Item* new_item)
+{
+  items.push_back(new_item);
+}
+
