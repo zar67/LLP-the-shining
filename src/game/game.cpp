@@ -70,12 +70,8 @@ bool MyASGEGame::init()
   map.setupRoomCollision();
 
   std::string texture = "/data/Characters/Danny.png";
-  player.init(renderer.get(),
-              texture,
-              game_width / 2 - 17,
-              game_height / 2 - 24.5f,
-              34.0f,
-              49.0f);
+  player.init(
+    renderer.get(), texture, game_width / 2 - 17, game_height / 2 - 24.5f);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -97,8 +93,8 @@ void MyASGEGame::setupResolution()
   // https://www.gamasutra.com/blogs/KenanBolukbasi/20171002/306822/
   // Scaling_and_MultiResolution_in_2D_Games.php
 
-  game_width = 704;
-  game_height = 448;
+  game_width = 1056;
+  game_height = 672;
 }
 
 /**

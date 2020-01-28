@@ -18,8 +18,6 @@ bool InteractableObjects::checkHealth(ASGE::Renderer* renderer)
     addSpriteComponent(renderer, secondary_texture);
     spriteComponent()->getSprite()->xPos(pos_x);
     spriteComponent()->getSprite()->yPos(pos_y);
-    spriteComponent()->getSprite()->width(40);
-    spriteComponent()->getSprite()->height(40);
     updateCollisionComponent();
   }
   return false;
@@ -39,8 +37,6 @@ bool InteractableObjects::setup(ASGE::Renderer* renderer,
   {
     spriteComponent()->getSprite()->xPos(x_pos);
     spriteComponent()->getSprite()->yPos(y_pos);
-    spriteComponent()->getSprite()->width(40);
-    spriteComponent()->getSprite()->height(40);
     updateCollisionComponent();
     return true;
   }
