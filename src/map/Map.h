@@ -64,12 +64,9 @@ class Map
   std::string needSouthDoor(int x_pos, int y_pos);
   std::string needWestDoor(int x_pos, int y_pos);
   bool checkRoomName(std::string name, std::string required_doors);
-
-
   bool roomChanged();
 
   const int STARTING_ROOM = 12;
-
 
   int map_size = 5;
   Room rooms[5][5];

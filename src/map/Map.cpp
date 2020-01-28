@@ -272,7 +272,6 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
     getCurrentRoom()->canMove(true);
   }
 
-
   if (roomChanged())
   {
     bool is_ready = axe_psycho.spawnTimerEnd(delta_time);
@@ -287,12 +286,6 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
   {
     bool in = axe_psycho.flashComponent()->flash(delta_time);
     axe_psycho.inRoom(in);
-
-    // check if in room isnt changed somewhere else
-    if (in)
-    {
-      std::cout << "inroom : " << in << std::endl;
-    }
   }
 
   if (axe_psycho.inRoom())
@@ -300,7 +293,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
     std::cout << axe_psycho.spriteComponent()->getSprite()->xPos() << " : "
               << axe_psycho.spriteComponent()->getSprite()->yPos() << std::endl;
   }
-  
+
   return descend;
 }
 
