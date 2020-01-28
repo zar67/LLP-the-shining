@@ -75,7 +75,8 @@ void Map::handlePlayerCollision(Player* player)
         player_collider->getCollisionSide(*wall);
       fixCollision(player, wall, side);
     }
-    if (player_collider->hasCollided(*axe_psycho.collisionComponent()))
+    if (axe_psycho.inRoom() &&
+        player_collider->hasCollided(*axe_psycho.collisionComponent()))
     {
       player->takeDamage(axe_psycho.attackDamage());
     }
@@ -241,6 +242,17 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
   getCurrentRoom()->renderObjectsInRoom(renderer);
+
+  bool render_flash = axe_psycho.flashComponent()->isVisible();
+  if (render_flash)
+  {
+    renderer->renderSprite(
+      *axe_psycho.flashComponent()->spriteComponent()->getSprite());
+  }
+  else if (axePsycho()->inRoom())
+  {
+    renderer->renderSprite(*axePsycho()->spriteComponent()->getSprite());
+  }
 }
 
 void Map::updateCurrentRoom(ASGE::Renderer* renderer,
@@ -251,7 +263,7 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
 {
   getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
 
-  if (getCurrentRoom()->getEnemies(false).empty())
+  if (getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
   }
@@ -262,8 +274,26 @@ void Map::updateCurrentRoom(ASGE::Renderer* renderer,
     if (is_ready)
     {
       last_room = current_room;
-      getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height);
+      axe_psycho.flashComponent()->isFlashing(
+        getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
     }
+  }
+  if (axe_psycho.flashComponent()->isFlashing())
+  {
+    bool in = axe_psycho.flashComponent()->flash(delta_time);
+    axe_psycho.inRoom(in);
+
+    // check if in room isnt changed somewhere else
+    if (in)
+    {
+      std::cout << "inroom : " << in << std::endl;
+    }
+  }
+
+  if (axe_psycho.inRoom())
+  {
+    std::cout << axe_psycho.spriteComponent()->getSprite()->xPos() << " : "
+              << axe_psycho.spriteComponent()->getSprite()->yPos() << std::endl;
   }
 }
 
@@ -742,16 +772,34 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
       valid = false;
     }
   }
-
   return valid;
 }
 
-// adds axe man on to enemies
+// adds axe man on to enemies but only if hes visible other wise removes him
+// from the vector
 std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
   std::vector<GameObject*> enemies =
     getCurrentRoom()->getEnemies(include_objects);
-  enemies.push_back(&axe_psycho);
+
+  auto itr = enemies.begin();
+  if (axe_psycho.inRoom())
+  {
+    enemies.push_back(&axe_psycho);
+  }
+  else if (axe_psycho.isKilled())
+  {
+    for (auto& evil : enemies)
+    {
+      if (evil == &axe_psycho)
+      {
+        enemies.erase(itr);
+        break;
+      }
+      itr++;
+    }
+    axe_psycho.isKilled(false);
+  }
   return enemies;
 }
 

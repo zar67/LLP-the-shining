@@ -9,10 +9,12 @@
 bool AxePsycho::setup(
   ASGE::Renderer* renderer, float x_pos, float y_pos, float width, float height)
 {
-  hp = 500;
+  hp = START_HP;
   damage = 25;
-  speed = 40;
+  speed = 100;
   in_room = false;
+
+  screen_warning = new FlashComponent(renderer, ASGE::COLOURS::RED);
 
   addCollisionComponent();
   if (addSpriteComponent(renderer, "data/Characters/axe-man.png"))
@@ -34,22 +36,34 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
   // Move Towards Player if not killed
   if (in_room)
   {
-    std::vector<float> direction;
     if (hp > 0)
     {
-      direction = getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
-                                     spriteComponent()->getSprite()->yPos(),
-                                     player_x,
-                                     player_y);
+      std::vector<float> direction =
+        getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
+                           spriteComponent()->getSprite()->yPos(),
+                           player_x,
+                           player_y);
+      move(delta_time, direction[0], direction[1], speed);
     }
     else
     {
-      direction = getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
-                                     spriteComponent()->getSprite()->yPos(),
-                                     spawned_x,
-                                     spawned_y);
+      std::vector<float> direction =
+        getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
+                           spriteComponent()->getSprite()->yPos(),
+                           spawned_x,
+                           spawned_y);
+      float distance =
+        getDistanceBetween(spriteComponent()->getSprite()->xPos(),
+                           spriteComponent()->getSprite()->yPos(),
+                           spawned_x,
+                           spawned_y);
+      move(delta_time, direction[0], direction[1], speed);
+      if (distance < 30.0f)
+      {
+        in_room = false;
+        hp = START_HP;
+      }
     }
-    move(delta_time, direction[0], direction[1], speed);
   }
 }
 
@@ -78,4 +92,19 @@ void AxePsycho::setSpawnedLocation(float x, float y)
 {
   spawned_x = x;
   spawned_y = y;
+}
+
+FlashComponent* AxePsycho::flashComponent()
+{
+  return screen_warning;
+}
+
+bool AxePsycho::isKilled()
+{
+  return is_killed;
+}
+
+void AxePsycho::isKilled(bool value)
+{
+  is_killed = value;
 }
