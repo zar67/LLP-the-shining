@@ -178,52 +178,48 @@ void Map::fixCollision(GameObject* object,
 /*
  * make these 4 functions into one and pass into direction of movement
  */
-bool Map::moveNorth(AxePsycho* axe_psycho, int game_width, int game_height)
+bool Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
   {
     current_room -= map_size;
     updateMiniMap();
-    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveEast(AxePsycho* axe_psycho, int game_width, int game_height)
+bool Map::moveEast()
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
     current_room += 1;
     updateMiniMap();
-    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveSouth(AxePsycho* axe_psycho, int game_width, int game_height)
+bool Map::moveSouth()
 {
   if (getCurrentRoom()->getSouth() && getCurrentRoom()->canMove())
   {
     current_room += map_size;
     updateMiniMap();
-    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
   return false;
 }
 
-bool Map::moveWest(AxePsycho* axe_psycho, int game_width, int game_height)
+bool Map::moveWest()
 {
   if (getCurrentRoom()->getWest() && getCurrentRoom()->canMove())
   {
     current_room -= 1;
     updateMiniMap();
-    getCurrentRoom()->axeManPresent(axe_psycho, game_width, game_height);
     return true;
   }
 
@@ -249,13 +245,25 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 
 void Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             double delta_time,
-                            Player* player)
+                            Player* player,
+                            int game_width,
+                            int game_height)
 {
   getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player);
 
   if (getCurrentRoom()->getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
+  }
+
+  if (roomChanged())
+  {
+    bool is_ready = axe_psycho.spawnTimerEnd(delta_time);
+    if (is_ready)
+    {
+      last_room = current_room;
+      getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height);
+    }
   }
 }
 
@@ -455,7 +463,7 @@ void Map::checkNorthDoorCollision(Player* player)
     {
       if (player_sprite->yPos() < 10)
       {
-        if (moveNorth(&axe_psycho, game_width, game_height))
+        if (moveNorth())
         {
           player_sprite->yPos(384);
         }
@@ -485,7 +493,7 @@ void Map::checkEastDoorCollision(Player* player)
     {
       if (player_sprite->xPos() > 694 - player_sprite->width())
       {
-        if (moveEast(&axe_psycho, game_width, game_height))
+        if (moveEast())
         {
           player_sprite->xPos(15);
         }
@@ -515,7 +523,7 @@ void Map::checkSouthDoorCollision(Player* player)
     {
       if (player_sprite->yPos() > 438 - player_sprite->height())
       {
-        if (moveSouth(&axe_psycho, game_width, game_height))
+        if (moveSouth())
         {
           player_sprite->yPos(15);
         }
@@ -545,7 +553,7 @@ void Map::checkWestDoorCollision(Player* player)
     {
       if (player_sprite->xPos() < 10)
       {
-        if (moveWest(&axe_psycho, game_width, game_height))
+        if (moveWest())
         {
           player_sprite->xPos(640);
         }
@@ -738,12 +746,22 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
   return valid;
 }
 
+// adds axe man on to enemies
 std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
-  return getCurrentRoom()->getEnemies(include_objects);
+  std::vector<GameObject*> enemies =
+    getCurrentRoom()->getEnemies(include_objects);
+  enemies.push_back(&axe_psycho);
+  return enemies;
 }
 
 AxePsycho* Map::axePsycho()
 {
   return &axe_psycho;
+}
+
+bool Map::roomChanged()
+{
+  // room changed spawn axe man and change last room to current room
+  return current_room != last_room;
 }

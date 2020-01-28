@@ -23,8 +23,16 @@ class AxePsycho : public Enemy
   bool inRoom();
   void inRoom(bool value);
 
+  bool spawnTimerEnd(float delta_time);
+  void setSpawnedLocation(float x, float y);
+
  private:
   bool in_room = false;
+  float timer_aim = 3.0f;
+  float current_time = 0.0f;
+
+  float spawned_x = 0.0f;
+  float spawned_y = 0.0f;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_AXEPSYCHO_H

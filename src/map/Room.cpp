@@ -257,8 +257,8 @@ void Room::addItemToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
-  int should_Spawn = rand() % 10;
-  if (should_Spawn == 1)
+  int should_Spawn = rand() % 1;
+  if (should_Spawn == 0)
   {
     while (true)
     {
@@ -288,12 +288,14 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
           x_pos = 50;
           y_pos = game_height / 2;
         }
+        axe_man->setSpawnedLocation(x_pos, y_pos);
         axe_man->spriteComponent()->getSprite()->xPos(x_pos);
         axe_man->spriteComponent()->getSprite()->yPos(y_pos);
         break;
       }
     }
     axe_man->inRoom(true);
+    return true;
   }
   return false;
 }

@@ -24,17 +24,19 @@ class Map
                     CollisionComponent* collided,
                     CollisionComponent::CollisionSide side);
 
-  bool moveNorth(AxePsycho* axe_psycho, int game_width, int game_height);
-  bool moveEast(AxePsycho* axe_psycho, int game_width, int game_height);
-  bool moveSouth(AxePsycho* axe_psycho, int game_width, int game_height);
-  bool moveWest(AxePsycho* axe_psycho, int game_width, int game_height);
+  bool moveNorth();
+  bool moveEast();
+  bool moveSouth();
+  bool moveWest();
 
   Room* getRoom(int id);
   Room* getCurrentRoom();
   void renderCurrentRoom(ASGE::Renderer* renderer);
   void updateCurrentRoom(ASGE::Renderer* renderer,
                          double delta_time,
-                         Player* player);
+                         Player* player,
+                         int game_width,
+                         int game_height);
   void renderMiniMap(ASGE::Renderer* renderer);
   void generateStartingRoom(ASGE::Renderer* renderer);
   void generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index);
@@ -65,11 +67,14 @@ class Map
   std::string needWestDoor(int x_pos, int y_pos);
   bool checkRoomName(std::string name, std::string required_doors);
 
+  bool roomChanged();
+
   int map_size = 5;
   Room rooms[5][5];
   std::vector<GameObject*> mini_map;
   std::vector<int> mini_map_ids;
   int current_room = STARTING_ROOM;
+  int last_room = STARTING_ROOM;
 
   CollisionComponent* room_wall_collision[8];
   CollisionComponent* room_door_collision[4];

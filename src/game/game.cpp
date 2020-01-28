@@ -72,8 +72,8 @@ bool MyASGEGame::init()
   std::string texture = "/data/Characters/Danny.png";
   player.init(renderer.get(),
               texture,
-              game_width / 2 - 17,
-              game_height / 2 - 24.5f,
+              game_width / 2.0f - 17,
+              game_height / 2.0f - 24.5f,
               34.0f,
               49.0f);
 
@@ -318,7 +318,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(inputs.get());
-    if (player.update(delta_time, map.getCurrentRoom()->getEnemies(true)))
+    if (player.update(delta_time, map.getEnemies(true)))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
@@ -333,7 +333,8 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 
     std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
-    map.updateCurrentRoom(renderer.get(), delta_time, &player);
+    map.updateCurrentRoom(
+      renderer.get(), delta_time, &player, game_width, game_height);
   }
 }
 
