@@ -89,6 +89,10 @@ void Map::handlePlayerCollision(Player* player)
   for (auto& obj : objects)
   {
     bool collision = obj->collisionComponent()->hasCollided(*player_collider);
+    if (!collision)
+    {
+      collision = player_collider->hasCollided(*obj->collisionComponent());
+    }
     if (collision)
     {
       CollisionComponent::CollisionSide side =
