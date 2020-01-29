@@ -55,10 +55,10 @@ void Map::setupRoomCollision(int game_width, int game_height)
   setupBoundingBox(room_wall_collision[6], 576, 576, 480, 96);
   setupBoundingBox(room_wall_collision[7], 960, 384, 96, 288);
 
-  setupBoundingBox(room_door_collision[0], 480, 0, 96, 10);    // North
-  setupBoundingBox(room_door_collision[1], 1040, 288, 10, 96); // East
-  setupBoundingBox(room_door_collision[2], 480, 662, 96, 10);  // South
-  setupBoundingBox(room_door_collision[3], 0, 288, 10, 96);    // West
+  setupBoundingBox(room_door_collision[0], 480, 0, 96, 96);   // North
+  setupBoundingBox(room_door_collision[1], 960, 288, 96, 96); // East
+  setupBoundingBox(room_door_collision[2], 480, 576, 96, 96); // South
+  setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);   // West
 }
 
 void Map::handlePlayerCollision(Player* player)

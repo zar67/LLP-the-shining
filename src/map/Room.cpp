@@ -137,14 +137,14 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
     ghosts.at(i)->render(renderer);
   }
 
-  for (auto& obj : interactable_objs)
-  {
-    renderer->renderSprite(*obj->spriteComponent()->getSprite());
-  }
-
   for (int i = 0; i < items.size(); i++)
   {
     items.at(i)->renderItem(renderer);
+  }
+
+  for (auto& obj : interactable_objs)
+  {
+    renderer->renderSprite(*obj->spriteComponent()->getSprite());
   }
 }
 
