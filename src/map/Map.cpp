@@ -76,9 +76,11 @@ void Map::handlePlayerCollision(Player* player)
       fixCollision(player, wall, side);
     }
     if (axe_psycho.inRoom() &&
-        player_collider->hasCollided(*axe_psycho.collisionComponent()))
+        player_collider->hasCollided(*axe_psycho.collisionComponent()) &&
+        !axe_psycho.isPaused())
     {
       player->takeDamage(axe_psycho.attackDamage());
+      axe_psycho.isPaused(true);
     }
   }
 
@@ -278,7 +280,8 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
 
   if (roomChanged())
   {
-    bool is_ready = axe_psycho.spawnTimerEnd(delta_time);
+    bool is_ready = axe_psycho.spawnTimerEnd(
+      delta_time, axe_psycho.flashAimTime(), *axe_psycho.currentFlashTime());
     if (is_ready)
     {
       last_room = current_room;

@@ -20,11 +20,12 @@ class AxePsycho : public Enemy
              float width,
              float height);
   void update(double delta_time, float player_x, float player_y) override;
+  void pauseMovement(float delta_time);
 
   bool inRoom();
   void inRoom(bool value);
 
-  bool spawnTimerEnd(float delta_time);
+  bool spawnTimerEnd(float delta_time, float timer_aim, float& current_time);
   void setSpawnedLocation(float x, float y);
 
   FlashComponent* flashComponent();
@@ -33,13 +34,21 @@ class AxePsycho : public Enemy
   bool isKilled();
   void isKilled(bool value);
 
+  float flashAimTime();
+  float* currentFlashTime();
+  bool isPaused();
+  void isPaused(bool value);
+
  private:
   bool is_killed = false;
   bool in_room = false;
-  float timer_aim = 1.5f;
-  float current_time = 0.0f;
+  const float TIMER_AIM_FLASH = 1.5f;
+  float current_time_flash = 0.0f;
 
   const int START_HP = 500;
+  const float PASUE_TIME = 1.5f;
+  float current_pause_time = 0.0f;
+  bool is_paused = false;
 
   float spawned_x = 0.0f;
   float spawned_y = 0.0f;

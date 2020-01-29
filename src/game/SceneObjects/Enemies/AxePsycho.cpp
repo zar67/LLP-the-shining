@@ -35,7 +35,11 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
   // Move Towards Player if not killed
   if (in_room)
   {
-    if (hp > 0)
+    if (is_paused)
+    {
+      is_paused = !spawnTimerEnd(delta_time, PASUE_TIME, current_pause_time);
+    }
+    if (hp > 0 && !isPaused())
     {
       std::vector<float> direction =
         getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
@@ -44,7 +48,7 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
                            player_y);
       move(delta_time, direction[0], direction[1], speed);
     }
-    else
+    else if (hp <= 0)
     {
       std::vector<float> direction =
         getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
@@ -76,7 +80,9 @@ void AxePsycho::inRoom(bool value)
   in_room = value;
 }
 
-bool AxePsycho::spawnTimerEnd(float delta_time)
+bool AxePsycho::spawnTimerEnd(float delta_time,
+                              float timer_aim,
+                              float& current_time)
 {
   current_time += delta_time;
   if (current_time >= timer_aim)
@@ -115,4 +121,24 @@ void AxePsycho::addFlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour)
     delete (flashComponent());
   }
   screen_warning = new FlashComponent(renderer, colour);
+}
+
+float AxePsycho::flashAimTime()
+{
+  return TIMER_AIM_FLASH;
+}
+
+float* AxePsycho::currentFlashTime()
+{
+  return &current_time_flash;
+}
+
+bool AxePsycho::isPaused()
+{
+  return is_paused;
+}
+
+void AxePsycho::isPaused(bool value)
+{
+  is_paused = value;
 }

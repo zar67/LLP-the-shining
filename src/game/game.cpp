@@ -326,12 +326,6 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     }
     if (map.axePsycho()->inRoom())
     {
-      std::cout << map.axePsycho()->spriteComponent()->getSprite()->xPos()
-                << " : "
-                << map.axePsycho()->spriteComponent()->getSprite()->yPos()
-                << "                 "
-                << player.spriteComponent()->getSprite()->xPos() << " : "
-                << player.spriteComponent()->getSprite()->yPos() << std::endl;
       map.axePsycho()->update(delta_time,
                               player.spriteComponent()->getSprite()->xPos(),
                               player.spriteComponent()->getSprite()->yPos());
