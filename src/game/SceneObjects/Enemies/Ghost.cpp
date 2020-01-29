@@ -58,8 +58,11 @@ void Ghost::update(double delta_time,
   {
     obj_grabbed = grabClosestObject(objects, game_width, game_height);
     getMoveToDoor(doors, door_pos, game_width, game_height);
-    obj_grabbed->spriteComponent()->getSprite()->colour(
-      ASGE::COLOURS::GREENYELLOW);
+    if (obj_grabbed)
+    {
+      obj_grabbed->spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::GREENYELLOW);
+    }
   }
   // move object to block door
   else

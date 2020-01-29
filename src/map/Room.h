@@ -75,6 +75,8 @@ class Room : public GameObject
   bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
 
  private:
+  void chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite);
+
   int ID = -1;
   RoomType type = NORMAL;
   bool north = false;
