@@ -59,9 +59,10 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
         getDistanceBetween(spriteComponent()->getSprite()->xPos(),
                            spriteComponent()->getSprite()->yPos(),
                            spawned_x,
-                           spawned_y);
+                           spawned_y) -
+        spriteComponent()->getSprite()->width() / 2.0f;
       move(delta_time, direction[0], direction[1], speed);
-      if (distance < 30.0f)
+      if (distance < 40.0f)
       {
         in_room = false;
         hp = START_HP;
