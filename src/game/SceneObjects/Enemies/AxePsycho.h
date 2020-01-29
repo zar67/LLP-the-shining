@@ -28,6 +28,7 @@ class AxePsycho : public Enemy
   void setSpawnedLocation(float x, float y);
 
   FlashComponent* flashComponent();
+  void addFlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour);
 
   bool isKilled();
   void isKilled(bool value);

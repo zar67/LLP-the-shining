@@ -10,8 +10,9 @@ FlashComponent::FlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour)
   spriteComponent()->getSprite()->colour(colour);
   spriteComponent()->getSprite()->xPos(0);
   spriteComponent()->getSprite()->yPos(0);
-  spriteComponent()->getSprite()->width(800);
-  spriteComponent()->getSprite()->height(1200);
+  // set it to screen size
+  spriteComponent()->getSprite()->width(1200);
+  spriteComponent()->getSprite()->height(1024);
 }
 
 void FlashComponent::incrementCount()

@@ -14,8 +14,7 @@ bool AxePsycho::setup(
   speed = 60;
   in_room = false;
 
-  screen_warning = new FlashComponent(renderer, ASGE::COLOURS::RED);
-
+  addFlashComponent(renderer, ASGE::COLOURS::RED);
   addCollisionComponent();
   if (addSpriteComponent(renderer, "data/Characters/axe-man.png"))
   {
@@ -107,4 +106,13 @@ bool AxePsycho::isKilled()
 void AxePsycho::isKilled(bool value)
 {
   is_killed = value;
+}
+
+void AxePsycho::addFlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour)
+{
+  if (flashComponent())
+  {
+    delete (flashComponent());
+  }
+  screen_warning = new FlashComponent(renderer, colour);
 }

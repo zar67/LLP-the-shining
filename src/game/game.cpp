@@ -74,10 +74,9 @@ bool MyASGEGame::init()
   player.init(renderer.get(),
               texture,
               game_width / 2.0f - 17,
-              game_height / 2.0f - 24.5f,
+              game_height / 2.0f - 24.5f/*,
               34.0f,
-              49.0f);
-
+              49.0f*/);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
