@@ -110,6 +110,11 @@ void GameScene::render(
   renderer->renderText("Floor " + std::to_string(floor), 10, 20);
   renderer->renderText("$" + std::to_string(coins), 10, 50);
 
+  if (abilities[1])
+  {
+    health_bar_background->width(300);
+  }
+
   renderer->renderSprite(*health_bar_background);
   health_bar->width(health * 1.5f);
   renderer->renderSprite(*health_bar);

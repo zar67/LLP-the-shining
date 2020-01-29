@@ -548,7 +548,6 @@ void Map::checkEastDoorCollision(Player* player)
       {
         if (moveEast())
         {
-          std::cout << "HERE" << std::endl;
           player_sprite->xPos(15);
         }
         else

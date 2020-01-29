@@ -128,7 +128,7 @@ void Ghost::getMoveToDoor(const bool doors[4],
   int choice = 0;
   do
   {
-    choice = rand() % 3;
+    choice = rand() % 4;
   } while (!doors[choice]);
 
   float x_pos = 0.0f;

@@ -161,7 +161,6 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
   {
     demons.at(i)->update(renderer, delta_time, player, interactable_objs);
   }
-
   bool doors[4] = { north, east, south, west };
   for (int i = 0; i < ghosts.size(); i++)
   {

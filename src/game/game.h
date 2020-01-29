@@ -35,7 +35,7 @@ class MyASGEGame : public ASGE::OGLGame
   Map map = Map();
   Player player = Player();
 
-  const int MAX_FLOOR = 3;
+  const int MAX_FLOOR = 4;
   int floor = 0;
 
   float last_shoot_dir[2] = { 0, 0 };
