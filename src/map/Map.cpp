@@ -295,7 +295,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
         getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
     }
   }
-  if (axe_psycho.flashComponent()->isFlashing())
+  else if (axe_psycho.flashComponent()->isFlashing())
   {
     bool in = axe_psycho.flashComponent()->flash(delta_time);
     axe_psycho.inRoom(in);
@@ -827,6 +827,7 @@ std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
   auto itr = enemies.begin();
   if (axe_psycho.inRoom() || axe_psycho.flashComponent()->isFlashing())
   {
+    getCurrentRoom()->canMove(false);
     enemies.push_back(&axe_psycho);
   }
   else if (axe_psycho.isKilled())

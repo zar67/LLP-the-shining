@@ -12,7 +12,7 @@ class AxePsycho : public Enemy
 {
  public:
   AxePsycho() = default;
-  ~AxePsycho() = default;
+  ~AxePsycho();
 
   bool setup(ASGE::Renderer* renderer,
              float x_pos,
