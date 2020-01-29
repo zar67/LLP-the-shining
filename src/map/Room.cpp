@@ -316,12 +316,11 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
           x_pos =
             game_width / 2 -
             static_cast<int>(axe_man->spriteComponent()->getSprite()->width());
-          ;
-          y_pos = 100;
+          y_pos = 150;
         }
         else if (door_spawned == 1)
         {
-          x_pos = game_width - 100;
+          x_pos = game_width - 150;
           y_pos = game_height / 2;
         }
         else if (door_spawned == 2)
@@ -329,11 +328,11 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
           x_pos =
             game_width / 2 -
             static_cast<int>(axe_man->spriteComponent()->getSprite()->width());
-          y_pos = game_height - 100;
+          y_pos = game_height - 150;
         }
         else
         {
-          x_pos = 100;
+          x_pos = 150;
           y_pos = game_height / 2;
         }
         axe_man->setSpawnedLocation(x_pos, y_pos);

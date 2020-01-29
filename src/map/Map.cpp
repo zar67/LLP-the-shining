@@ -825,7 +825,7 @@ std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
     getCurrentRoom()->getEnemies(include_objects);
 
   auto itr = enemies.begin();
-  if (axe_psycho.inRoom())
+  if (axe_psycho.inRoom() || axe_psycho.flashComponent()->isFlashing())
   {
     enemies.push_back(&axe_psycho);
   }
