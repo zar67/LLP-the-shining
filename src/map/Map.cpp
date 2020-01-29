@@ -76,7 +76,8 @@ void Map::handlePlayerCollision(Player* player)
       fixCollision(player, wall, side);
     }
     if (axe_psycho.inRoom() &&
-        player_collider->hasCollided(*axe_psycho.collisionComponent()) &&
+        (player_collider->hasCollided(*axe_psycho.collisionComponent()) ||
+         axe_psycho.collisionComponent()->hasCollided(*player_collider)) &&
         !axe_psycho.isPaused())
     {
       player->takeDamage(axe_psycho.attackDamage());
@@ -142,7 +143,8 @@ void Map::handleObjectCollision(std::vector<GameObject*> colliders)
 
     for (auto& obj : scene_objects)
     {
-      if (col->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      if (col->collisionComponent()->hasCollided(*obj->collisionComponent()) ||
+          obj->collisionComponent()->hasCollided(*col->collisionComponent()))
       {
         CollisionComponent::CollisionSide side =
           col->collisionComponent()->getCollisionSide(
@@ -187,9 +189,6 @@ void Map::fixCollision(GameObject* object,
   }
 }
 
-/*
- * make these 4 functions into one and pass into direction of movement
- */
 bool Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
@@ -225,7 +224,6 @@ bool Map::moveSouth()
     updateMiniMap();
     return true;
   }
-
   return false;
 }
 
@@ -383,7 +381,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
 {
-  axe_psycho.setup(renderer, 0, 0, 64, 64);
+  axe_psycho.setup(renderer, 0, 0, 92, 92);
   generateStartingRoom(renderer);
 
   // Create Queue of Rooms From Open Doors

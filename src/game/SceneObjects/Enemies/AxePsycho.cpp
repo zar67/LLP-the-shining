@@ -55,6 +55,14 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
                            spriteComponent()->getSprite()->yPos(),
                            player_x,
                            player_y);
+      if (direction[0] < 0)
+      {
+        spriteComponent()->getSprite()->setFlipFlags(ASGE::Sprite::FLIP_X);
+      }
+      else if (direction[0] > 0)
+      {
+        spriteComponent()->getSprite()->setFlipFlags(ASGE::Sprite::NORMAL);
+      }
       move(delta_time, direction[0], direction[1], speed);
     }
     else if (hp <= 0)
