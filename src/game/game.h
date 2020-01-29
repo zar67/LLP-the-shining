@@ -38,6 +38,8 @@ class MyASGEGame : public ASGE::OGLGame
   const int MAX_FLOOR = 3;
   int floor = 0;
 
+  float last_shoot_dir[2] = { 0, 0 };
+  float shoot_timer = 0;
   bool controller_connected = false;
   bool shoot_pressed = true;
 

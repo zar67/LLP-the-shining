@@ -13,16 +13,12 @@ ShootingComponent::ShootingComponent()
 
 void ShootingComponent::Fire(ASGE::Renderer* renderer,
                              float start_x,
-                             float start_y)
+                             float start_y,
+                             float x_dir,
+                             float y_dir)
 {
   auto bullet = new Projectile();
-  bullet->setup(renderer,
-                speed,
-                range,
-                start_x,
-                start_y,
-                move_direction[0],
-                move_direction[1]);
+  bullet->setup(renderer, speed, range, start_x, start_y, x_dir, y_dir);
   bullet->spriteComponent()->getSprite()->width(size);
   bullet->spriteComponent()->getSprite()->height(size);
   projectiles.push_back(bullet);

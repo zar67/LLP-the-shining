@@ -76,8 +76,7 @@ void Demon::update(ASGE::Renderer* renderer,
 
       std::vector<float> dir =
         getDirectionFromTo(x_pos, y_pos, player_x, player_y);
-      weapon_component->setMoveDirection(dir.at(0), dir.at(1));
-      weapon_component->Fire(renderer, x_pos, y_pos);
+      weapon_component->Fire(renderer, x_pos, y_pos, dir.at(0), dir.at(1));
 
       shoot_timer = 0;
     }
