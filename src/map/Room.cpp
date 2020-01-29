@@ -356,7 +356,7 @@ void Room::addItemToRoom(Item* new_item)
 void Room::chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite)
 {
   int chance = rand() % 10;
-  std::string texture = "";
+  std::string texture;
   Item::GameItems type;
   if (chance == 1)
   {
