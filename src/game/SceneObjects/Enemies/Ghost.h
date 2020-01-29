@@ -35,8 +35,8 @@ class Ghost : public Enemy
   float door_pos[2] = { 0.0f, 0.0f }; // door object grabbed moving to
   std::vector<float> direction;       // direction for object to door
 
-  int jedi_force_speed = 180;         // speed of moving object
-         // speed of moving object
+  int jedi_force_speed = 180; // speed of moving object
+                              // speed of moving object
 
   float ghost_teleports_x[12] = { 100, 120, 240, 300, 360, 420,
                                   480, 560, 610, 700, 790, 890 };
