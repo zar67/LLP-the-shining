@@ -12,7 +12,7 @@ class Ghost : public Enemy
 {
  public:
   Ghost() = default;
-  ~Ghost() = default;
+  ~Ghost();
 
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
   void update(double delta_time,

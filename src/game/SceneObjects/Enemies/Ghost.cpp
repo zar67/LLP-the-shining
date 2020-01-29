@@ -4,6 +4,15 @@
 
 #include "Ghost.h"
 
+Ghost::~Ghost()
+{
+  if (obj_grabbed)
+  {
+    obj_grabbed->setIsGrabbed(false);
+    obj_grabbed = nullptr;
+  }
+}
+
 bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   hp = 50;
