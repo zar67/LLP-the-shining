@@ -53,3 +53,8 @@ bool InteractableObjects::isGrabbed()
 {
   return is_grabbed;
 }
+
+int InteractableObjects::damage()
+{
+  return movement_damage;
+}

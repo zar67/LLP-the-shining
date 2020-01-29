@@ -150,7 +150,9 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 
 bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
                                double delta_time,
-                               Player* player)
+                               Player* player,
+                               int game_width,
+                               int game_height)
 {
   bool descend = false;
 
@@ -162,7 +164,8 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
   bool doors[4] = { north, east, south, west };
   for (int i = 0; i < ghosts.size(); i++)
   {
-    ghosts.at(i)->update(delta_time, interactable_objs, doors);
+    ghosts.at(i)->update(
+      delta_time, interactable_objs, doors, game_width, game_height);
   }
 
   for (int i = 0; i < items.size(); i++)
@@ -295,10 +298,9 @@ void Room::addItemToRoom(ASGE::Renderer* renderer,
   items.push_back(new_item);
 }
 
-
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
-  int should_Spawn = rand() % 5;
+  int should_Spawn = rand() % 7;
   if (should_Spawn == 0)
   {
     while (true)
@@ -314,12 +316,11 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
           x_pos =
             game_width / 2 -
             static_cast<int>(axe_man->spriteComponent()->getSprite()->width());
-          ;
-          y_pos = 100;
+          y_pos = 150;
         }
         else if (door_spawned == 1)
         {
-          x_pos = game_width - 100;
+          x_pos = game_width - 150;
           y_pos = game_height / 2;
         }
         else if (door_spawned == 2)
@@ -327,11 +328,11 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
           x_pos =
             game_width / 2 -
             static_cast<int>(axe_man->spriteComponent()->getSprite()->width());
-          y_pos = game_height - 100;
+          y_pos = game_height - 150;
         }
         else
         {
-          x_pos = 100;
+          x_pos = 150;
           y_pos = game_height / 2;
         }
         axe_man->setSpawnedLocation(x_pos, y_pos);
@@ -350,4 +351,3 @@ void Room::addItemToRoom(Item* new_item)
 {
   items.push_back(new_item);
 }
-

@@ -94,6 +94,11 @@ void Map::handlePlayerCollision(Player* player)
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*obj->collisionComponent());
       fixCollision(player, obj->collisionComponent(), side);
+      if (obj->isGrabbed())
+      {
+        player->takeDamage(obj->damage());
+        obj->setIsGrabbed(false);
+      }
     }
   }
 
@@ -268,7 +273,8 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             int game_height)
 {
   bool descend = false;
-  if (getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player))
+  if (getCurrentRoom()->updateObjectsInRoom(
+        renderer, delta_time, player, game_width, game_height))
   {
     descend = true;
   }
@@ -289,7 +295,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
         getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
     }
   }
-  if (axe_psycho.flashComponent()->isFlashing())
+  else if (axe_psycho.flashComponent()->isFlashing())
   {
     bool in = axe_psycho.flashComponent()->flash(delta_time);
     axe_psycho.inRoom(in);
@@ -819,8 +825,9 @@ std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
     getCurrentRoom()->getEnemies(include_objects);
 
   auto itr = enemies.begin();
-  if (axe_psycho.inRoom())
+  if (axe_psycho.inRoom() || axe_psycho.flashComponent()->isFlashing())
   {
+    getCurrentRoom()->canMove(false);
     enemies.push_back(&axe_psycho);
   }
   else if (axe_psycho.isKilled())
