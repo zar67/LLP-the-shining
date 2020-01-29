@@ -25,8 +25,9 @@ void Enemy::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*spriteComponent()->getSprite());
 }
 
-bool Enemy::takeDamage(int hit)
+bool Enemy::takeDamage(AudioManager* audio, int hit)
 {
+  audio->playHit();
   hp -= hit;
 
   return hp <= 0;

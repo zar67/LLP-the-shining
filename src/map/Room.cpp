@@ -149,6 +149,7 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 }
 
 bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
+                               AudioManager* audio,
                                double delta_time,
                                Player* player,
                                int game_width,
@@ -177,14 +178,17 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
       if (items.at(i)->itemType() == Item::GameItems::COIN)
       {
         player->addCoins(5);
+        audio->playCoin();
       }
       else if (items.at(i)->itemType() == Item::GameItems::HEART)
       {
         player->addHealth(20);
+        audio->playHeart();
       }
       else if (items.at(i)->itemType() == Item::GameItems::STAIRCASE)
       {
         descend = true;
+        audio->playDownAFloor();
       }
     }
   }

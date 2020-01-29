@@ -31,6 +31,7 @@ class Map
   Room* getCurrentRoom();
   void renderCurrentRoom(ASGE::Renderer* renderer);
   bool updateCurrentRoom(ASGE::Renderer* renderer,
+                         AudioManager* audio,
                          double delta_time,
                          Player* player,
                          int game_width,
