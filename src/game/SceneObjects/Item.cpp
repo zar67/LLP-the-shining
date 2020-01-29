@@ -11,7 +11,8 @@
 bool Item::hasCollidedWithPlayer(Player* player)
 {
   updateCollisionComponent();
-  return player->collisionComponent()->hasCollided(*collisionComponent()) &&
+  return (player->collisionComponent()->hasCollided(*collisionComponent()) ||
+          collisionComponent()->hasCollided(*player->collisionComponent())) &&
          visibility;
 }
 void Item::hasPickedUpItem()

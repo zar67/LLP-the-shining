@@ -55,16 +55,16 @@ void Map::setupRoomCollision(int game_width, int game_height)
   setupBoundingBox(room_wall_collision[6], 576, 576, 480, 96);
   setupBoundingBox(room_wall_collision[7], 960, 384, 96, 288);
 
-  setupBoundingBox(room_door_collision[0], 480, 0, 96, 96);
-  setupBoundingBox(room_door_collision[1], 960, 288, 96, 96);
-  setupBoundingBox(room_door_collision[2], 480, 576, 96, 96);
-  setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);
+  setupBoundingBox(room_door_collision[0], 480, 0, 96, 96);   // North
+  setupBoundingBox(room_door_collision[1], 960, 288, 96, 96); // East
+  setupBoundingBox(room_door_collision[2], 480, 576, 96, 96); // South
+  setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);   // West
 }
 
 void Map::handlePlayerCollision(Player* player)
 {
-  CollisionComponent* player_collider = player->collisionComponent();
   player->updateCollisionComponent();
+  CollisionComponent* player_collider = player->collisionComponent();
   axe_psycho.updateCollisionComponent();
 
   for (auto& wall : room_wall_collision)
@@ -88,12 +88,21 @@ void Map::handlePlayerCollision(Player* player)
     getCurrentRoom()->getObjectsInRoom();
   for (auto& obj : objects)
   {
-    bool collision = player_collider->hasCollided(*obj->collisionComponent());
+    bool collision = obj->collisionComponent()->hasCollided(*player_collider);
+    if (!collision)
+    {
+      collision = player_collider->hasCollided(*obj->collisionComponent());
+    }
     if (collision)
     {
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*obj->collisionComponent());
       fixCollision(player, obj->collisionComponent(), side);
+      if (obj->isGrabbed())
+      {
+        player->takeDamage(obj->damage());
+        obj->setIsGrabbed(false);
+      }
     }
   }
 
@@ -198,6 +207,7 @@ bool Map::moveEast()
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
+    std::cout << "MOVE" << std::endl;
     current_room += 1;
     getCurrentRoom()->found(true);
     updateMiniMap();
@@ -270,7 +280,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
 {
   bool descend = false;
   if (getCurrentRoom()->updateObjectsInRoom(
-        renderer, audio, delta_time, player))
+        renderer, audio, delta_time, player, game_width, game_height))
   {
     descend = true;
   }
@@ -291,7 +301,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
         getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
     }
   }
-  if (axe_psycho.flashComponent()->isFlashing())
+  else if (axe_psycho.flashComponent()->isFlashing())
   {
     bool in = axe_psycho.flashComponent()->flash(delta_time);
     axe_psycho.inRoom(in);
@@ -303,10 +313,11 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    if (getRoom(mini_map_ids.at(i))->found())
+    /*if (getRoom(mini_map_ids.at(i))->found())
     {
       renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
-    }
+    }*/
+    renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
   }
 }
 
@@ -368,6 +379,7 @@ void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
                                  possible_rooms[index][2] == 'S',
                                  possible_rooms[index][3] == 'W');
   rooms[x_index][y_index].setup(renderer, &file);
+  rooms[x_index][y_index].canMove(true);
 }
 
 void Map::generateRooms(ASGE::Renderer* renderer,
@@ -539,6 +551,7 @@ void Map::checkEastDoorCollision(Player* player)
       {
         if (moveEast())
         {
+          std::cout << "HERE" << std::endl;
           player_sprite->xPos(15);
         }
         else
@@ -821,8 +834,9 @@ std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
     getCurrentRoom()->getEnemies(include_objects);
 
   auto itr = enemies.begin();
-  if (axe_psycho.inRoom())
+  if (axe_psycho.inRoom() || axe_psycho.flashComponent()->isFlashing())
   {
+    getCurrentRoom()->canMove(false);
     enemies.push_back(&axe_psycho);
   }
   else if (axe_psycho.isKilled())

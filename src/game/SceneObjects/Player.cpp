@@ -93,13 +93,27 @@ void Player::Movement(float x_pos, float y_pos)
 
 void Player::addHealth(int amount)
 {
-  if (health + amount > 100)
+  if (powerups[health_powerup_index])
   {
-    health = 100;
+    if (health + amount > starting_health * 2)
+    {
+      health = starting_health * 2;
+    }
+    else
+    {
+      health += amount;
+    }
   }
   else
   {
-    health += amount;
+    if (health + amount > starting_health)
+    {
+      health = starting_health;
+    }
+    else
+    {
+      health += amount;
+    }
   }
 }
 

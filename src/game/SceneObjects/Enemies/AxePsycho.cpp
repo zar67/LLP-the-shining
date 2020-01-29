@@ -6,6 +6,15 @@
 
 #include <iostream>
 
+AxePsycho::~AxePsycho()
+{
+  if (screen_warning)
+  {
+    delete (screen_warning);
+    screen_warning = nullptr;
+  }
+}
+
 bool AxePsycho::setup(
   ASGE::Renderer* renderer, float x_pos, float y_pos, float width, float height)
 {
