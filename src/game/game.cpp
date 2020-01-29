@@ -133,80 +133,41 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
         key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveVertical(1.0f);
+      last_shoot_dir[1] = 1;
     }
     else if (key->key == ASGE::KEYS::KEY_UP &&
              key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveVertical(-1.0f);
+      last_shoot_dir[1] = -1;
     }
     else if ((key->key == ASGE::KEYS::KEY_DOWN ||
               key->key == ASGE::KEYS::KEY_UP) &&
              key->action == ASGE::KEYS::KEY_RELEASED)
     {
       player.moveVertical(0.0f);
+      last_shoot_dir[1] = 0;
     }
+
     // Horizontal movement
     if (key->key == ASGE::KEYS::KEY_RIGHT &&
         key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveHorizontal(1.0f);
+      last_shoot_dir[0] = 1;
     }
     else if (key->key == ASGE::KEYS::KEY_LEFT &&
              key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveHorizontal(-1.0f);
+      last_shoot_dir[0] = -1;
     }
     else if ((key->key == ASGE::KEYS::KEY_LEFT ||
               key->key == ASGE::KEYS::KEY_RIGHT) &&
              key->action == ASGE::KEYS::KEY_RELEASED)
     {
       player.moveHorizontal(0.0f);
-    }
-
-    // Shooting
-    if (key->key == ASGE::KEYS::KEY_W)
-    {
-      if (key->action == ASGE::KEYS::KEY_PRESSED)
-      {
-        last_shoot_dir[1] = -1;
-      }
-      else
-      {
-        last_shoot_dir[1] = 0;
-      }
-    }
-    else if (key->key == ASGE::KEYS::KEY_A)
-    {
-      if (key->action == ASGE::KEYS::KEY_PRESSED)
-      {
-        last_shoot_dir[0] = -1;
-      }
-      else
-      {
-        last_shoot_dir[0] = 0;
-      }
-    }
-    else if (key->key == ASGE::KEYS::KEY_S)
-    {
-      if (key->action == ASGE::KEYS::KEY_PRESSED)
-      {
-        last_shoot_dir[1] = 1;
-      }
-      else
-      {
-        last_shoot_dir[1] = 0;
-      }
-    }
-    else if (key->key == ASGE::KEYS::KEY_D)
-    {
-      if (key->action == ASGE::KEYS::KEY_PRESSED)
-      {
-        last_shoot_dir[0] = 1;
-      }
-      else
-      {
-        last_shoot_dir[0] = 0;
-      }
+      last_shoot_dir[0] = 0;
     }
 
     if (key->key == ASGE::KEYS::KEY_SPACE &&
