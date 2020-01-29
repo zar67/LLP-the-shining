@@ -63,8 +63,8 @@ void Map::setupRoomCollision(int game_width, int game_height)
 
 void Map::handlePlayerCollision(Player* player)
 {
-  CollisionComponent* player_collider = player->collisionComponent();
   player->updateCollisionComponent();
+  CollisionComponent* player_collider = player->collisionComponent();
   axe_psycho.updateCollisionComponent();
 
   for (auto& wall : room_wall_collision)
@@ -88,7 +88,7 @@ void Map::handlePlayerCollision(Player* player)
     getCurrentRoom()->getObjectsInRoom();
   for (auto& obj : objects)
   {
-    bool collision = player_collider->hasCollided(*obj->collisionComponent());
+    bool collision = obj->collisionComponent()->hasCollided(*player_collider);
     if (collision)
     {
       CollisionComponent::CollisionSide side =
