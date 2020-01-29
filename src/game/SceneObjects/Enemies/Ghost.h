@@ -17,16 +17,23 @@ class Ghost : public Enemy
   bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
   void update(double delta_time,
               std::vector<InteractableObjects*>& objects,
-              bool doors[4]);
+              bool doors[4],
+              int game_width,
+              int game_height);
 
-  GameObject* grabClosestObject(std::vector<InteractableObjects*> objects);
-  void getMoveToDoor(const bool doors[4], float (&out_pos)[2]);
+  GameObject* grabClosestObject(std::vector<InteractableObjects*> objects,
+                                int game_width,
+                                int game_height);
+  void getMoveToDoor(const bool doors[4],
+                     float (&out_pos)[2],
+                     int game_width,
+                     int game_height);
 
  private:
   GameObject* obj_grabbed = nullptr;
   float door_pos[2] = { 0.0f, 0.0f }; // door object grabbed moving to
   std::vector<float> direction;       // direction for object to door
-  int jedi_force_speed = 70;          // speed of moving object
+  int jedi_force_speed = 180;         // speed of moving object
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_GHOST_H

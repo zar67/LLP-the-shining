@@ -23,14 +23,16 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 
 void Ghost::update(double delta_time,
                    std::vector<InteractableObjects*>& objects,
-                   bool doors[4])
+                   bool doors[4],
+                   int game_width,
+                   int game_height)
 {
   // Random update
   // Move Object Randomly
   if (!obj_grabbed)
   {
-    obj_grabbed = grabClosestObject(objects);
-    getMoveToDoor(doors, door_pos);
+    obj_grabbed = grabClosestObject(objects, game_width, game_height);
+    getMoveToDoor(doors, door_pos, game_width, game_height);
   }
   // move object to block door
   else
@@ -38,7 +40,7 @@ void Ghost::update(double delta_time,
     if (getDistanceBetween(obj_grabbed->spriteComponent()->getSprite()->xPos(),
                            obj_grabbed->spriteComponent()->getSprite()->yPos(),
                            door_pos[0],
-                           door_pos[1]) > 5.0f)
+                           door_pos[1]) > 25.0f)
     {
       direction =
         getDirectionFromTo(obj_grabbed->spriteComponent()->getSprite()->xPos(),
@@ -55,7 +57,9 @@ void Ghost::update(double delta_time,
   }
 }
 
-GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
+GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects,
+                                     int game_width,
+                                     int game_height)
 {
   ASGE::Sprite* ghost_sprite = spriteComponent()->getSprite();
   InteractableObjects* closest_obj = nullptr;
@@ -84,7 +88,10 @@ GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
   return closest_obj;
 }
 
-void Ghost::getMoveToDoor(const bool doors[4], float (&out_pos)[2])
+void Ghost::getMoveToDoor(const bool doors[4],
+                          float (&out_pos)[2],
+                          int game_width,
+                          int game_height)
 {
   int choice = 0;
   do
@@ -97,23 +104,23 @@ void Ghost::getMoveToDoor(const bool doors[4], float (&out_pos)[2])
 
   if (choice == 0)
   {
-    x_pos = 320.0f;
-    y_pos = 100.0f;
+    x_pos = game_width / 2.0f;
+    y_pos = game_height - 150.0f;
   }
   else if (choice == 1)
   {
-    x_pos = 540.0f;
-    y_pos = 240.0f;
+    x_pos = game_width - 150.0f;
+    y_pos = game_height / 2.0f;
   }
   else if (choice == 2)
   {
-    x_pos = 320.0f;
-    y_pos = 380.0f;
+    x_pos = game_width / 2.0f;
+    y_pos = game_height - 150.0f;
   }
   else
   {
-    x_pos = 100.0f;
-    y_pos = 240.0f;
+    x_pos = 150.0f;
+    y_pos = game_height / 2.0f;
   }
 
   out_pos[0] = x_pos;

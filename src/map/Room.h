@@ -53,7 +53,9 @@ class Room : public GameObject
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   bool updateObjectsInRoom(ASGE::Renderer* renderer,
                            double delta_time,
-                           Player* player);
+                           Player* player,
+                           int game_width,
+                           int game_height);
 
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);

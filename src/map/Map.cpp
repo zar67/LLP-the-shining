@@ -268,7 +268,8 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             int game_height)
 {
   bool descend = false;
-  if (getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player))
+  if (getCurrentRoom()->updateObjectsInRoom(
+        renderer, delta_time, player, game_width, game_height))
   {
     descend = true;
   }
