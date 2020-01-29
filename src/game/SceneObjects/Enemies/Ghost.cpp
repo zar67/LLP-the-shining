@@ -36,21 +36,20 @@ void Ghost::update(double delta_time,
                    int game_width,
                    int game_height)
 {
-  /*teleport_timer += delta_time;
+  teleport_timer += delta_time;
   if (teleport_timer >= 5)
   {
-      teleport_timer = 0;
+    teleport_timer = 0;
 
-      int ghost_loc_x = rand() % 12;
-      int ghost_loc_y = rand() % 12;
+    int ghost_loc_x = rand() % 12;
+    int ghost_loc_y = rand() % 12;
 
-      float x_pos = ghost_teleports_x[ghost_loc_x];
-      float y_pos = ghost_teleports_y[ghost_loc_y];
+    float x_pos = ghost_teleports_x[ghost_loc_x];
+    float y_pos = ghost_teleports_y[ghost_loc_y];
 
-      spriteComponent()->getSprite()->xPos(x_pos);
-      spriteComponent()->getSprite()->yPos(y_pos);
-
-  }*/
+    spriteComponent()->getSprite()->xPos(x_pos);
+    spriteComponent()->getSprite()->yPos(y_pos);
+  }
   // Random update
   // Move Object Randomly
   if (!obj_grabbed)
