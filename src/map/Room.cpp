@@ -304,7 +304,7 @@ void Room::addItemToRoom(ASGE::Renderer* renderer,
 
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
-  int should_Spawn = rand() % 7;
+  int should_Spawn = rand() % 6;
   if (should_Spawn == 0)
   {
     while (true)
