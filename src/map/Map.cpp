@@ -653,8 +653,8 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
       getRoom(id)->addItemToRoom(renderer,
                                  "data/Items/coin.png",
                                  Item::GameItems::COIN,
-                                 (rand() & (game_width - 128)) + 64,
-                                 (rand() & (game_height - 128)) + 64);
+                                 (rand() & (game_width - 192)) + 96,
+                                 (rand() & (game_height - 192)) + 96);
     }
 
     // Generate Hearts
@@ -664,8 +664,8 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
       getRoom(id)->addItemToRoom(renderer,
                                  "data/Items/heart.png",
                                  Item::GameItems::HEART,
-                                 (rand() & (game_width - 128)) + 64,
-                                 (rand() & (game_height - 128)) + 64);
+                                 (rand() & (game_width - 192)) + 96,
+                                 (rand() & (game_height - 192)) + 96);
     }
   }
 }
