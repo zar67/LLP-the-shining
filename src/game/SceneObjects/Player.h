@@ -8,8 +8,10 @@
 #include <Engine/InputEvents.h>
 #include <vector>
 
+#include "../Components/AudioManager.h"
 #include "../Components/ShootingComponent.h"
 #include "GameObject.h"
+
 class Player : public GameObject
 {
  public:
@@ -21,7 +23,9 @@ class Player : public GameObject
             float y_pos);
   void reset(float game_width, float game_height);
   void Movement(float x_pos, float y_pos);
-  bool update(double delta_time, std::vector<GameObject*> enemies);
+  bool update(AudioManager* audio,
+              double delta_time,
+              std::vector<GameObject*> enemies);
   void takeDamage(int hit_damage); // maybe pass enemie as different demons do
                                    // different damage
 

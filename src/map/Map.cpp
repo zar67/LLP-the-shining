@@ -262,13 +262,15 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 }
 
 bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
+                            AudioManager* audio,
                             double delta_time,
                             Player* player,
                             int game_width,
                             int game_height)
 {
   bool descend = false;
-  if (getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player))
+  if (getCurrentRoom()->updateObjectsInRoom(
+        renderer, audio, delta_time, player))
   {
     descend = true;
   }

@@ -5,6 +5,7 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/Components/AudioManager.h"
 #include "../game/SceneObjects/Enemies/AxePsycho.h"
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
@@ -52,6 +53,7 @@ class Room : public GameObject
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   bool updateObjectsInRoom(ASGE::Renderer* renderer,
+                           AudioManager* audio,
                            double delta_time,
                            Player* player);
 

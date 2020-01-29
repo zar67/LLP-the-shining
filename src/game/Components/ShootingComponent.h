@@ -7,6 +7,7 @@
 
 #include "../SceneObjects/InteractableObjects.h"
 #include "../SceneObjects/Projectile.h"
+#include "AudioManager.h"
 #include <vector>
 
 //  Forward declare
@@ -18,7 +19,8 @@ class ShootingComponent
   ShootingComponent();
 
   void Fire(ASGE::Renderer* renderer, float start_x, float start_y);
-  void maintainProjectiles(double delta_time,
+  void maintainProjectiles(AudioManager* audio,
+                           double delta_time,
                            std::vector<GameObject*> colliders,
                            int damage);
   bool hitPlayer(double delta_time,

@@ -8,7 +8,10 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "string"
+#include <Engine/FileIO.h>
 #include <Engine/OGLGame.h>
+#include <soloud.h>
+#include <soloud_wav.h>
 
 class Item : public GameObject
 {

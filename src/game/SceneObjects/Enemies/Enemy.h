@@ -5,6 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_ENEMY_H
 #define THE_SHINING_GAME_GROUP_3_ENEMY_H
 
+#include "../../Components/AudioManager.h"
 #include "../GameObject.h"
 //#include "../Player.h"
 //#include "../InteractableObjects.h"
@@ -24,7 +25,7 @@ class Enemy : public GameObject
   virtual void update(double delta_time, float player_x, float player_y){};
   virtual bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos){};
   virtual void render(ASGE::Renderer* renderer);
-  bool takeDamage(int hit);
+  bool takeDamage(AudioManager* audio, int hit);
 
  protected:
   bool is_alive = true;
