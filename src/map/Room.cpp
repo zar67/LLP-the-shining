@@ -295,7 +295,6 @@ void Room::addItemToRoom(ASGE::Renderer* renderer,
   items.push_back(new_item);
 }
 
-
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
   int should_Spawn = rand() % 5;
@@ -350,4 +349,3 @@ void Room::addItemToRoom(Item* new_item)
 {
   items.push_back(new_item);
 }
-

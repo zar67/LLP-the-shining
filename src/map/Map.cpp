@@ -55,10 +55,10 @@ void Map::setupRoomCollision(int game_width, int game_height)
   setupBoundingBox(room_wall_collision[6], 576, 576, 480, 96);
   setupBoundingBox(room_wall_collision[7], 960, 384, 96, 288);
 
-  setupBoundingBox(room_door_collision[0], 480, 0, 96, 96);
-  setupBoundingBox(room_door_collision[1], 960, 288, 96, 96);
-  setupBoundingBox(room_door_collision[2], 480, 576, 96, 96);
-  setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);
+  setupBoundingBox(room_door_collision[0], 480, 0, 96, 10);    // North
+  setupBoundingBox(room_door_collision[1], 1040, 288, 10, 96); // East
+  setupBoundingBox(room_door_collision[2], 480, 662, 96, 10);  // South
+  setupBoundingBox(room_door_collision[3], 0, 288, 10, 96);    // West
 }
 
 void Map::handlePlayerCollision(Player* player)
@@ -198,6 +198,7 @@ bool Map::moveEast()
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
   {
+    std::cout << "MOVE" << std::endl;
     current_room += 1;
     getCurrentRoom()->found(true);
     updateMiniMap();
@@ -301,10 +302,11 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    if (getRoom(mini_map_ids.at(i))->found())
+    /*if (getRoom(mini_map_ids.at(i))->found())
     {
       renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
-    }
+    }*/
+    renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
   }
 }
 
@@ -366,6 +368,7 @@ void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
                                  possible_rooms[index][2] == 'S',
                                  possible_rooms[index][3] == 'W');
   rooms[x_index][y_index].setup(renderer, &file);
+  rooms[x_index][y_index].canMove(true);
 }
 
 void Map::generateRooms(ASGE::Renderer* renderer,
@@ -537,6 +540,7 @@ void Map::checkEastDoorCollision(Player* player)
       {
         if (moveEast())
         {
+          std::cout << "HERE" << std::endl;
           player_sprite->xPos(15);
         }
         else
