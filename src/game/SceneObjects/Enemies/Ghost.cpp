@@ -9,6 +9,7 @@ Ghost::~Ghost()
   if (obj_grabbed)
   {
     obj_grabbed->setIsGrabbed(false);
+    obj_grabbed->spriteComponent()->getSprite()->colour(ASGE::COLOURS::BROWN);
     obj_grabbed = nullptr;
   }
 }
@@ -57,6 +58,8 @@ void Ghost::update(double delta_time,
   {
     obj_grabbed = grabClosestObject(objects, game_width, game_height);
     getMoveToDoor(doors, door_pos, game_width, game_height);
+    obj_grabbed->spriteComponent()->getSprite()->colour(
+      ASGE::COLOURS::GREENYELLOW);
   }
   // move object to block door
   else
@@ -64,7 +67,7 @@ void Ghost::update(double delta_time,
     if (getDistanceBetween(obj_grabbed->spriteComponent()->getSprite()->xPos(),
                            obj_grabbed->spriteComponent()->getSprite()->yPos(),
                            door_pos[0],
-                           door_pos[1]) > 25.0f)
+                           door_pos[1]) > 50.0f)
     {
       direction =
         getDirectionFromTo(obj_grabbed->spriteComponent()->getSprite()->xPos(),
@@ -77,6 +80,7 @@ void Ghost::update(double delta_time,
     else
     {
       obj_grabbed->setIsGrabbed(false);
+      obj_grabbed->spriteComponent()->getSprite()->colour(ASGE::COLOURS::BROWN);
       obj_grabbed = nullptr;
     }
   }
