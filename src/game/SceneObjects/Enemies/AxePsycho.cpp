@@ -67,6 +67,7 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
     }
     else if (hp <= 0)
     {
+      speed = quick_speed;
       std::vector<float> direction =
         getDirectionFromTo(spriteComponent()->getSprite()->xPos(),
                            spriteComponent()->getSprite()->yPos(),
@@ -83,6 +84,7 @@ void AxePsycho::update(double delta_time, float player_x, float player_y)
       {
         in_room = false;
         hp = START_HP;
+        speed = 60;
       }
     }
   }

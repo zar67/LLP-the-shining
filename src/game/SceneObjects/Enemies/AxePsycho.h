@@ -52,6 +52,8 @@ class AxePsycho : public Enemy
   float spawned_x = 0.0f;
   float spawned_y = 0.0f;
 
+  float quick_speed = 200.0f;
+
   FlashComponent* screen_warning = nullptr;
 };
 
