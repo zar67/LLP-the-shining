@@ -30,8 +30,11 @@ Map::~Map()
   }
 }
 
-void Map::setupRoomCollision()
+void Map::setupRoomCollision(int game_width, int game_height)
 {
+  this->game_width = game_width;
+  this->game_height = game_height;
+
   for (int i = 0; i < 8; i++)
   {
     room_wall_collision[i] = new CollisionComponent();
@@ -62,6 +65,7 @@ void Map::handlePlayerCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
   player->updateCollisionComponent();
+  axe_psycho.updateCollisionComponent();
 
   for (auto& wall : room_wall_collision)
   {
@@ -70,6 +74,13 @@ void Map::handlePlayerCollision(Player* player)
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*wall);
       fixCollision(player, wall, side);
+    }
+    if (axe_psycho.inRoom() &&
+        player_collider->hasCollided(*axe_psycho.collisionComponent()) &&
+        !axe_psycho.isPaused())
+    {
+      player->takeDamage(axe_psycho.attackDamage());
+      axe_psycho.isPaused(true);
     }
   }
 
@@ -167,6 +178,9 @@ void Map::fixCollision(GameObject* object,
   }
 }
 
+/*
+ * make these 4 functions into one and pass into direction of movement
+ */
 bool Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
@@ -234,11 +248,24 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
   getCurrentRoom()->renderObjectsInRoom(renderer);
+
+  bool render_flash = axe_psycho.flashComponent()->isVisible();
+  if (render_flash)
+  {
+    renderer->renderSprite(
+      *axe_psycho.flashComponent()->spriteComponent()->getSprite());
+  }
+  else if (axePsycho()->inRoom())
+  {
+    renderer->renderSprite(*axePsycho()->spriteComponent()->getSprite());
+  }
 }
 
 bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             double delta_time,
-                            Player* player)
+                            Player* player,
+                            int game_width,
+                            int game_height)
 {
   bool descend = false;
   if (getCurrentRoom()->updateObjectsInRoom(renderer, delta_time, player))
@@ -246,11 +273,27 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
     descend = true;
   }
 
-  if (getCurrentRoom()->getEnemies(false).empty())
+  if (getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
   }
 
+  if (roomChanged())
+  {
+    bool is_ready = axe_psycho.spawnTimerEnd(
+      delta_time, axe_psycho.flashAimTime(), *axe_psycho.currentFlashTime());
+    if (is_ready)
+    {
+      last_room = current_room;
+      axe_psycho.flashComponent()->isFlashing(
+        getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
+    }
+  }
+  if (axe_psycho.flashComponent()->isFlashing())
+  {
+    bool in = axe_psycho.flashComponent()->flash(delta_time);
+    axe_psycho.inRoom(in);
+  }
   return descend;
 }
 
@@ -329,6 +372,7 @@ void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
 {
+  axe_psycho.setup(renderer, 0, 0, 64, 64);
   generateStartingRoom(renderer);
 
   // Create Queue of Rooms From Open Doors
@@ -764,11 +808,44 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
       valid = false;
     }
   }
-
   return valid;
 }
 
+// adds axe man on to enemies but only if hes visible other wise removes him
+// from the vector
 std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
-  return getCurrentRoom()->getEnemies(include_objects);
+  std::vector<GameObject*> enemies =
+    getCurrentRoom()->getEnemies(include_objects);
+
+  auto itr = enemies.begin();
+  if (axe_psycho.inRoom())
+  {
+    enemies.push_back(&axe_psycho);
+  }
+  else if (axe_psycho.isKilled())
+  {
+    for (auto& evil : enemies)
+    {
+      if (evil == &axe_psycho)
+      {
+        enemies.erase(itr);
+        break;
+      }
+      itr++;
+    }
+    axe_psycho.isKilled(false);
+  }
+  return enemies;
+}
+
+AxePsycho* Map::axePsycho()
+{
+  return &axe_psycho;
+}
+
+bool Map::roomChanged()
+{
+  // room changed spawn axe man and change last room to current room
+  return current_room != last_room;
 }

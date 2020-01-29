@@ -67,11 +67,16 @@ bool MyASGEGame::init()
     return false;
   }
 
-  map.setupRoomCollision();
+  map.setupRoomCollision(game_width, game_height);
 
   std::string texture = "/data/Characters/Danny.png";
-  player.init(
-    renderer.get(), texture, game_width / 2 - 17, game_height / 2 - 24.5f);
+
+  player.init(renderer.get(),
+              texture,
+              game_width / 2.0f - 17,
+              game_height / 2.0f - 24.5f/*,
+              34.0f,
+              49.0f*/);
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -315,16 +320,24 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(inputs.get());
-    if (player.update(delta_time, map.getCurrentRoom()->getEnemies(true)))
+    if (player.update(delta_time, map.getEnemies(true)))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
+    if (map.axePsycho()->inRoom())
+    {
+      map.axePsycho()->update(delta_time,
+                              player.spriteComponent()->getSprite()->xPos(),
+                              player.spriteComponent()->getSprite()->yPos());
+    }
+
     map.handlePlayerCollision(&player);
 
     std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
 
-    if (map.updateCurrentRoom(renderer.get(), delta_time, &player))
+    if (map.updateCurrentRoom(
+          renderer.get(), delta_time, &player, game_width, game_height))
     {
       // Descend Floor
       floor += 1;

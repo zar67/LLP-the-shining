@@ -5,6 +5,7 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/SceneObjects/Enemies/AxePsycho.h"
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
@@ -69,6 +70,8 @@ class Room : public GameObject
   void addItemToRoom(Item* new_item);
   void removeItemFromRoom(int item_index);
 
+  bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
+
  private:
   int ID = -1;
   RoomType type = NORMAL;
@@ -79,7 +82,6 @@ class Room : public GameObject
   bool movement_enabled = true;
   bool revealed = false;
 
-  // zoe remeber to delete the eneimes when you change room/ memory leak other
   // wise
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;

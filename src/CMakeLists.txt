@@ -60,7 +60,7 @@ set(HEADER_FILES
         game/UIHandler/Scenes/GameOverMenu.h
         game/UIHandler/Scenes/ShopMenu.h
         game/UIHandler/Scenes/GameScene.h
-        game/SceneObjects/InteractableObjects.h)
+        game/SceneObjects/InteractableObjects.h game/Components/FlashComponent.cpp game/Components/FlashComponent.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

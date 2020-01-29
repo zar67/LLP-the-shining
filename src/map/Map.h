@@ -15,7 +15,7 @@ class Map
   Map() = default;
   ~Map();
 
-  void setupRoomCollision();
+  void setupRoomCollision(int game_width, int game_height);
   void handlePlayerCollision(Player* player);
   void handleObjectCollision(std::vector<GameObject*> colliders);
   void fixCollision(GameObject* object,
@@ -32,7 +32,9 @@ class Map
   void renderCurrentRoom(ASGE::Renderer* renderer);
   bool updateCurrentRoom(ASGE::Renderer* renderer,
                          double delta_time,
-                         Player* player);
+                         Player* player,
+                         int game_width,
+                         int game_height);
   void renderMiniMap(ASGE::Renderer* renderer);
   void generateStartingRoom(ASGE::Renderer* renderer);
   void generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index);
@@ -40,6 +42,7 @@ class Map
   void setupMinimap(ASGE::Renderer* renderer, int game_width, int game_height);
 
   std::vector<GameObject*> getEnemies(bool include_objects);
+  AxePsycho* axePsycho();
 
  private:
   void
@@ -61,6 +64,7 @@ class Map
   std::string needSouthDoor(int x_pos, int y_pos);
   std::string needWestDoor(int x_pos, int y_pos);
   bool checkRoomName(std::string name, std::string required_doors);
+  bool roomChanged();
 
   const int STARTING_ROOM = 12;
 
@@ -70,9 +74,14 @@ class Map
   std::vector<int> mini_map_ids;
 
   int current_room = STARTING_ROOM;
+  int last_room = STARTING_ROOM;
 
   CollisionComponent* room_wall_collision[8];
   CollisionComponent* room_door_collision[4];
+
+  AxePsycho axe_psycho = AxePsycho();
+  int game_width = 0;
+  int game_height = 0;
 };
 
 #endif // PROJECT_MAP_H

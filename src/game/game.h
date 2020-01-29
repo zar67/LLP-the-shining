@@ -1,5 +1,6 @@
 #pragma once
 #include "../map/Map.h"
+#include "SceneObjects/Enemies/AxePsycho.h"
 #include "SceneObjects/Enemies/Demon.h"
 #include "SceneObjects/Player.h"
 #include "UIHandler/SceneManager.h"

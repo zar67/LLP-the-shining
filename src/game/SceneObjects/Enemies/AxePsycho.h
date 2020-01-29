@@ -5,6 +5,7 @@
 #ifndef THE_SHINING_GAME_GROUP_3_AXEPSYCHO_H
 #define THE_SHINING_GAME_GROUP_3_AXEPSYCHO_H
 
+#include "../../Components/FlashComponent.h"
 #include "Enemy.h"
 
 class AxePsycho : public Enemy
@@ -13,11 +14,46 @@ class AxePsycho : public Enemy
   AxePsycho() = default;
   ~AxePsycho() = default;
 
-  bool setup(ASGE::Renderer* renderer, float x_pos, float y_pos) override;
+  bool setup(ASGE::Renderer* renderer,
+             float x_pos,
+             float y_pos,
+             float width,
+             float height);
   void update(double delta_time, float player_x, float player_y) override;
+  void pauseMovement(float delta_time);
+
+  bool inRoom();
+  void inRoom(bool value);
+
+  bool spawnTimerEnd(float delta_time, float timer_aim, float& current_time);
+  void setSpawnedLocation(float x, float y);
+
+  FlashComponent* flashComponent();
+  void addFlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour);
+
+  bool isKilled();
+  void isKilled(bool value);
+
+  float flashAimTime();
+  float* currentFlashTime();
+  bool isPaused();
+  void isPaused(bool value);
 
  private:
+  bool is_killed = false;
   bool in_room = false;
+  const float TIMER_AIM_FLASH = 1.5f;
+  float current_time_flash = 0.0f;
+
+  const int START_HP = 500;
+  const float PASUE_TIME = 1.5f;
+  float current_pause_time = 0.0f;
+  bool is_paused = false;
+
+  float spawned_x = 0.0f;
+  float spawned_y = 0.0f;
+
+  FlashComponent* screen_warning = nullptr;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_AXEPSYCHO_H
