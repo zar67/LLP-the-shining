@@ -1,5 +1,6 @@
 #pragma once
 #include "../map/Map.h"
+#include "Components/AudioManager.h"
 #include "SceneObjects/Enemies/AxePsycho.h"
 #include "SceneObjects/Enemies/Demon.h"
 #include "SceneObjects/Player.h"
@@ -30,6 +31,7 @@ class MyASGEGame : public ASGE::OGLGame
   void render(const ASGE::GameTime&) override;
 
   SceneManager scene_handler;
+  AudioManager audio_manager;
   Map map = Map();
   Player player = Player();
 

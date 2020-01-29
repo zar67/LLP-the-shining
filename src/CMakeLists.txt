@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11.4)
 project(TheShining)
 set(GAMEDATA_FOLDER "data")
 set(ENABLE_ENET  OFF  CACHE BOOL "Adds Networking"   FORCE)
-set(ENABLE_SOUND OFF   CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_SOUND ON   CACHE BOOL "Adds SoLoud Audio" FORCE)
 set(ENABLE_JSON  ON   CACHE BOOL "Adds JSON to the Project" FORCE)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -60,7 +60,7 @@ set(HEADER_FILES
         game/UIHandler/Scenes/GameOverMenu.h
         game/UIHandler/Scenes/ShopMenu.h
         game/UIHandler/Scenes/GameScene.h
-        game/SceneObjects/InteractableObjects.h game/Components/FlashComponent.cpp game/Components/FlashComponent.h)
+        game/SceneObjects/InteractableObjects.h game/Components/FlashComponent.cpp game/Components/FlashComponent.h game/Components/AudioManager.cpp game/Components/AudioManager.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

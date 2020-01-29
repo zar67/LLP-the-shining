@@ -5,6 +5,7 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/Components/AudioManager.h"
 #include "../game/SceneObjects/Enemies/AxePsycho.h"
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
@@ -52,6 +53,7 @@ class Room : public GameObject
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
   bool updateObjectsInRoom(ASGE::Renderer* renderer,
+                           AudioManager* audio,
                            double delta_time,
                            Player* player,
                            int game_width,
@@ -75,6 +77,8 @@ class Room : public GameObject
   bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
 
  private:
+  void chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite);
+
   int ID = -1;
   RoomType type = NORMAL;
   bool north = false;

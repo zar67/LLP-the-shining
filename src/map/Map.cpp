@@ -271,6 +271,7 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 }
 
 bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
+                            AudioManager* audio,
                             double delta_time,
                             Player* player,
                             int game_width,
@@ -278,7 +279,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
 {
   bool descend = false;
   if (getCurrentRoom()->updateObjectsInRoom(
-        renderer, delta_time, player, game_width, game_height))
+        renderer, audio, delta_time, player, game_width, game_height))
   {
     descend = true;
   }
@@ -649,8 +650,8 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
       getRoom(id)->addItemToRoom(renderer,
                                  "data/Items/coin.png",
                                  Item::GameItems::COIN,
-                                 (rand() & (game_width - 128)) + 64,
-                                 (rand() & (game_height - 128)) + 64);
+                                 (rand() & (game_width - 192)) + 96,
+                                 (rand() & (game_height - 192)) + 96);
     }
 
     // Generate Hearts
@@ -660,8 +661,8 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
       getRoom(id)->addItemToRoom(renderer,
                                  "data/Items/heart.png",
                                  Item::GameItems::HEART,
-                                 (rand() & (game_width - 128)) + 64,
-                                 (rand() & (game_height - 128)) + 64);
+                                 (rand() & (game_width - 192)) + 96,
+                                 (rand() & (game_height - 192)) + 96);
     }
   }
 }

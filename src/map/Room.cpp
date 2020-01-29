@@ -149,6 +149,7 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 }
 
 bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
+                               AudioManager* audio,
                                double delta_time,
                                Player* player,
                                int game_width,
@@ -177,14 +178,17 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
       if (items.at(i)->itemType() == Item::GameItems::COIN)
       {
         player->addCoins(5);
+        audio->playCoin();
       }
       else if (items.at(i)->itemType() == Item::GameItems::HEART)
       {
         player->addHealth(20);
+        audio->playHeart();
       }
       else if (items.at(i)->itemType() == Item::GameItems::STAIRCASE)
       {
         descend = true;
+        audio->playDownAFloor();
       }
     }
   }
@@ -199,6 +203,7 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
     bool is_destroyed = obj->checkHealth(renderer);
     if (is_destroyed)
     {
+      chanceForItem(renderer, obj->spriteComponent()->getSprite());
       interactable_objs.erase(itr);
     }
     itr++;
@@ -350,4 +355,28 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 void Room::addItemToRoom(Item* new_item)
 {
   items.push_back(new_item);
+}
+
+void Room::chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite)
+{
+  int chance = rand() % 10;
+  std::string texture;
+  Item::GameItems type;
+  if (chance == 1)
+  {
+    texture = "data/Items/heart.png";
+    type = Item::GameItems::HEART;
+  }
+  else if (chance > 5)
+  {
+    texture = "data/Items/coin.png";
+    type = Item::GameItems::COIN;
+  }
+  else
+  {
+    return;
+  }
+  Item* item = new Item();
+  item->setUpItem(renderer, texture, type, sprite->xPos(), sprite->yPos());
+  items.push_back(item);
 }

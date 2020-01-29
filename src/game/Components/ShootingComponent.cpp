@@ -25,7 +25,8 @@ void ShootingComponent::Fire(ASGE::Renderer* renderer,
 }
 
 // detect collision for game objects
-void ShootingComponent::maintainProjectiles(double delta_time,
+void ShootingComponent::maintainProjectiles(AudioManager* audio,
+                                            double delta_time,
                                             std::vector<GameObject*> colliders,
                                             int damage)
 {
@@ -53,7 +54,7 @@ void ShootingComponent::maintainProjectiles(double delta_time,
           bullet = nullptr;
           projectiles.erase(itr);
           auto* enemy = static_cast<Enemy*>(col);
-          enemy->takeDamage(damage);
+          enemy->takeDamage(audio, damage);
           break;
         }
       }

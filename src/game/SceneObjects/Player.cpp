@@ -56,7 +56,9 @@ void Player::reset(float game_width, float game_height)
  * move the player depending on which keys are pressed
  */
 
-bool Player::update(double delta_time, std::vector<GameObject*> enemies)
+bool Player::update(AudioManager* audio,
+                    double delta_time,
+                    std::vector<GameObject*> enemies)
 {
   if (sprite_component)
   {
@@ -66,7 +68,7 @@ bool Player::update(double delta_time, std::vector<GameObject*> enemies)
   // bullet movement
   if (weapon_component)
   {
-    weaponComponent()->maintainProjectiles(delta_time, enemies, damage);
+    weaponComponent()->maintainProjectiles(audio, delta_time, enemies, damage);
   }
 
   return health <= 0;

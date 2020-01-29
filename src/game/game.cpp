@@ -78,6 +78,11 @@ bool MyASGEGame::init()
               34.0f,
               49.0f*/);
 
+  if (!audio_manager.audioSetUp())
+  {
+    return false;
+  }
+
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
 }
@@ -362,30 +367,35 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         if (player.addDamagePowerup())
         {
           scene_handler.hideDamagePowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
         if (player.addHealthPowerup())
         {
           scene_handler.hideHealthPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
         if (player.addMoveSpeedPowerup())
         {
           scene_handler.hideMoveSpeedPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
         if (player.addShotSizePowerup())
         {
           scene_handler.hideShotSizePowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
         if (player.addShotSpeedPowerup())
         {
           scene_handler.hideShotSpeedPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       default:
@@ -395,7 +405,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(inputs.get());
-    if (player.update(delta_time, map.getEnemies(true)))
+    if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
@@ -411,8 +421,12 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
     std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
 
-    if (map.updateCurrentRoom(
-          renderer.get(), delta_time, &player, game_width, game_height))
+    if (map.updateCurrentRoom(renderer.get(),
+                              &audio_manager,
+                              delta_time,
+                              &player,
+                              game_width,
+                              game_height))
     {
       // Descend Floor
       floor += 1;
