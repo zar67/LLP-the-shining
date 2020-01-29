@@ -158,16 +158,63 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
       player.moveHorizontal(0.0f);
     }
 
-    if (key->key == ASGE::KEYS::KEY_SPACE &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
+    // Shooting
+    if (key->key == ASGE::KEYS::KEY_W)
     {
-      // fire bullet using players vector
-      player.weaponComponent()->Fire(
-        renderer.get(),
-        player.spriteComponent()->getSprite()->xPos() +
-          player.spriteComponent()->getSprite()->width() / 2,
-        player.spriteComponent()->getSprite()->yPos() +
-          player.spriteComponent()->getSprite()->height() / 2);
+      if (key->action == ASGE::KEYS::KEY_PRESSED)
+      {
+        last_shoot_dir[1] = -1;
+      }
+      else
+      {
+        last_shoot_dir[1] = 0;
+      }
+    }
+    else if (key->key == ASGE::KEYS::KEY_A)
+    {
+      if (key->action == ASGE::KEYS::KEY_PRESSED)
+      {
+        last_shoot_dir[0] = -1;
+      }
+      else
+      {
+        last_shoot_dir[0] = 0;
+      }
+    }
+    else if (key->key == ASGE::KEYS::KEY_S)
+    {
+      if (key->action == ASGE::KEYS::KEY_PRESSED)
+      {
+        last_shoot_dir[1] = 1;
+      }
+      else
+      {
+        last_shoot_dir[1] = 0;
+      }
+    }
+    else if (key->key == ASGE::KEYS::KEY_D)
+    {
+      if (key->action == ASGE::KEYS::KEY_PRESSED)
+      {
+        last_shoot_dir[0] = 1;
+      }
+      else
+      {
+        last_shoot_dir[0] = 0;
+      }
+    }
+
+    if (key->key == ASGE::KEYS::KEY_SPACE &&
+        key->action == ASGE::KEYS::KEY_PRESSED &&
+        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
+    {
+      // Fire Using Shoot Vector
+      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+      player.weaponComponent()->Fire(renderer.get(),
+                                     sprite->xPos() + sprite->width() / 2,
+                                     sprite->yPos() + sprite->height() / 2,
+                                     last_shoot_dir[0],
+                                     last_shoot_dir[1]);
     }
   }
 
@@ -210,18 +257,46 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
       player.moveVertical(0.0f);
     }
 
-    if (!shoot_pressed && data.buttons[0])
+    if (data.axis[2] > 0.2f)
     {
-      shoot_pressed = true;
-      player.weaponComponent()->Fire(
-        renderer.get(),
-        player.spriteComponent()->getSprite()->xPos() +
-          player.spriteComponent()->getSprite()->width() / 2,
-        player.spriteComponent()->getSprite()->yPos() +
-          player.spriteComponent()->getSprite()->height() / 2);
+      last_shoot_dir[0] = 1;
+    }
+    else if (data.axis[2] < -0.2f)
+    {
+      last_shoot_dir[0] = -1;
+    }
+    else
+    {
+      last_shoot_dir[0] = 0;
     }
 
-    if (!data.buttons[0])
+    if (data.axis[3] > 0.2f)
+    {
+      last_shoot_dir[1] = -1;
+    }
+    else if (data.axis[3] < -0.2f)
+    {
+      last_shoot_dir[1] = 1;
+    }
+    else
+    {
+      last_shoot_dir[1] = 0;
+    }
+
+    if (!shoot_pressed && data.axis[5] > 0.5f &&
+        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
+    {
+      shoot_pressed = true;
+      // Fire Using Shoot Vector
+      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+      player.weaponComponent()->Fire(renderer.get(),
+                                     sprite->xPos() + sprite->width() / 2,
+                                     sprite->yPos() + sprite->height() / 2,
+                                     last_shoot_dir[0],
+                                     last_shoot_dir[1]);
+    }
+
+    if (shoot_pressed && data.axis[5] < 0.5f)
     {
       shoot_pressed = false;
     }

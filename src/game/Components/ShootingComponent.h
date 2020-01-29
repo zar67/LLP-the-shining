@@ -17,7 +17,11 @@ class ShootingComponent
  public:
   ShootingComponent();
 
-  void Fire(ASGE::Renderer* renderer, float start_x, float start_y);
+  void Fire(ASGE::Renderer* renderer,
+            float start_x,
+            float start_y,
+            float x_dir,
+            float y_dir);
   void maintainProjectiles(double delta_time,
                            std::vector<GameObject*> colliders,
                            int damage);
