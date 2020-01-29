@@ -294,13 +294,6 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
     bool in = axe_psycho.flashComponent()->flash(delta_time);
     axe_psycho.inRoom(in);
   }
-
-  if (axe_psycho.inRoom())
-  {
-    std::cout << axe_psycho.spriteComponent()->getSprite()->xPos() << " : "
-              << axe_psycho.spriteComponent()->getSprite()->yPos() << std::endl;
-  }
-
   return descend;
 }
 
