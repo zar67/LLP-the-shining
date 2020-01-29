@@ -283,7 +283,7 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
       last_shoot_dir[1] = 0;
     }
 
-    if (!shoot_pressed && data.axis[5] > 0.5f &&
+    if (!shoot_pressed && data.buttons[5] > 0.5f &&
         !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
     {
       shoot_pressed = true;
@@ -296,7 +296,7 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
                                      last_shoot_dir[1]);
     }
 
-    if (shoot_pressed && data.axis[5] < 0.5f)
+    if (!data.buttons[5])
     {
       shoot_pressed = false;
     }
