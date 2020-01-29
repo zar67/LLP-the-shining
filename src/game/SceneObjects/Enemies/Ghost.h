@@ -21,16 +21,17 @@ class Ghost : public Enemy
               int game_width,
               int game_height);
 
-  GameObject* grabClosestObject(std::vector<InteractableObjects*> objects,
-                                int game_width,
-                                int game_height);
+  InteractableObjects*
+  grabClosestObject(std::vector<InteractableObjects*> objects,
+                    int game_width,
+                    int game_height);
   void getMoveToDoor(const bool doors[4],
                      float (&out_pos)[2],
                      int game_width,
                      int game_height);
 
  private:
-  GameObject* obj_grabbed = nullptr;
+  InteractableObjects* obj_grabbed = nullptr;
   float door_pos[2] = { 0.0f, 0.0f }; // door object grabbed moving to
   std::vector<float> direction;       // direction for object to door
   int jedi_force_speed = 180;         // speed of moving object

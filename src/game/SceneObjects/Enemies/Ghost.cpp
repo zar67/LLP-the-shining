@@ -52,14 +52,16 @@ void Ghost::update(double delta_time,
     }
     else
     {
+      obj_grabbed->setIsGrabbed(false);
       obj_grabbed = nullptr;
     }
   }
 }
 
-GameObject* Ghost::grabClosestObject(std::vector<InteractableObjects*> objects,
-                                     int game_width,
-                                     int game_height)
+InteractableObjects*
+Ghost::grabClosestObject(std::vector<InteractableObjects*> objects,
+                         int game_width,
+                         int game_height)
 {
   ASGE::Sprite* ghost_sprite = spriteComponent()->getSprite();
   InteractableObjects* closest_obj = nullptr;
@@ -105,7 +107,7 @@ void Ghost::getMoveToDoor(const bool doors[4],
   if (choice == 0)
   {
     x_pos = game_width / 2.0f;
-    y_pos = game_height - 150.0f;
+    y_pos = 150.0f;
   }
   else if (choice == 1)
   {

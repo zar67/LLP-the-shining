@@ -94,6 +94,11 @@ void Map::handlePlayerCollision(Player* player)
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*obj->collisionComponent());
       fixCollision(player, obj->collisionComponent(), side);
+      if (obj->isGrabbed())
+      {
+        player->takeDamage(obj->damage());
+        obj->setIsGrabbed(false);
+      }
     }
   }
 
