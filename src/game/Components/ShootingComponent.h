@@ -23,7 +23,6 @@ class ShootingComponent
             float start_y,
             float x_dir,
             float y_dir);
-  void maintainProjectiles(double delta_time,
   void maintainProjectiles(AudioManager* audio,
                            double delta_time,
                            std::vector<GameObject*> colliders,
