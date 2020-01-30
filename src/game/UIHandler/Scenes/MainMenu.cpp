@@ -21,6 +21,12 @@ MainMenu::~MainMenu()
 
   delete exit_game;
   exit_game = nullptr;
+
+  delete keyboard_image;
+  keyboard_image = nullptr;
+
+  delete controller_image;
+  controller_image = nullptr;
 }
 
 /**
@@ -66,12 +72,34 @@ bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
   }
 
   exit_game = renderer->createRawSprite();
-  return setupSprite(*exit_game,
-                     "data/UI/MenuButtons/ExitButton.png",
-                     game_width / 2 - 90,
-                     412,
-                     180,
-                     45);
+  if (!setupSprite(*exit_game,
+                   "data/UI/MenuButtons/ExitButton.png",
+                   game_width / 2 - 90,
+                   412,
+                   180,
+                   45))
+  {
+    return false;
+  }
+
+  keyboard_image = renderer->createRawSprite();
+  if (!setupSprite(*keyboard_image,
+                   "data/UI/keyboard.png",
+                   game_width / 4 - 41.5,
+                   262,
+                   83,
+                   70))
+  {
+    return false;
+  }
+
+  controller_image = renderer->createRawSprite();
+  return setupSprite(*controller_image,
+                     "data/UI/controller.png",
+                     (game_width / 4) * 3 - 48,
+                     262,
+                     96,
+                     70);
 }
 
 /**
@@ -112,6 +140,20 @@ void MainMenu::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*start_game);
   renderer->renderSprite(*open_shop);
   renderer->renderSprite(*exit_game);
+  renderer->renderSprite(*keyboard_image);
+  renderer->renderSprite(*controller_image);
+
+  renderer->renderText("Move: Arrow Keys \nShoot: Space",
+                       keyboard_image->xPos() - 40,
+                       370,
+                       1.0f,
+                       ASGE::COLOURS::GREY);
+  renderer->renderText("Move: Left Analog \nShoot Direction: Right Analog "
+                       "\nShoot: Right Bumper",
+                       controller_image->xPos() - 60,
+                       370,
+                       1.0f,
+                       ASGE::COLOURS::GREY);
 }
 
 /**
