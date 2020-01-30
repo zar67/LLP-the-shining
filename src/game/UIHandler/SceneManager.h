@@ -77,7 +77,7 @@ class SceneManager
   ShopMenu shop_menu;
   GameOverMenu game_over_menu;
 
-  ScreenOpen screen_open = GAME_OVER;
+  ScreenOpen screen_open = MAIN_MENU;
 
   ASGE::Sprite* cursor = nullptr;
 
