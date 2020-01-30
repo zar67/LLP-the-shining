@@ -63,7 +63,7 @@ class Room : public GameObject
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
 
   std::vector<InteractableObjects*> getObjectsInRoom();
-  std::vector<GameObject*> getEnemies(bool inlcude_objects);
+  std::vector<GameObject*> getEnemies(bool include_objects);
   void checkEnemyHealth();
 
   void addItemToRoom(ASGE::Renderer* renderer,
@@ -72,7 +72,6 @@ class Room : public GameObject
                      float x_pos,
                      float y_pos);
   void addItemToRoom(Item* new_item);
-  void removeItemFromRoom(int item_index);
 
   bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
 

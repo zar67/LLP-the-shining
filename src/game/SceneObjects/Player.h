@@ -22,7 +22,6 @@ class Player : public GameObject
             float x_pos,
             float y_pos);
   void reset(float game_width, float game_height);
-  void Movement(float x_pos, float y_pos);
   bool update(AudioManager* audio,
               double delta_time,
               std::vector<GameObject*> enemies);
@@ -31,8 +30,7 @@ class Player : public GameObject
 
   void moveVertical(float move);
   void moveHorizontal(float move);
-  void setMovementVec(float vec[2]);
-  float* getDirectionVector();
+  void setMovementVec(const float vec[2]);
 
   bool addWeaponComponent();
   ShootingComponent* weaponComponent();
@@ -53,7 +51,7 @@ class Player : public GameObject
   bool addPowerup(int index);
 
   const int starting_health = 100;
-  const float starting_speed = 130;
+  const float starting_speed = 150;
   const int starting_damage = 20;
   const float starting_shot_speed = 250;
   const float starting_shot_size = 8;

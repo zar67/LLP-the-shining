@@ -4,6 +4,10 @@
 
 #include "Ghost.h"
 
+/**
+ *   @brief   Destructor
+ *   @details Frees the obj_grabbed memory
+ */
 Ghost::~Ghost()
 {
   if (obj_grabbed)
@@ -14,6 +18,14 @@ Ghost::~Ghost()
   }
 }
 
+/**
+ *   @brief   Sets up the ghost
+ *   @details Sets the default values and adds the relevant components
+ *   @param   renderer The ASGE renderer
+ *            x_pos The starting x position
+ *            y_pos The starting y position
+ *   @return  True if setup correctly
+ */
 bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   hp = 50;
@@ -31,6 +43,15 @@ bool Ghost::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   return false;
 }
 
+/**
+ *   @brief   Updates the ghost
+ *   @details Randomly teleports the ghost, randomly picks up objects and moves
+ * the grabbed object to a random door
+ *   @param   objects The crates in the current room
+ *            doors The doors of the current room
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Ghost::update(double delta_time,
                    std::vector<InteractableObjects*>& objects,
                    bool doors[4],
@@ -55,7 +76,7 @@ void Ghost::update(double delta_time,
   // Move Object Randomly
   if (!obj_grabbed)
   {
-    obj_grabbed = grabClosestObject(objects, game_width, game_height);
+    obj_grabbed = grabClosestObject(objects);
     getMoveToDoor(doors, door_pos, game_width, game_height);
     if (obj_grabbed)
     {
@@ -88,10 +109,13 @@ void Ghost::update(double delta_time,
   }
 }
 
+/**
+ *   @brief   Selects the closest object as the one to move
+ *   @param   objects The crates in the room
+ *   @return  The object it grabs
+ */
 InteractableObjects*
-Ghost::grabClosestObject(std::vector<InteractableObjects*> objects,
-                         int game_width,
-                         int game_height)
+Ghost::grabClosestObject(std::vector<InteractableObjects*> objects)
 {
   ASGE::Sprite* ghost_sprite = spriteComponent()->getSprite();
   InteractableObjects* closest_obj = nullptr;
@@ -120,10 +144,17 @@ Ghost::grabClosestObject(std::vector<InteractableObjects*> objects,
   return closest_obj;
 }
 
+/**
+ *   @brief   Chooses a random door to move objects towards
+ *   @param   doors The doors of the current room
+ *            out_pos A pointer to the array to change the values of
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Ghost::getMoveToDoor(const bool doors[4],
                           float (&out_pos)[2],
-                          int game_width,
-                          int game_height)
+                          float game_width,
+                          float game_height)
 {
   int choice = 0;
   do
@@ -131,8 +162,8 @@ void Ghost::getMoveToDoor(const bool doors[4],
     choice = rand() % 4;
   } while (!doors[choice]);
 
-  float x_pos = 0.0f;
-  float y_pos = 0.0f;
+  float x_pos;
+  float y_pos;
 
   if (choice == 0)
   {

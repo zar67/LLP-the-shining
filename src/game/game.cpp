@@ -27,9 +27,6 @@ MyASGEGame::~MyASGEGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
 
-  this->inputs->unregisterCallback(
-    static_cast<unsigned int>(mouse_callback_id));
-
   scene_handler.disableInputs(inputs.get());
 }
 
@@ -55,9 +52,6 @@ bool MyASGEGame::init()
 
   key_callback_id =
     inputs->addCallbackFnc(ASGE::E_KEY, &MyASGEGame::keyHandler, this);
-
-  mouse_callback_id = inputs->addCallbackFnc(
-    ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
 
   renderer->setClearColour(ASGE::COLOURS::BLACK);
 
@@ -117,7 +111,7 @@ void MyASGEGame::setupResolution()
  *   @see     KeyEvent
  *   @return  void
  */
-void MyASGEGame::keyHandler(ASGE::SharedEventData data)
+void MyASGEGame::keyHandler(const ASGE::SharedEventData& data)
 {
   auto key = static_cast<const ASGE::KeyEvent*>(data.get());
 
@@ -190,6 +184,10 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
 }
 
+/**
+ *   @brief   Handles controller input if one is connected
+ *   @param   input The ASGE inputs
+ */
 void MyASGEGame::playerControllerInput(ASGE::Input* input)
 {
   if (input->getGamePad(0).is_connected)
@@ -274,26 +272,8 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
 }
 
 /**
- *   @brief   Processes any click inputs
- *   @details This function is added as a callback to handle the game's
- *            mouse button input. For this game, calls to this function
- *            are thread safe, so you may alter the game's state as you
- *            see fit.
- *   @param   data The event data relating to key input.
- *   @see     ClickEvent
- *   @return  void
+ *   @brief   Resets all the values of the game
  */
-void MyASGEGame::clickHandler(ASGE::SharedEventData data)
-{
-  auto click = static_cast<const ASGE::ClickEvent*>(data.get());
-
-  double x_pos = click->xpos;
-  double y_pos = click->ypos;
-
-  ASGE::DebugPrinter() << x_pos << std::endl;
-  ASGE::DebugPrinter() << y_pos << std::endl;
-}
-
 void MyASGEGame::resetGame()
 {
   floor = 1;

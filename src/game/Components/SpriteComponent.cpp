@@ -3,8 +3,11 @@
 //
 
 #include "SpriteComponent.h"
-#include <iostream>
 
+/**
+ *   @brief   Destructor
+ *   @details Handles deleting the sprite
+ */
 SpriteComponent::~SpriteComponent()
 {
   if (sprite)
@@ -14,8 +17,15 @@ SpriteComponent::~SpriteComponent()
   }
 }
 
+/**
+ *   @brief   Sets up the class
+ *   @details Creates a raw sprite and gives it a texture
+ *   @param   renderer The ASGE renderer
+ *            texture_location The texture to load
+ *   @return  True if initialised correctly
+ */
 bool SpriteComponent::loadSpriteComponent(ASGE::Renderer* renderer,
-                                          std::string texture_location)
+                                          const std::string& texture_location)
 {
   if (sprite)
   {
@@ -34,6 +44,10 @@ bool SpriteComponent::loadSpriteComponent(ASGE::Renderer* renderer,
   return false;
 }
 
+/**
+ *   @brief   Gets the sprite
+ *   @return  sprite
+ */
 ASGE::Sprite* SpriteComponent::getSprite()
 {
   return sprite;

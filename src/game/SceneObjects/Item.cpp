@@ -3,9 +3,7 @@
 //
 
 #include "Item.h"
-#include "../Components/CollisionComponent.h"
 #include <Engine/OGLGame.h>
-
 #include <utility>
 
 bool Item::hasCollidedWithPlayer(Player* player)

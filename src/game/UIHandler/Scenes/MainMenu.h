@@ -22,8 +22,7 @@ class MainMenu : public Scene
   MainMenu() = default;
   ~MainMenu();
 
-  bool
-  init(ASGE::Renderer* renderer, float game_width, float game_height) override;
+  bool init(ASGE::Renderer* renderer, float game_width);
   MenuItem update(Point2D point);
   void render(ASGE::Renderer* renderer) override;
 

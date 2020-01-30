@@ -18,6 +18,7 @@ class Item : public GameObject
  public:
   enum GameItems
   {
+    NONE,
     STAIRCASE,
     COIN,
     HEART
@@ -40,7 +41,7 @@ class Item : public GameObject
 
  private:
   bool visibility = true;
-  GameItems item;
+  GameItems item = NONE;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_ITEM_H

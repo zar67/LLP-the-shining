@@ -4,6 +4,7 @@
 
 #include "Player.h"
 #include <iostream>
+#include <utility>
 
 Player::~Player()
 {
@@ -68,27 +69,11 @@ bool Player::update(AudioManager* audio,
   // bullet movement
   if (weapon_component)
   {
-    weaponComponent()->maintainProjectiles(audio, delta_time, enemies, damage);
+    weaponComponent()->maintainProjectiles(
+      audio, delta_time, std::move(enemies), damage);
   }
 
   return health <= 0;
-}
-
-void Player::Movement(float x_pos, float y_pos)
-{
-  if (!spriteComponent())
-  {
-    // show error
-    return;
-  }
-
-  ASGE::Sprite* sprite = spriteComponent()->getSprite();
-
-  float new_x = x_pos + sprite->xPos() * speed;
-  float new_y = y_pos + sprite->yPos() * speed;
-
-  sprite->xPos(new_x);
-  sprite->yPos(new_y);
 }
 
 void Player::addHealth(int amount)
@@ -144,17 +129,12 @@ void Player::moveHorizontal(float move)
   }
 }
 
-void Player::setMovementVec(float* vec)
+void Player::setMovementVec(const float* vec)
 {
   for (int i = 0; i < 2; ++i)
   {
     vector_movement[i] = vec[i];
   }
-}
-
-float* Player::getDirectionVector()
-{
-  return vector_movement;
 }
 
 bool Player::addWeaponComponent()

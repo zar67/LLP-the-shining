@@ -58,7 +58,6 @@ class SceneManager
               int health,
               bool* abilities);
 
-  ScreenOpen screenOpen();
   void screenOpen(ScreenOpen screen);
   bool inMenu();
 
@@ -69,8 +68,8 @@ class SceneManager
   void hideShotSpeedPowerup();
 
  private:
-  void mouseHandler(ASGE::SharedEventData data);
-  void clickHandler(ASGE::SharedEventData data);
+  void mouseHandler(const ASGE::SharedEventData& data);
+  void clickHandler(const ASGE::SharedEventData& data);
   void controllerHandler(double delta_time, ASGE::Input* input);
 
   MainMenu main_menu;
@@ -78,7 +77,7 @@ class SceneManager
   ShopMenu shop_menu;
   GameOverMenu game_over_menu;
 
-  ScreenOpen screen_open = MAIN_MENU;
+  ScreenOpen screen_open = GAME_OVER;
 
   ASGE::Sprite* cursor = nullptr;
 

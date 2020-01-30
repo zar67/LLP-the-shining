@@ -4,6 +4,10 @@
 
 #include "GameOverMenu.h"
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 GameOverMenu::~GameOverMenu()
 {
   delete game_over_title;
@@ -25,9 +29,14 @@ GameOverMenu::~GameOverMenu()
   exit_game = nullptr;
 }
 
-bool GameOverMenu::init(ASGE::Renderer* renderer,
-                        float game_width,
-                        float game_height)
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *   @return  True if setup correctly
+ */
+bool GameOverMenu::init(ASGE::Renderer* renderer, float game_width)
 {
   game_over_title = renderer->createRawSprite();
   if (!setupSprite(*game_over_title,
@@ -93,6 +102,11 @@ bool GameOverMenu::init(ASGE::Renderer* renderer,
                      45);
 }
 
+/**
+ *   @brief   Updates the opacity of the buttons in the scene
+ *   @param   point The cursor position
+ *   @return  The MenuItem the cursor is hovering over
+ */
 GameOverMenu::MenuItem GameOverMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
@@ -119,6 +133,11 @@ GameOverMenu::MenuItem GameOverMenu::update(Point2D point)
   return mouse_over;
 }
 
+/**
+ *   @brief   Renders the scene
+ *   @param   renderer The ASGE renderer
+ *            game_won If the game has been won
+ */
 void GameOverMenu::render(ASGE::Renderer* renderer, bool game_won)
 {
   if (game_won)
@@ -136,6 +155,11 @@ void GameOverMenu::render(ASGE::Renderer* renderer, bool game_won)
   renderer->renderSprite(*exit_game);
 }
 
+/**
+ *   @brief   Gets the menu item the cursor is hovering over
+ *   @param   point The position of the cursor
+ *   @return  The menu item
+ */
 GameOverMenu::MenuItem GameOverMenu::menuItem(Point2D point)
 {
   if (isInside(start_game, point))
@@ -158,6 +182,9 @@ GameOverMenu::MenuItem GameOverMenu::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
+/**
+ *   @brief   Resets the opacity of all the buttons
+ */
 void GameOverMenu::resetOpacity()
 {
   start_game->opacity(0.5f);

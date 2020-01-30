@@ -18,17 +18,23 @@ class AxePsycho : public Enemy
              float x_pos,
              float y_pos,
              float width,
-             float height);
+             float height,
+             float game_width,
+             float game_height);
   void update(double delta_time, float player_x, float player_y) override;
 
   bool inRoom();
   void inRoom(bool value);
 
-  bool spawnTimerEnd(float delta_time, float timer_aim, float& current_time);
-  void setSpawnedLocation(float x, float y);
+  static bool
+  spawnTimerEnd(double delta_time, float timer_aim, double current_time);
+  void setSpawnedLocation(float x_pos, float y_pos);
 
   FlashComponent* flashComponent();
-  void addFlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour);
+  void addFlashComponent(ASGE::Renderer* renderer,
+                         ASGE::Colour colour,
+                         float game_width,
+                         float game_height);
 
   bool isKilled();
   void isKilled(bool value);
@@ -45,8 +51,8 @@ class AxePsycho : public Enemy
   float current_time_flash = 0.0f;
 
   const int START_HP = 500;
-  const float PASUE_TIME = 1.5f;
-  float current_pause_time = 0.0f;
+  const float PAUSE_TIME = 1.5f;
+  double current_pause_time = 0.0f;
   bool is_paused = false;
 
   float spawned_x = 0.0f;

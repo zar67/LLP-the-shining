@@ -4,6 +4,10 @@
 
 #include "MainMenu.h"
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 MainMenu::~MainMenu()
 {
   delete menu_title;
@@ -19,9 +23,14 @@ MainMenu::~MainMenu()
   exit_game = nullptr;
 }
 
-bool MainMenu::init(ASGE::Renderer* renderer,
-                    float game_width,
-                    float game_height)
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *   @return  True if setup correctly
+ */
+bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
 {
   menu_title = renderer->createRawSprite();
   if (!setupSprite(*menu_title,
@@ -65,6 +74,11 @@ bool MainMenu::init(ASGE::Renderer* renderer,
                      45);
 }
 
+/**
+ *   @brief   Updates the opacity of the buttons in the scene
+ *   @param   point The cursor position
+ *   @return  The MenuItem the cursor is hovering over
+ */
 MainMenu::MenuItem MainMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
@@ -88,6 +102,10 @@ MainMenu::MenuItem MainMenu::update(Point2D point)
   return mouse_over;
 }
 
+/**
+ *   @brief   Renders the scene
+ *   @param   renderer The ASGE renderer
+ */
 void MainMenu::render(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*menu_title);
@@ -96,6 +114,11 @@ void MainMenu::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*exit_game);
 }
 
+/**
+ *   @brief   Gets the menu item the cursor is hovering over
+ *   @param   point The position of the cursor
+ *   @return  The menu item
+ */
 MainMenu::MenuItem MainMenu::menuItem(Point2D point)
 {
   if (isInside(start_game, point))
@@ -114,6 +137,9 @@ MainMenu::MenuItem MainMenu::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
+/**
+ *   @brief   Resets the opacity of all the buttons
+ */
 void MainMenu::resetOpacity()
 {
   start_game->opacity(0.5f);

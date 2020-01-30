@@ -3,11 +3,22 @@
 //
 
 #include "AudioManager.h"
+
+/**
+ *   @brief   Destructor
+ *   @details Denitialises the soloud library
+ */
 AudioManager::~AudioManager()
 {
   soloud.deinit();
 }
 
+/**
+ *   @brief   Sets up the class
+ *   @details Initialises the soloud library and sets up the audio files used in
+ * the game
+ *   @return  True if initialised correctly
+ */
 bool AudioManager::audioSetUp()
 {
   if (soloud.init() != SoLoud::SO_NO_ERROR)
@@ -198,6 +209,9 @@ void AudioManager::playBox()
   soloud.play(Box_MP3);
 }
 
+/**
+ *   @brief   Plays coin pickup audio
+ */
 void AudioManager::playCoin()
 {
   soloud.play(Coin_MP3);
@@ -213,16 +227,25 @@ void AudioManager::playGhost()
   soloud.play(Ghost_MP3);
 }
 
+/**
+ *   @brief   Plays audio for descending a floor
+ */
 void AudioManager::playDownAFloor()
 {
   soloud.play(DownAFLoor_MP3);
 }
 
+/**
+ *   @brief   Plays heart pickup audio
+ */
 void AudioManager::playHeart()
 {
   soloud.play(Heart_MP3);
 }
 
+/**
+ *   @brief   Plays hit audio
+ */
 void AudioManager::playHit()
 {
   soloud.play(HitHurt_MP3);
@@ -233,6 +256,9 @@ void AudioManager::playMaybe()
   soloud.play(Maybe_MP3);
 }
 
+/**
+ *   @brief   Plays UI audio
+ */
 void AudioManager::playPowerUp()
 {
   soloud.play(PowerUp_MP3);

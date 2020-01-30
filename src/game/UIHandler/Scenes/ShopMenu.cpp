@@ -3,8 +3,11 @@
 //
 
 #include "ShopMenu.h"
-#include <iostream>
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 ShopMenu::~ShopMenu()
 {
   delete shop_title;
@@ -29,6 +32,14 @@ ShopMenu::~ShopMenu()
   open_main_menu = nullptr;
 }
 
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if setup correctly
+ */
 bool ShopMenu::init(ASGE::Renderer* renderer,
                     float game_width,
                     float game_height)
@@ -108,6 +119,11 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
                      45);
 }
 
+/**
+ *   @brief   Updates the opacity of the buttons in the scene
+ *   @param   point The cursor position
+ *   @return  The MenuItem the cursor is hovering over
+ */
 ShopMenu::MenuItem ShopMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
@@ -140,9 +156,17 @@ ShopMenu::MenuItem ShopMenu::update(Point2D point)
   return mouse_over;
 }
 
-void ShopMenu::render(ASGE::Renderer* renderer)
+/**
+ *   @brief   Renders the scene
+ *   @details Only renders the power ups if they haven't been bought yet
+ *   @param   renderer The ASGE renderer
+ *            coins The money the player has
+ */
+void ShopMenu::render(ASGE::Renderer* renderer, int coins)
 {
   renderer->renderSprite(*shop_title);
+  renderer->renderText(
+    "$" + std::to_string(coins), 10, 35, 1.5f, ASGE::COLOURS::GREY);
 
   if (render_damage)
   {
@@ -168,31 +192,51 @@ void ShopMenu::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*open_main_menu);
 }
 
+/**
+ *   @brief   Stop damage power up being shown
+ */
 void ShopMenu::disableDamage()
 {
   render_damage = false;
 }
 
+/**
+ *   @brief   Stop health power up being shown
+ */
 void ShopMenu::disableHealth()
 {
   render_health = false;
 }
 
+/**
+ *   @brief   Stop move speed power up being shown
+ */
 void ShopMenu::disableMoveSpeed()
 {
   render_move_speed = false;
 }
 
+/**
+ *   @brief   Stop shot size power up being shown
+ */
 void ShopMenu::disableShotSize()
 {
   render_shot_size = false;
 }
 
+/**
+ *   @brief   Stop shot speed power up being shown
+ */
 void ShopMenu::disableShotSpeed()
 {
   render_shot_speed = false;
 }
 
+/**
+ *   @brief   Gets the menu item the cursor is hovering over
+ *   @param   point The position of the cursor
+ *   @return  The menu item
+ */
 ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
 {
   if (isInside(open_main_menu, point))
@@ -228,6 +272,9 @@ ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
+/**
+ *   @brief   Resets the opacity of all the buttons
+ */
 void ShopMenu::resetOpacity()
 {
   damage_powerup->opacity(0.5f);

@@ -3,15 +3,26 @@
 //
 
 #include "Demon.h"
-#include <iostream>
-#include <math.h>
+#include <utility>
 
+/**
+ *   @brief   Desrtuctor
+ *   @details Frees the weapon_component
+ */
 Demon::~Demon()
 {
   delete weapon_component;
   weapon_component = nullptr;
 }
 
+/**
+ *   @brief   Sets up the Demon
+ *   @details Sets the default values and adds the relevant components
+ *   @param   renderer The ASGE Renderer
+ *            x_pos The starting x position
+ *            y_pos The starting y position
+ *   @return  True if setup correctly
+ */
 bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
   hp = 100;
@@ -30,6 +41,14 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   return true;
 }
 
+/**
+ *   @brief   Updates the Demon
+ *   @details Moves the Demon towards the Player, tries to shoot and handles
+ * collision with the crates
+ *   @param   renderer The ASGE renderer
+ *            player A reference to the player
+ *            scene_objects The crates to detect collision against
+ */
 void Demon::update(ASGE::Renderer* renderer,
                    double delta_time,
                    Player* player,
@@ -82,13 +101,18 @@ void Demon::update(ASGE::Renderer* renderer,
     }
 
     // pass in crates vector as well to detect collision
-    if (weaponComponent()->hitPlayer(delta_time, player, scene_objects))
+    if (weaponComponent()->hitPlayer(
+          delta_time, player, std::move(scene_objects)))
     {
       player->takeDamage(damage);
     }
   }
 }
 
+/**
+ *   @brief   Renders the Demon and any projectiles
+ *   @param   renderer The ASGE renderer
+ */
 void Demon::render(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*sprite_component->getSprite());
@@ -99,6 +123,10 @@ void Demon::render(ASGE::Renderer* renderer)
   }
 }
 
+/**
+ *   @brief   Adds a new shooting component
+ *   @return  True if setup correctly
+ */
 bool Demon::addWeaponComponent()
 {
   if (weapon_component)
@@ -110,6 +138,10 @@ bool Demon::addWeaponComponent()
   return true;
 }
 
+/**
+ *   @brief   Gets the weapon component
+ *   @return  weapon_component
+ */
 ShootingComponent* Demon::weaponComponent()
 {
   return weapon_component;

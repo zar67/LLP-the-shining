@@ -2,13 +2,14 @@
 // Created by Zoe on 16/12/2019.
 //
 
+#include "Map.h"
 #include <Engine/FileIO.h>
-#include <array>
-#include <iostream>
 #include <queue>
 
-#include "Map.h"
-
+/**
+ *   @brief   Destructor
+ *   @details Frees the memory of the mini_map sprites and collision components
+ */
 Map::~Map()
 {
   for (auto room : mini_map)
@@ -17,32 +18,37 @@ Map::~Map()
   }
   mini_map.clear();
 
-  for (int i = 0; i < 8; i++)
+  for (auto& i : room_wall_collision)
   {
-    delete room_wall_collision[i];
-    room_wall_collision[i] = nullptr;
+    delete i;
+    i = nullptr;
   }
 
-  for (int i = 0; i < 4; i++)
+  for (auto& i : room_door_collision)
   {
-    delete room_door_collision[i];
-    room_door_collision[i] = nullptr;
+    delete i;
+    i = nullptr;
   }
 }
 
+/**
+ *   @brief   Sets up the collision components for the room
+ *   @param   game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Map::setupRoomCollision(int game_width, int game_height)
 {
   this->game_width = game_width;
   this->game_height = game_height;
 
-  for (int i = 0; i < 8; i++)
+  for (auto& i : room_wall_collision)
   {
-    room_wall_collision[i] = new CollisionComponent();
+    i = new CollisionComponent();
   }
 
-  for (int i = 0; i < 4; i++)
+  for (auto& i : room_door_collision)
   {
-    room_door_collision[i] = new CollisionComponent();
+    i = new CollisionComponent();
   }
 
   setupBoundingBox(room_wall_collision[0], 0, 0, 96, 288);
@@ -61,6 +67,11 @@ void Map::setupRoomCollision(int game_width, int game_height)
   setupBoundingBox(room_door_collision[3], 0, 288, 96, 96);   // West
 }
 
+/**
+ *   @brief   Handles the collision with the player and the room and the axe
+ * psycho
+ *   @param   player A reference to the player
+ */
 void Map::handlePlayerCollision(Player* player)
 {
   player->updateCollisionComponent();
@@ -113,6 +124,10 @@ void Map::handlePlayerCollision(Player* player)
   checkWestDoorCollision(player);
 }
 
+/**
+ *   @brief   Handles the collision of the enemies/items and the room
+ *   @param   colliders The gameobjects to check against the room collision
+ */
 void Map::handleObjectCollision(std::vector<GameObject*> colliders)
 {
   std::vector<InteractableObjects*> scene_objects =
@@ -155,6 +170,14 @@ void Map::handleObjectCollision(std::vector<GameObject*> colliders)
   }
 }
 
+/**
+ *   @brief   Resolve colliding objects
+ *   @details Push the object out of the other, direction depending on the side
+ * hit
+ *   @param   object The object to move
+ *            collided The other object collided with
+ *            side The side of the object hit
+ */
 void Map::fixCollision(GameObject* object,
                        CollisionComponent* collided,
                        CollisionComponent::CollisionSide side)
@@ -189,6 +212,10 @@ void Map::fixCollision(GameObject* object,
   }
 }
 
+/**
+ *   @brief   Move north
+ *   @return  True if was able to move
+ */
 bool Map::moveNorth()
 {
   if (getCurrentRoom()->getNorth() && getCurrentRoom()->canMove())
@@ -202,6 +229,10 @@ bool Map::moveNorth()
   return false;
 }
 
+/**
+ *   @brief   Move east
+ *   @return  True if was able to move
+ */
 bool Map::moveEast()
 {
   if (getCurrentRoom()->getEast() && getCurrentRoom()->canMove())
@@ -215,6 +246,10 @@ bool Map::moveEast()
   return false;
 }
 
+/**
+ *   @brief   Move south
+ *   @return  True if was able to move
+ */
 bool Map::moveSouth()
 {
   if (getCurrentRoom()->getSouth() && getCurrentRoom()->canMove())
@@ -227,6 +262,10 @@ bool Map::moveSouth()
   return false;
 }
 
+/**
+ *   @brief   Move west
+ *   @return  True if was able to move
+ */
 bool Map::moveWest()
 {
   if (getCurrentRoom()->getWest() && getCurrentRoom()->canMove())
@@ -240,17 +279,30 @@ bool Map::moveWest()
   return false;
 }
 
+/**
+ *   @brief   Get room with the specific ID
+ *   @param   id The ID of the room to find
+ *   @return  A pointer to the room
+ */
 Room* Map::getRoom(int id)
 {
   int x_index = id % map_size;
   return &rooms[x_index][id - (x_index * map_size)];
 }
 
+/**
+ *   @brief   Gets the current room
+ *   @return  A pointer to the current room
+ */
 Room* Map::getCurrentRoom()
 {
   return getRoom(current_room);
 }
 
+/**
+ *   @brief   Render the current room and the objects in it
+ *   @param   renderer The ASGE renderer
+ */
 void Map::renderCurrentRoom(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*getCurrentRoom()->spriteComponent()->getSprite());
@@ -268,6 +320,15 @@ void Map::renderCurrentRoom(ASGE::Renderer* renderer)
   }
 }
 
+/**
+ *   @brief   Updates the current room and the objects in it
+ *   @param   renderer The ASGE renderer
+ *            audio A reference to the audio manager
+ *            player A reference to the player
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if player needs to descend a level
+ */
 bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
                             AudioManager* audio,
                             double delta_time,
@@ -306,6 +367,10 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
   return descend;
 }
 
+/**
+ *   @brief   Render the mini map
+ *   @param   renderer The ASGE renderer
+ */
 void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
@@ -317,6 +382,10 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
   }
 }
 
+/**
+ *   @brief   Generate the starting room
+ *   @param   renderer The ASGE renderer
+ */
 void Map::generateStartingRoom(ASGE::Renderer* renderer)
 {
   // Set All Rooms To Empty
@@ -338,6 +407,12 @@ void Map::generateStartingRoom(ASGE::Renderer* renderer)
   rooms[map_size / 2][map_size / 2].found(true);
 }
 
+/**
+ *   @brief   Generate a new room
+ *   @param   renderer The ASGE renderer
+ *            x_index The x position in the rooms array
+ *            y_index The y position in the rooms array
+ */
 void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
 {
   // Calculate Required Doors (NESW)
@@ -353,7 +428,7 @@ void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
   // For Each File
   std::vector<std::string> files = ASGE::FILEIO::enumerateFiles("data/"
                                                                 "Rooms");
-  for (auto name : files)
+  for (const auto& name : files)
   {
     // Check If File is Valid
     if (checkRoomName(name, doors_needed))
@@ -377,11 +452,18 @@ void Map::generateNewRoom(ASGE::Renderer* renderer, int x_index, int y_index)
   rooms[x_index][y_index].setup(renderer, &file);
 }
 
+/**
+ *   @brief   Room generation function
+ *   @details Generates a new map of rooms, with enemies and items inside
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Map::generateRooms(ASGE::Renderer* renderer,
                         int game_width,
                         int game_height)
 {
-  axe_psycho.setup(renderer, 0, 0, 92, 92);
+  axe_psycho.setup(renderer, 0, 0, 92, 92, game_width, game_height);
   generateStartingRoom(renderer);
 
   // Create Queue of Rooms From Open Doors
@@ -452,6 +534,13 @@ void Map::generateRooms(ASGE::Renderer* renderer,
   setupMinimap(renderer, game_width, game_height);
 }
 
+/**
+ *   @brief   Setup the mini map
+ *   @details Create a mini map based on the rooms generated
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Map::setupMinimap(ASGE::Renderer* renderer,
                        int game_width,
                        int game_height)
@@ -472,7 +561,7 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
       file += getRoom(i)->getWest() ? "W" : "_";
       file += ".png";
 
-      GameObject* new_room = new GameObject();
+      auto* new_room = new GameObject();
       mini_map.push_back(new_room);
       mini_map_ids.push_back(getRoom(i)->getId());
 
@@ -493,6 +582,15 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
   updateMiniMap();
 }
 
+/**
+ *   @brief   Set up a bounding box
+ *   @details Used to setup the room collision
+ *   @param   component The collision component to set up
+ *            x_pos The x position
+ *            y_pos The y position
+ *            width The width of the bounding box
+ *            height The height of the bounding box
+ */
 void Map::setupBoundingBox(CollisionComponent* component,
                            float x_pos,
                            float y_pos,
@@ -503,6 +601,10 @@ void Map::setupBoundingBox(CollisionComponent* component,
   component->updateBoundingBox(bounding_box);
 }
 
+/**
+ *   @brief   Check if the player is colliding with the north door
+ *   @param   player A reference to the player
+ */
 void Map::checkNorthDoorCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
@@ -533,6 +635,10 @@ void Map::checkNorthDoorCollision(Player* player)
   }
 }
 
+/**
+ *   @brief   Check if the player is colliding with the east door
+ *   @param   player A reference to the player
+ */
 void Map::checkEastDoorCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
@@ -563,6 +669,10 @@ void Map::checkEastDoorCollision(Player* player)
   }
 }
 
+/**
+ *   @brief   Check if the player is colliding with the south door
+ *   @param   player A reference to the player
+ */
 void Map::checkSouthDoorCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
@@ -593,6 +703,10 @@ void Map::checkSouthDoorCollision(Player* player)
   }
 }
 
+/**
+ *   @brief   Check if the player is colliding with the west door
+ *   @param   player A reference to the player
+ */
 void Map::checkWestDoorCollision(Player* player)
 {
   CollisionComponent* player_collider = player->collisionComponent();
@@ -623,6 +737,12 @@ void Map::checkWestDoorCollision(Player* player)
   }
 }
 
+/**
+ *   @brief   Randomly generate item rooms in the map and populate them
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Map::generateItemRooms(ASGE::Renderer* renderer,
                             int game_width,
                             int game_height)
@@ -664,6 +784,12 @@ void Map::generateItemRooms(ASGE::Renderer* renderer,
   }
 }
 
+/**
+ *   @brief   Populate normal rooms with enemies
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
 void Map::generateEnemies(ASGE::Renderer* renderer,
                           int game_width,
                           int game_height)
@@ -696,6 +822,10 @@ void Map::generateEnemies(ASGE::Renderer* renderer,
   }
 }
 
+/**
+ *   @brief   Change the colours of the mini map sprites to show the current
+ * room
+ */
 void Map::updateMiniMap()
 {
   for (int i = 0; i < mini_map.size(); i++)
@@ -727,6 +857,15 @@ void Map::updateMiniMap()
   }
 }
 
+/**
+ *   @brief   When generating rooms, check if the current room needs a north
+ * door
+ *   @param   x_pos The x position of the room
+ *            y_pos The y position of the room
+ *   @return  N if north door needed
+ *            _ if cannot have north door
+ *            * if can either have one or not
+ */
 std::string Map::needNorthDoor(int x_pos, int y_pos)
 {
   if (x_pos - 1 >= 0)
@@ -747,6 +886,14 @@ std::string Map::needNorthDoor(int x_pos, int y_pos)
   return "_";
 }
 
+/**
+ *   @brief   When generating rooms, check if the current room needs a east door
+ *   @param   x_pos The x position of the room
+ *            y_pos The y position of the room
+ *   @return  E if east door needed
+ *            _ if cannot have east door
+ *            * if can either have one or not
+ */
 std::string Map::needEastDoor(int x_pos, int y_pos)
 {
   if (y_pos + 1 < map_size)
@@ -767,6 +914,15 @@ std::string Map::needEastDoor(int x_pos, int y_pos)
   return "_";
 }
 
+/**
+ *   @brief   When generating rooms, check if the current room needs a south
+ * door
+ *   @param   x_pos The x position of the room
+ *            y_pos The y position of the room
+ *   @return  S if south door needed
+ *            _ if cannot have south door
+ *            * if can either have one or not
+ */
 std::string Map::needSouthDoor(int x_pos, int y_pos)
 {
   if (x_pos + 1 < map_size)
@@ -787,6 +943,14 @@ std::string Map::needSouthDoor(int x_pos, int y_pos)
   return "_";
 }
 
+/**
+ *   @brief   When generating rooms, check if the current room needs a west door
+ *   @param   x_pos The x position of the room
+ *            y_pos The y position of the room
+ *   @return  W if west door needed
+ *            _ if cannot have west door
+ *            * if can either have one or not
+ */
 std::string Map::needWestDoor(int x_pos, int y_pos)
 {
   if (y_pos - 1 >= 0)
@@ -807,6 +971,12 @@ std::string Map::needWestDoor(int x_pos, int y_pos)
   return "_";
 }
 
+/**
+ *   @brief   See if room name has the required doors
+ *   @param   name The name to check
+ *            required_doors The doors needed
+ *   @return  True if name has the correct doors
+ */
 bool Map::checkRoomName(std::string name, std::string required_doors)
 {
   bool valid = true;
@@ -820,8 +990,13 @@ bool Map::checkRoomName(std::string name, std::string required_doors)
   return valid;
 }
 
-// adds axe man on to enemies but only if hes visible other wise removes him
-// from the vector
+/**
+ *   @brief   Adds the axe man to enemies
+ *   @details Only adds him if he is in the room, if not he is removed from
+ * enemies
+ *   @param   include_objects Whether to include_objects in enemies list
+ *   @return  vector of enemies in the current room
+ */
 std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
 {
   std::vector<GameObject*> enemies =
@@ -849,13 +1024,21 @@ std::vector<GameObject*> Map::getEnemies(bool include_objects = false)
   return enemies;
 }
 
+/**
+ *   @brief   Gets a reference to the axe psycho
+ *   @return  axe_psycho
+ */
 AxePsycho* Map::axePsycho()
 {
   return &axe_psycho;
 }
 
+/**
+ *   @brief   Gets if room has changed
+ *   @details Used with setting the axe man to spawn
+ *   @return  True if room has changed
+ */
 bool Map::roomChanged()
 {
-  // room changed spawn axe man and change last room to current room
   return current_room != last_room;
 }

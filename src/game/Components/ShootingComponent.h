@@ -10,9 +10,6 @@
 #include "AudioManager.h"
 #include <vector>
 
-//  Forward declare
-// class Projectile;
-
 class ShootingComponent
 {
  public:
@@ -38,7 +35,7 @@ class ShootingComponent
 
  private:
   float speed = 250.0f;
-  float range = 200.0f;
+  float range = 300.0f;
   float size = 8;
   std::vector<Projectile*> projectiles;
   std::vector<float> move_direction;

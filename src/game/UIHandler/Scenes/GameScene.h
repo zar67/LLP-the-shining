@@ -13,13 +13,12 @@ class GameScene : public Scene
   GameScene() = default;
   ~GameScene();
 
-  bool
-  init(ASGE::Renderer* renderer, float game_width, float game_height) override;
+  bool init(ASGE::Renderer* renderer, float game_height);
   void render(ASGE::Renderer* renderer,
               int floor,
               int coins,
               int health,
-              bool* abilities);
+              const bool* abilities);
 
  private:
   ASGE::Sprite* health_bar = nullptr;

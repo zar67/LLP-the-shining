@@ -18,9 +18,9 @@ class Map
   void setupRoomCollision(int game_width, int game_height);
   void handlePlayerCollision(Player* player);
   void handleObjectCollision(std::vector<GameObject*> colliders);
-  void fixCollision(GameObject* object,
-                    CollisionComponent* collided,
-                    CollisionComponent::CollisionSide side);
+  static void fixCollision(GameObject* object,
+                           CollisionComponent* collided,
+                           CollisionComponent::CollisionSide side);
 
   bool moveNorth();
   bool moveEast();
@@ -48,11 +48,11 @@ class Map
  private:
   void
   generateItemRooms(ASGE::Renderer* renderer, int game_width, int game_height);
-  void setupBoundingBox(CollisionComponent* component,
-                        float x_pos,
-                        float y_pos,
-                        float width,
-                        float height);
+  static void setupBoundingBox(CollisionComponent* component,
+                               float x_pos,
+                               float y_pos,
+                               float width,
+                               float height);
   void checkNorthDoorCollision(Player* player);
   void checkEastDoorCollision(Player* player);
   void checkSouthDoorCollision(Player* player);
@@ -64,7 +64,7 @@ class Map
   std::string needEastDoor(int x_pos, int y_pos);
   std::string needSouthDoor(int x_pos, int y_pos);
   std::string needWestDoor(int x_pos, int y_pos);
-  bool checkRoomName(std::string name, std::string required_doors);
+  static bool checkRoomName(std::string name, std::string required_doors);
   bool roomChanged();
 
   const int STARTING_ROOM = 12;
@@ -77,8 +77,8 @@ class Map
   int current_room = STARTING_ROOM;
   int last_room = STARTING_ROOM;
 
-  CollisionComponent* room_wall_collision[8];
-  CollisionComponent* room_door_collision[4];
+  CollisionComponent* room_wall_collision[8]{};
+  CollisionComponent* room_door_collision[4]{};
 
   AxePsycho axe_psycho = AxePsycho();
   int game_width = 0;

@@ -21,9 +21,8 @@ class MyASGEGame : public ASGE::OGLGame
   bool init() override;
 
  private:
-  void keyHandler(ASGE::SharedEventData data);
+  void keyHandler(const ASGE::SharedEventData& data);
   void playerControllerInput(ASGE::Input* input);
-  void clickHandler(ASGE::SharedEventData data);
   void setupResolution();
 
   void resetGame();
@@ -39,10 +38,8 @@ class MyASGEGame : public ASGE::OGLGame
   int floor = 0;
 
   float last_shoot_dir[2] = { 0, 0 };
-  float shoot_timer = 0;
   bool controller_connected = false;
   bool shoot_pressed = true;
 
-  int key_callback_id = -1;   /**< Key Input Callback ID. */
-  int mouse_callback_id = -1; /**< Mouse Input Callback ID. */
+  int key_callback_id = -1; /**< Key Input Callback ID. */
 };

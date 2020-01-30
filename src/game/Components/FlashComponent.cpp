@@ -4,42 +4,49 @@
 
 #include "FlashComponent.h"
 
-FlashComponent::FlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour)
+/**
+ *   @brief   Constructor
+ *   @details Sets up the sprite component for the flashing
+ *   @param   renderer The ASGE renderer
+ *            colour The colour to flash
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ */
+FlashComponent::FlashComponent(ASGE::Renderer* renderer,
+                               ASGE::Colour colour,
+                               float game_width,
+                               float game_height)
 {
   addSpriteComponent(renderer, "/data/white.png");
   spriteComponent()->getSprite()->colour(colour);
   spriteComponent()->getSprite()->xPos(0);
   spriteComponent()->getSprite()->yPos(0);
-  // set it to screen size
-  spriteComponent()->getSprite()->width(1200);
-  spriteComponent()->getSprite()->height(1024);
+  spriteComponent()->getSprite()->width(game_width);
+  spriteComponent()->getSprite()->height(game_height);
 }
 
-void FlashComponent::incrementCount()
-{
-  current_count++;
-}
-
-void FlashComponent::resetCount()
-{
-  current_count = 0;
-}
-
-bool FlashComponent::checkCount()
-{
-  return current_count == WARNING_COUNT;
-}
-
+/**
+ *   @brief   Gets visible attribute
+ *   @return  is_visible
+ */
 bool FlashComponent::isVisible()
 {
   return is_visible;
 }
 
+/**
+ *   @brief   Inverts the visible attribute
+ */
 void FlashComponent::reverseIsVisible()
 {
   is_visible = !is_visible;
 }
 
+/**
+ *   @brief   Flashes the sprite on and off
+ *   @details Updates the flashing and turns off if the timer has ran out
+ *   @return  True if stopped flashing
+ */
 bool FlashComponent::flash(float delta_time)
 {
   if (current_count < WARNING_COUNT)
@@ -61,11 +68,19 @@ bool FlashComponent::flash(float delta_time)
   return true;
 }
 
+/**
+ *   @brief   Gets if the sprite is flashing
+ *   @return  is_flashing
+ */
 bool FlashComponent::isFlashing()
 {
   return is_flashing;
 }
 
+/**
+ *   @brief   Sets if the sprite is flashing
+ *   @param   value New flashing value
+ */
 void FlashComponent::isFlashing(bool value)
 {
   is_flashing = value;

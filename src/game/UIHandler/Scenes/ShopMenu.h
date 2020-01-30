@@ -28,7 +28,7 @@ class ShopMenu : public Scene
   bool
   init(ASGE::Renderer* renderer, float game_width, float game_height) override;
   MenuItem update(Point2D point);
-  void render(ASGE::Renderer* renderer) override;
+  void render(ASGE::Renderer* renderer, int coins);
 
   void disableDamage();
   void disableHealth();

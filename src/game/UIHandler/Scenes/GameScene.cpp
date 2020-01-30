@@ -5,6 +5,10 @@
 #include "GameScene.h"
 #include <iostream>
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 GameScene::~GameScene()
 {
   delete health_bar;
@@ -29,9 +33,14 @@ GameScene::~GameScene()
   shot_speed_powerup_icon = nullptr;
 }
 
-bool GameScene::init(ASGE::Renderer* renderer,
-                     float game_width,
-                     float game_height)
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_height The height of the game screen
+ *   @return  True if setup correctly
+ */
+bool GameScene::init(ASGE::Renderer* renderer, float game_height)
 {
   health_bar = renderer->createRawSprite();
   if (!setupSprite(
@@ -104,11 +113,24 @@ bool GameScene::init(ASGE::Renderer* renderer,
                      60);
 }
 
-void GameScene::render(
-  ASGE::Renderer* renderer, int floor, int coins, int health, bool* abilities)
+/**
+ *   @brief   Renders the scene
+ *   @param   renderer The ASGE renderer
+ *            floor The floort the player is on
+ *            coins The money the player has
+ *            health The player's health
+ *            abilities The abilities the player has
+ */
+void GameScene::render(ASGE::Renderer* renderer,
+                       int floor,
+                       int coins,
+                       int health,
+                       const bool* abilities)
 {
-  renderer->renderText("Floor " + std::to_string(floor), 10, 20);
-  renderer->renderText("$" + std::to_string(coins), 10, 50);
+  renderer->renderText(
+    "Floor " + std::to_string(floor), 10, 30, 1.5f, ASGE::COLOURS::GREY);
+  renderer->renderText(
+    "$" + std::to_string(coins), 10, 65, 1.5f, ASGE::COLOURS::GREY);
 
   if (abilities[1])
   {

@@ -11,11 +11,10 @@
 class FlashComponent : public GameObject
 {
  public:
-  FlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour);
-
-  void incrementCount();
-  void resetCount();
-  bool checkCount();
+  FlashComponent(ASGE::Renderer* renderer,
+                 ASGE::Colour colour,
+                 float game_width,
+                 float game_height);
 
   bool isVisible();
   void reverseIsVisible();

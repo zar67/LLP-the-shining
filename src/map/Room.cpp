@@ -3,9 +3,16 @@
 //
 
 #include "Room.h"
-#include <iostream>
-#include <utility>
 
+/**
+ *   @brief   Constructor
+ *   @param   id The unique id of the room
+ *            room_type The type of the room
+ *            n_door Whether the room has a north door
+ *            e_door Whether the room has an east door
+ *            s_door Whether the room has a south door
+ *            w_door Whether the room has a west door
+ */
 Room::Room(int id,
            RoomType room_type,
            bool n_door,
@@ -22,6 +29,10 @@ Room::Room(int id,
   movement_enabled = false;
 }
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the enemies and items in the room
+ */
 Room::~Room()
 {
   for (auto demon : demons)
@@ -43,6 +54,13 @@ Room::~Room()
   items.clear();
 }
 
+/**
+ *   @brief   Sets up the room
+ *   @details Adds a sprite component and adds crates to the room
+ *   @param   renderer The ASGE renderer
+ *            filename The location of the texture to load
+ *   @return  True if set up correctly
+ */
 bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
 {
   addSpriteComponent(renderer, *filename);
@@ -71,75 +89,124 @@ bool Room::setup(ASGE::Renderer* renderer, std::string* filename)
   }
 }
 
+/**
+ *   @brief   Gets the ID of the room
+ *   @return  ID
+ */
 int Room::getId()
 {
   return ID;
 }
 
+/**
+ *   @brief   Gets the type of the room
+ *   @return  type
+ */
 Room::RoomType Room::getType()
 {
   return type;
 }
+
+/**
+ *   @brief   Sets the type of the room
+ *   @param   room_type The new room type
+ */
 void Room::setType(RoomType room_type)
 {
   type = room_type;
 }
 
+/**
+ *   @brief   Gets the north door boolean
+ *   @return  north
+ */
 bool Room::getNorth()
 {
   return north;
 }
 
+/**
+ *   @brief   Gets the east door boolean
+ *   @return  east
+ */
 bool Room::getEast()
 {
   return east;
 }
 
+/**
+ *   @brief   Gets the south door boolean
+ *   @return  south
+ */
 bool Room::getSouth()
 {
   return south;
 }
 
+/**
+ *   @brief   Gets the west door boolean
+ *   @return  west
+ */
 bool Room::getWest()
 {
   return west;
 }
 
+/**
+ *   @brief   Gets if the player can leave the room
+ *   @return  movement_enabled
+ */
 bool Room::canMove()
 {
   return movement_enabled;
 }
 
+/**
+ *   @brief   Sets if the player can leave the room
+ *   @param   movement The new value
+ */
 void Room::canMove(bool movement)
 {
   movement_enabled = movement;
 }
 
+/**
+ *   @brief   Gets if the room had been entered before
+ *   @return  revealed
+ */
 bool Room::found()
 {
   return revealed;
 }
 
+/**
+ *   @brief   Sets if the room has been found
+ *   @param   found The new value
+ */
 void Room::found(bool found)
 {
   revealed = found;
 }
 
+/**
+ *   @brief   Renders all the enemies and items in the room
+ *   @param   renderer The ASGE renderer
+ */
 void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
 {
-  for (int i = 0; i < demons.size(); i++)
+  for (auto& demon : demons)
   {
-    demons.at(i)->render(renderer);
+    demon->render(renderer);
   }
 
-  for (int i = 0; i < ghosts.size(); i++)
+  for (auto& ghost : ghosts)
   {
-    ghosts.at(i)->render(renderer);
+    ghost->render(renderer);
   }
 
-  for (int i = 0; i < items.size(); i++)
+  for (auto& item : items)
   {
-    items.at(i)->renderItem(renderer);
+    item->renderItem(renderer);
   }
 
   for (auto& obj : interactable_objs)
@@ -148,6 +215,16 @@ void Room::renderObjectsInRoom(ASGE::Renderer* renderer)
   }
 }
 
+/**
+ *   @brief   Updates all the enemies in the room and checks collision of items
+ *   @param   renderer The ASGE renderer
+ *            audio A reference to the audio manager
+ *            player A reference to the player
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if the player needs to descend floors (has collided with the
+ * staircase)
+ */
 bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
                                AudioManager* audio,
                                double delta_time,
@@ -157,34 +234,35 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
 {
   bool descend = false;
 
-  for (int i = 0; i < demons.size(); i++)
+  for (auto& demon : demons)
   {
-    demons.at(i)->update(renderer, delta_time, player, interactable_objs);
+    demon->update(renderer, delta_time, player, interactable_objs);
   }
+
   bool doors[4] = { north, east, south, west };
-  for (int i = 0; i < ghosts.size(); i++)
+  for (auto& ghost : ghosts)
   {
-    ghosts.at(i)->update(
+    ghost->update(
       delta_time, interactable_objs, doors, game_width, game_height);
   }
 
-  for (int i = 0; i < items.size(); i++)
+  for (auto& item : items)
   {
-    if (items.at(i)->hasCollidedWithPlayer(player))
+    if (item->hasCollidedWithPlayer(player))
     {
-      items.at(i)->hasPickedUpItem();
+      item->hasPickedUpItem();
 
-      if (items.at(i)->itemType() == Item::GameItems::COIN)
+      if (item->itemType() == Item::GameItems::COIN)
       {
-        player->addCoins(5);
+        player->addCoins(2);
         audio->playCoin();
       }
-      else if (items.at(i)->itemType() == Item::GameItems::HEART)
+      else if (item->itemType() == Item::GameItems::HEART)
       {
         player->addHealth(20);
         audio->playHeart();
       }
-      else if (items.at(i)->itemType() == Item::GameItems::STAIRCASE)
+      else if (item->itemType() == Item::GameItems::STAIRCASE)
       {
         descend = true;
         audio->playDownAFloor();
@@ -211,26 +289,38 @@ bool Room::updateObjectsInRoom(ASGE::Renderer* renderer,
   return descend;
 }
 
+/**
+ *   @brief   Adds a demon to the demons vector
+ *   @param   renderer The ASGE renderer
+ *            x_pos The starting x position
+ *            y_pos The starting y position
+ */
 void Room::addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
-  Demon* new_demon = new Demon();
+  auto* new_demon = new Demon();
   new_demon->setup(renderer, x_pos, y_pos);
   demons.push_back(new_demon);
 }
 
+/**
+ *   @brief   Adds a ghost to the ghosts vector
+ *   @param   renderer The ASGE renderer
+ *            x_pos The starting x position
+ *            y_pos The starting y position
+ */
 void Room::addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos)
 {
-  Ghost* new_ghost = new Ghost();
+  auto* new_ghost = new Ghost();
   new_ghost->setup(renderer, x_pos, y_pos);
   ghosts.push_back(new_ghost);
 }
 
-/*
- * pass enemy memory location up to game.cpp
- * this is so player can access and detect collision
- * only include objects when detecting collision
+/**
+ *   @brief   Gets the enemies for player collision detection
+ *   @param   include_objects Only include objects when detecting collision
+ *   @return  Vector of gameobjects
  */
-std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
+std::vector<GameObject*> Room::getEnemies(bool include_objects = false)
 {
   std::vector<GameObject*> enemies;
   for (auto& demon : demons)
@@ -241,7 +331,7 @@ std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
   {
     enemies.push_back(ghost);
   }
-  if (inlcude_objects)
+  if (include_objects)
   {
     for (auto& obj : interactable_objs)
     {
@@ -251,6 +341,9 @@ std::vector<GameObject*> Room::getEnemies(bool inlcude_objects = false)
   return enemies;
 }
 
+/**
+ *   @brief   Remove any enemies that have health lower than 0
+ */
 void Room::checkEnemyHealth()
 {
   auto itr_ghost = ghosts.begin();
@@ -278,19 +371,23 @@ void Room::checkEnemyHealth()
   }
 }
 
+/**
+ *   @brief   Gets the crates in the room
+ *   @return  intractable_objs
+ */
 std::vector<InteractableObjects*> Room::getObjectsInRoom()
 {
   return interactable_objs;
 }
 
-void Room::removeItemFromRoom(int item_index)
-{
-  if (item_index < items.size())
-  {
-    items.erase(items.begin() + item_index);
-  }
-}
-
+/**
+ *   @brief   Adds a new item to the items vector
+ *   @param   renderer The ASGE renderer
+ *            filename The location of the texture to load
+ *            item_type The type of item
+ *            x_pos The starting x position
+ *            y_pos The starting y position
+ */
 void Room::addItemToRoom(ASGE::Renderer* renderer,
                          std::string filename,
                          Item::GameItems item_type,
@@ -302,6 +399,22 @@ void Room::addItemToRoom(ASGE::Renderer* renderer,
   items.push_back(new_item);
 }
 
+/**
+ *   @brief   Adds a specific item to the items vector
+ *   @param   new_item The item to be added
+ */
+void Room::addItemToRoom(Item* new_item)
+{
+  items.push_back(new_item);
+}
+
+/**
+ *   @brief   Calculates whether to spawn the axe man
+ *   @param   axe_man A reference to the psycho axe man
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if axe man spawned in room
+ */
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
   int should_Spawn = rand() % 6;
@@ -351,11 +464,12 @@ bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
   return false;
 }
 
-void Room::addItemToRoom(Item* new_item)
-{
-  items.push_back(new_item);
-}
-
+/**
+ *   @brief   Calculate the chance for an item to spawn when a crate is
+ * destroyed
+ *   @param   renderer The ASGE renderer
+ *            sprite The crate sprite
+ */
 void Room::chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite)
 {
   int chance = rand() % 10;
