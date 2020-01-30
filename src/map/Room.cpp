@@ -304,7 +304,7 @@ void Room::addItemToRoom(ASGE::Renderer* renderer,
 
 bool Room::axeManPresent(AxePsycho* axe_man, int game_width, int game_height)
 {
-  int should_Spawn = rand() % 6;
+  int should_Spawn = rand() % 1;
   if (should_Spawn == 0)
   {
     while (true)
@@ -366,7 +366,7 @@ void Room::chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite)
     texture = "data/Items/heart.png";
     type = Item::GameItems::HEART;
   }
-  else if (chance > 5)
+  else if (chance > 7)
   {
     texture = "data/Items/coin.png";
     type = Item::GameItems::COIN;
