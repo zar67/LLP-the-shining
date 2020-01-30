@@ -26,40 +26,6 @@ bool AudioManager::audioSetUp()
     return false;
   }
 
-  if (axe_Man.open("/data/Audio/Axe Man.mp3"))
-  {
-    auto io_buffer = axe_Man.read();
-    if (axe_Man_MP3.loadMem(io_buffer.as_unsigned_char(),
-                            static_cast<unsigned int>(io_buffer.length),
-                            false,
-                            false))
-    {
-      return true;
-    }
-    axe_Man.close();
-  }
-  else
-  {
-    return false;
-  }
-
-  if (Box.open("/data/Audio/Box.mp3"))
-  {
-    auto io_buffer = Box.read();
-    if (Box_MP3.loadMem(io_buffer.as_unsigned_char(),
-                        static_cast<unsigned int>(io_buffer.length),
-                        false,
-                        false))
-    {
-      return true;
-    }
-    Box.close();
-  }
-  else
-  {
-    return false;
-  }
-
   if (Coin.open("/data/Audio/Coin.mp3"))
   {
     auto io_buffer = Coin.read();
@@ -71,40 +37,6 @@ bool AudioManager::audioSetUp()
       return true;
     }
     Coin.close();
-  }
-  else
-  {
-    return false;
-  }
-
-  if (Demon.open("/data/Audio/Demon.mp3"))
-  {
-    auto io_buffer = Demon.read();
-    if (Demon_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Demon.close();
-  }
-  else
-  {
-    return false;
-  }
-
-  if (Ghost.open("/data/Audio/Ghost.mp3"))
-  {
-    auto io_buffer = Ghost.read();
-    if (Ghost_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Ghost.close();
   }
   else
   {
@@ -162,23 +94,6 @@ bool AudioManager::audioSetUp()
     return false;
   }
 
-  if (Maybe.open("/data/Audio/Maybe.mp3"))
-  {
-    auto io_buffer = Maybe.read();
-    if (Maybe_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Maybe.close();
-  }
-  else
-  {
-    return false;
-  }
-
   if (PowerUp.open("/data/Audio/PowerUp.mp3"))
   {
     auto io_buffer = PowerUp.read();
@@ -199,32 +114,12 @@ bool AudioManager::audioSetUp()
   return true;
 }
 
-void AudioManager::playAxeMan()
-{
-  soloud.play(axe_Man_MP3);
-}
-
-void AudioManager::playBox()
-{
-  soloud.play(Box_MP3);
-}
-
 /**
  *   @brief   Plays coin pickup audio
  */
 void AudioManager::playCoin()
 {
   soloud.play(Coin_MP3);
-}
-
-void AudioManager::playDemon()
-{
-  soloud.play(Demon_MP3);
-}
-
-void AudioManager::playGhost()
-{
-  soloud.play(Ghost_MP3);
 }
 
 /**
@@ -249,11 +144,6 @@ void AudioManager::playHeart()
 void AudioManager::playHit()
 {
   soloud.play(HitHurt_MP3);
-}
-
-void AudioManager::playMaybe()
-{
-  soloud.play(Maybe_MP3);
 }
 
 /**

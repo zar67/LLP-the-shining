@@ -22,6 +22,8 @@ class MyASGEGame : public ASGE::OGLGame
 
  private:
   void keyHandler(const ASGE::SharedEventData& data);
+  void playerMovement(const ASGE::SharedEventData& data);
+  void playerShooting(const ASGE::SharedEventData& data);
   void playerControllerInput(ASGE::Input* input);
   void setupResolution();
 

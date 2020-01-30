@@ -122,65 +122,86 @@ void MyASGEGame::keyHandler(const ASGE::SharedEventData& data)
 
   if (!controller_connected)
   {
-    // vertical movement
-    if (key->key == ASGE::KEYS::KEY_DOWN &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveVertical(1.0f);
-      last_shoot_dir[1] = 1;
-    }
-    else if (key->key == ASGE::KEYS::KEY_UP &&
-             key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveVertical(-1.0f);
-      last_shoot_dir[1] = -1;
-    }
-    else if ((key->key == ASGE::KEYS::KEY_DOWN ||
-              key->key == ASGE::KEYS::KEY_UP) &&
-             key->action == ASGE::KEYS::KEY_RELEASED)
-    {
-      player.moveVertical(0.0f);
-      last_shoot_dir[1] = 0;
-    }
-
-    // Horizontal movement
-    if (key->key == ASGE::KEYS::KEY_RIGHT &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveHorizontal(1.0f);
-      last_shoot_dir[0] = 1;
-    }
-    else if (key->key == ASGE::KEYS::KEY_LEFT &&
-             key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveHorizontal(-1.0f);
-      last_shoot_dir[0] = -1;
-    }
-    else if ((key->key == ASGE::KEYS::KEY_LEFT ||
-              key->key == ASGE::KEYS::KEY_RIGHT) &&
-             key->action == ASGE::KEYS::KEY_RELEASED)
-    {
-      player.moveHorizontal(0.0f);
-      last_shoot_dir[0] = 0;
-    }
-
-    if (key->key == ASGE::KEYS::KEY_SPACE &&
-        key->action == ASGE::KEYS::KEY_PRESSED &&
-        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
-    {
-      // Fire Using Shoot Vector
-      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
-      player.weaponComponent()->Fire(renderer.get(),
-                                     sprite->xPos() + sprite->width() / 2,
-                                     sprite->yPos() + sprite->height() / 2,
-                                     last_shoot_dir[0],
-                                     last_shoot_dir[1]);
-    }
+    playerMovement(data);
+    playerShooting(data);
   }
 
   if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
+  }
+}
+
+/**
+ *   @brief   Detects key press for player movement
+ *   @param   data The event data relating to key input
+ */
+void MyASGEGame::playerMovement(const ASGE::SharedEventData& data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  // vertical movement
+  if (key->key == ASGE::KEYS::KEY_DOWN &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveVertical(1.0f);
+    last_shoot_dir[1] = 1;
+  }
+  else if (key->key == ASGE::KEYS::KEY_UP &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveVertical(-1.0f);
+    last_shoot_dir[1] = -1;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_DOWN ||
+            key->key == ASGE::KEYS::KEY_UP) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    player.moveVertical(0.0f);
+    last_shoot_dir[1] = 0;
+  }
+
+  // Horizontal movement
+  if (key->key == ASGE::KEYS::KEY_RIGHT &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveHorizontal(1.0f);
+    last_shoot_dir[0] = 1;
+  }
+  else if (key->key == ASGE::KEYS::KEY_LEFT &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveHorizontal(-1.0f);
+    last_shoot_dir[0] = -1;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_LEFT ||
+            key->key == ASGE::KEYS::KEY_RIGHT) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    player.moveHorizontal(0.0f);
+    last_shoot_dir[0] = 0;
+  }
+}
+
+/**
+ *   @brief   Detects key press for player shooting
+ *   @param   data The event data relating to key input
+ */
+void MyASGEGame::playerShooting(const ASGE::SharedEventData& data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  if (key->key == ASGE::KEYS::KEY_SPACE &&
+      key->action == ASGE::KEYS::KEY_PRESSED &&
+      !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
+  {
+    // Fire Using Shoot Vector
+    ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+    player.weaponComponent()->Fire(renderer.get(),
+                                   sprite->xPos() + sprite->width() / 2,
+                                   sprite->yPos() + sprite->height() / 2,
+                                   last_shoot_dir[0],
+                                   last_shoot_dir[1]);
   }
 }
 
