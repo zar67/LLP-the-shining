@@ -13,6 +13,8 @@ FlashComponent::FlashComponent(ASGE::Renderer* renderer, ASGE::Colour colour)
   // set it to screen size
   spriteComponent()->getSprite()->width(1200);
   spriteComponent()->getSprite()->height(1024);
+
+  spriteComponent()->getSprite()->opacity(0.5f);
 }
 
 void FlashComponent::incrementCount()

@@ -37,7 +37,9 @@ set(SOURCE_FILES
         game/UIHandler/Scenes/GameScene.cpp
         game/SceneObjects/InteractableObjects.cpp
         game/SceneObjects/Item.cpp
-        game/Components/ShootingComponent.cpp)
+        game/Components/ShootingComponent.cpp
+        game/Components/FlashComponent.cpp
+        game/Components/AudioManager.cpp)
 
 set(HEADER_FILES
         game/game.h
@@ -60,7 +62,9 @@ set(HEADER_FILES
         game/UIHandler/Scenes/GameOverMenu.h
         game/UIHandler/Scenes/ShopMenu.h
         game/UIHandler/Scenes/GameScene.h
-        game/SceneObjects/InteractableObjects.h game/Components/FlashComponent.cpp game/Components/FlashComponent.h game/Components/AudioManager.cpp game/Components/AudioManager.h)
+        game/SceneObjects/InteractableObjects.h
+        game/Components/FlashComponent.h
+        game/Components/AudioManager.h)
 
 ## the executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
