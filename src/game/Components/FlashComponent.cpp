@@ -23,6 +23,7 @@ FlashComponent::FlashComponent(ASGE::Renderer* renderer,
   spriteComponent()->getSprite()->yPos(0);
   spriteComponent()->getSprite()->width(game_width);
   spriteComponent()->getSprite()->height(game_height);
+  spriteComponent()->getSprite()->opacity(0.5f);
 }
 
 /**
