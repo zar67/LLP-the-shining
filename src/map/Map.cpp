@@ -799,7 +799,7 @@ void Map::generateEnemies(ASGE::Renderer* renderer,
   for (int i = 0; i < map_size * map_size; i++)
   {
     if (getRoom(i)->getId() == -1 || getRoom(i)->getId() == STARTING_ROOM ||
-        getRoom(i)->getId() != Room::NORMAL)
+        getRoom(i)->getType() != Room::NORMAL)
     {
       continue;
     }
