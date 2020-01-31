@@ -44,8 +44,13 @@ class ShootingComponent
   void hasShot(bool value);
   bool hasShot();
 
+  void hasReset(bool value);
+  bool hasReset();
+
  private:
   float calcAngle(float x, float y);
+
+  bool has_reset = false;
 
   bool has_shot = false;
   const float SHOOT_DELAY = 0.3f;
