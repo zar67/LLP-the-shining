@@ -142,10 +142,15 @@ void AxePsycho::inRoom(bool value)
  */
 bool AxePsycho::spawnTimerEnd(double delta_time,
                               float timer_aim,
-                              double current_time)
+                              float& current_time)
 {
   current_time += delta_time;
-  return current_time >= timer_aim;
+  if (current_time >= timer_aim)
+  {
+    current_time = 0.0f;
+    return true;
+  }
+  return false;
 }
 
 /**
