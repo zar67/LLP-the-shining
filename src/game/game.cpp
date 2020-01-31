@@ -219,8 +219,31 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
     player.moveHorizontal(data.axis[0]);
     player.moveVertical(-data.axis[1]);
 
-    last_shoot_dir[0] = data.axis[2];
-    last_shoot_dir[1] = -data.axis[3];
+    if (data.axis[2] < -0.2f)
+    {
+      last_shoot_dir[0] = -1;
+    }
+    else if (data.axis[2] > 0.2f)
+    {
+      last_shoot_dir[0] = 1;
+    }
+    else
+    {
+      last_shoot_dir[0] = 0;
+    }
+
+    if (data.axis[3] < -0.2f)
+    {
+      last_shoot_dir[1] = 1;
+    }
+    else if (data.axis[3] > 0.2f)
+    {
+      last_shoot_dir[1] = -1;
+    }
+    else
+    {
+      last_shoot_dir[1] = 0;
+    }
 
     if (!shoot_pressed && data.buttons[5] > 0.5f &&
         !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
@@ -251,7 +274,7 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
  */
 void MyASGEGame::resetGame()
 {
-  floor = 1;
+  floor = 3;
   map.generateRooms(renderer.get(), game_width, game_height);
   player.reset(game_width, game_height);
 }
@@ -345,10 +368,10 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
                               game_height))
     {
       // Descend Floor
-      floor += 1;
+      floor -= 1;
       map.generateRooms(renderer.get(), game_width, game_height);
 
-      if (floor == MAX_FLOOR)
+      if (floor == 0)
       {
         scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
       }

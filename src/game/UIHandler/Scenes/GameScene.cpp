@@ -44,7 +44,7 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
 {
   health_bar = renderer->createRawSprite();
   if (!setupSprite(
-        *health_bar, "data/UI/HealthBar.png", 10, game_height - 120, 150, 30))
+        *health_bar, "data/UI/HealthBar.png", 10, game_height - 85, 150, 25))
   {
     return false;
   }
@@ -53,9 +53,9 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   if (!setupSprite(*health_bar_background,
                    "data/UI/HealthBarBackground.png",
                    10,
-                   game_height - 120,
+                   game_height - 85,
                    150,
-                   30))
+                   25))
   {
     return false;
   }
@@ -64,9 +64,9 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   if (!setupSprite(*damage_powerup_icon,
                    "data/UI/Power Up Icons/DamageIcon.png",
                    10,
-                   game_height - 75,
-                   60,
-                   60))
+                   game_height - 55,
+                   45,
+                   45))
   {
     return false;
   }
@@ -74,10 +74,10 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   health_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*health_powerup_icon,
                    "data/UI/Power Up Icons/HealthIcon.png",
-                   80,
-                   game_height - 75,
-                   60,
-                   60))
+                   65,
+                   game_height - 55,
+                   45,
+                   45))
   {
     return false;
   }
@@ -85,10 +85,10 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   move_speed_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*move_speed_powerup_icon,
                    "data/UI/Power Up Icons/MoveSpeedIcon.png",
-                   150,
-                   game_height - 75,
-                   60,
-                   60))
+                   120,
+                   game_height - 55,
+                   45,
+                   45))
   {
     return false;
   }
@@ -96,10 +96,10 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   shot_size_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*shot_size_powerup_icon,
                    "data/UI/Power Up Icons/ShotSizeIcon.png",
-                   220,
-                   game_height - 75,
-                   60,
-                   60))
+                   175,
+                   game_height - 55,
+                   45,
+                   45))
   {
     return false;
   }
@@ -107,10 +107,10 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   shot_speed_powerup_icon = renderer->createRawSprite();
   return setupSprite(*shot_speed_powerup_icon,
                      "data/UI/Power Up Icons/ShotSpeedIcon.png",
-                     290,
-                     game_height - 75,
-                     60,
-                     60);
+                     230,
+                     game_height - 55,
+                     45,
+                     45);
 }
 
 /**

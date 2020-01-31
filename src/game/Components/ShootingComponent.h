@@ -34,7 +34,7 @@ class ShootingComponent
   void setSize(float value);
 
  private:
-  float speed = 250.0f;
+  float speed = 350.0f;
   float range = 300.0f;
   float size = 8;
   std::vector<Projectile*> projectiles;

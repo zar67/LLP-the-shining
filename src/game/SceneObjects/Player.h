@@ -51,9 +51,9 @@ class Player : public GameObject
   bool addPowerup(int index);
 
   const int starting_health = 100;
-  const float starting_speed = 200;
+  const float starting_speed = 250;
   const int starting_damage = 20;
-  const float starting_shot_speed = 250;
+  const float starting_shot_speed = 400;
   const float starting_shot_size = 8;
 
   int coins = 0;
