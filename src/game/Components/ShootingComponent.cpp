@@ -55,6 +55,16 @@ void ShootingComponent::maintainProjectiles(AudioManager* audio,
                                             std::vector<GameObject*> colliders,
                                             int damage)
 {
+  if (hasShot())
+  {
+    current_time += delta_time;
+    if (current_time >= SHOOT_DELAY)
+    {
+      hasShot(false);
+      current_time = 0.0f;
+    }
+  }
+
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
   {
@@ -235,4 +245,14 @@ float ShootingComponent::calcAngle(float x, float y)
   float radians = value;
   spriteComponent()->getSprite()->rotationInRadians(radians);
   return radians;
+}
+
+void ShootingComponent::hasShot(bool value)
+{
+  has_shot = value;
+}
+
+bool ShootingComponent::hasShot()
+{
+  return has_shot;
 }
