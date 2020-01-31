@@ -32,7 +32,7 @@ class Player : public GameObject
   void moveHorizontal(float move);
   void setMovementVec(const float vec[2]);
 
-  bool addWeaponComponent();
+  bool addWeaponComponent(ASGE::Renderer* renderer, bool use_arrow = false);
   ShootingComponent* weaponComponent();
 
   bool addDamagePowerup();

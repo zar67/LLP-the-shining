@@ -58,3 +58,23 @@ int InteractableObjects::damage()
 {
   return movement_damage;
 }
+
+void InteractableObjects::canDamage(bool value)
+{
+  can_damage = value;
+}
+
+bool InteractableObjects::canDamage()
+{
+  return can_damage;
+}
+
+void InteractableObjects::tickDamage(float delta_time)
+{
+  current_time += delta_time;
+  if (current_time >= WAIT)
+  {
+    can_damage = true;
+    current_time = 0.0f;
+  }
+}

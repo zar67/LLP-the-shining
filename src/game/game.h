@@ -33,6 +33,7 @@ class MyASGEGame : public ASGE::OGLGame
 
   SceneManager scene_handler;
   AudioManager audio_manager;
+
   Map map = Map();
   Player player = Player();
 
