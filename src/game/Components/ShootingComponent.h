@@ -43,7 +43,6 @@ class ShootingComponent
   void arrow_control(float x_pos, float y_pos);
 
  private:
-
   float calcAngle(float x, float y);
   float speed = 350.0f;
   float range = 300.0f;

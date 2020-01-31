@@ -18,8 +18,8 @@ ShootingComponent::ShootingComponent(ASGE::Renderer* renderer, bool use_arrow)
   if (use_arrow)
   {
     addSpriteComponent(renderer, "/data/aiming_arrow.png");
-    sprite_component->getSprite()->xPos(test);
-    sprite_component->getSprite()->yPos(test);
+    sprite_component->getSprite()->xPos(0);
+    sprite_component->getSprite()->yPos(0);
     sprite_component->getSprite()->width(150);
     sprite_component->getSprite()->height(10);
   }
