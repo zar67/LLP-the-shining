@@ -23,7 +23,7 @@ void Player::init(ASGE::Renderer* renderer,
   }
   if (!weapon_component)
   {
-    addWeaponComponent();
+    addWeaponComponent(renderer, true);
   }
   if (!collision_component)
   {
@@ -73,6 +73,8 @@ bool Player::update(AudioManager* audio,
   {
     weaponComponent()->maintainProjectiles(
       audio, delta_time, std::move(enemies), damage);
+    weaponComponent()->arrow_control(spriteComponent()->getSprite()->xPos(),
+                                     spriteComponent()->getSprite()->yPos());
   }
 
   return health <= 0;
@@ -139,13 +141,13 @@ void Player::setMovementVec(const float* vec)
   }
 }
 
-bool Player::addWeaponComponent()
+bool Player::addWeaponComponent(ASGE::Renderer* renderer, bool use_arrow)
 {
   if (weapon_component)
   {
     delete (weapon_component);
   }
-  weapon_component = new ShootingComponent();
+  weapon_component = new ShootingComponent(renderer, use_arrow);
 
   return true;
 }

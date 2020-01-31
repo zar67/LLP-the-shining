@@ -30,7 +30,7 @@ bool Demon::setup(ASGE::Renderer* renderer, float x_pos, float y_pos)
   speed = 80;
 
   addCollisionComponent();
-  addWeaponComponent();
+  addWeaponComponent(renderer);
   if (addSpriteComponent(renderer, "data/Characters/Demon.png"))
   {
     spriteComponent()->getSprite()->xPos(x_pos);
@@ -127,13 +127,13 @@ void Demon::render(ASGE::Renderer* renderer)
  *   @brief   Adds a new shooting component
  *   @return  True if setup correctly
  */
-bool Demon::addWeaponComponent()
+bool Demon::addWeaponComponent(ASGE::Renderer* renderer, bool use_arrow)
 {
   if (weapon_component)
   {
     delete (weapon_component);
   }
-  weapon_component = new ShootingComponent();
+  weapon_component = new ShootingComponent(renderer, use_arrow);
 
   return true;
 }

@@ -5,13 +5,24 @@
 #include "ShootingComponent.h"
 #include "../SceneObjects/Enemies/Enemy.h"
 
+#include <iostream>
+
 /**
  *   @brief   Constructor
  */
-ShootingComponent::ShootingComponent()
+ShootingComponent::ShootingComponent(ASGE::Renderer* renderer, bool use_arrow)
 {
   move_direction.reserve(2);
   setMoveDirection(0, -1);
+
+  if (use_arrow)
+  {
+    addSpriteComponent(renderer, "/data/aiming_arrow.png");
+    sprite_component->getSprite()->xPos(test);
+    sprite_component->getSprite()->yPos(test);
+    sprite_component->getSprite()->width(96);
+    sprite_component->getSprite()->height(10);
+  }
 }
 
 /**
@@ -29,6 +40,9 @@ void ShootingComponent::Fire(ASGE::Renderer* renderer,
   bullet->spriteComponent()->getSprite()->width(size);
   bullet->spriteComponent()->getSprite()->height(size);
   projectiles.push_back(bullet);
+
+  x_shoot = x_dir;
+  y_shoot = y_dir;
 }
 
 /**
@@ -144,6 +158,10 @@ void ShootingComponent::render(ASGE::Renderer* renderer)
       renderer->renderSprite(*sprite);
     }
   }
+  if (spriteComponent())
+  {
+    renderer->renderSprite(*spriteComponent()->getSprite());
+  }
 }
 
 /**
@@ -173,4 +191,56 @@ void ShootingComponent::reset()
     itr++;
   }
   projectiles.clear();
+}
+
+bool ShootingComponent::addSpriteComponent(ASGE::Renderer* renderer,
+                                           const std::string& texture_location)
+{
+  if (sprite_component)
+  {
+    delete (sprite_component);
+  }
+  sprite_component = new SpriteComponent();
+
+  if (sprite_component->loadSpriteComponent(renderer, texture_location))
+  {
+    return true;
+  }
+
+  delete (sprite_component);
+  sprite_component = nullptr;
+  return false;
+}
+
+SpriteComponent* ShootingComponent::spriteComponent()
+{
+  return sprite_component;
+}
+
+void ShootingComponent::arrow_control(const float x_pos, const float y_pos)
+{
+  sprite_component->getSprite()->xPos(
+    x_pos - 20.0f); // +
+                    // sprite_component->getSprite()->width()
+                    // / 4.0f);
+  sprite_component->getSprite()->yPos(y_pos + 30.0f);
+  calcAngle(x_shoot, y_shoot);
+}
+
+float ShootingComponent::calcAngle(float x, float y)
+{
+  float value = atan(y / x);
+  if (x < 0.0)
+  {
+    value = atan(x / y) * -2.0f;
+  }
+  if (x == -1)
+  {
+    value = atan(y / x) + 3.1f;
+  }
+
+  float radians = value;
+  std::cout << radians << std::endl;
+  spriteComponent()->getSprite()->rotationInRadians(radians);
+  return radians;
 }
