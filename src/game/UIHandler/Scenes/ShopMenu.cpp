@@ -3,8 +3,11 @@
 //
 
 #include "ShopMenu.h"
-#include <iostream>
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 ShopMenu::~ShopMenu()
 {
   delete shop_title;
@@ -29,6 +32,14 @@ ShopMenu::~ShopMenu()
   open_main_menu = nullptr;
 }
 
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if setup correctly
+ */
 bool ShopMenu::init(ASGE::Renderer* renderer,
                     float game_width,
                     float game_height)
@@ -36,10 +47,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shop_title = renderer->createRawSprite();
   if (!setupSprite(*shop_title,
                    "data/UI/ShopTitle.png",
-                   game_width / 2 - 200,
-                   38,
-                   400,
-                   100))
+                   game_width / 2 - 300,
+                   57,
+                   600,
+                   150))
   {
     return false;
   }
@@ -47,10 +58,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   damage_powerup = renderer->createRawSprite();
   if (!setupSprite(*damage_powerup,
                    "data/UI/Shop/DamagePowerup.png",
-                   42,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   63,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -58,10 +69,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   health_powerup = renderer->createRawSprite();
   if (!setupSprite(*health_powerup,
                    "data/UI/Shop/HealthPowerup.png",
-                   172,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   258,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -69,10 +80,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   move_speed_powerup = renderer->createRawSprite();
   if (!setupSprite(*move_speed_powerup,
                    "data/UI/Shop/MoveSpeedPowerup.png",
-                   302,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   453,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -80,10 +91,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shot_size_powerup = renderer->createRawSprite();
   if (!setupSprite(*shot_size_powerup,
                    "data/UI/Shop/ShotSizePowerup.png",
-                   432,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   648,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -91,10 +102,10 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   shot_speed_powerup = renderer->createRawSprite();
   if (!setupSprite(*shot_speed_powerup,
                    "data/UI/Shop/ShotSpeedPowerup.png",
-                   562,
-                   game_height / 2 - 50,
-                   100,
-                   130))
+                   843,
+                   game_height / 2 - 75,
+                   150,
+                   195))
   {
     return false;
   }
@@ -102,12 +113,17 @@ bool ShopMenu::init(ASGE::Renderer* renderer,
   open_main_menu = renderer->createRawSprite();
   return setupSprite(*open_main_menu,
                      "data/UI/MenuButtons/MenuButton.png",
-                     game_width / 2 - 60,
-                     game_height - 50,
-                     120,
-                     30);
+                     game_width / 2 - 90,
+                     game_height - 100,
+                     180,
+                     45);
 }
 
+/**
+ *   @brief   Updates the opacity of the buttons in the scene
+ *   @param   point The cursor position
+ *   @return  The MenuItem the cursor is hovering over
+ */
 ShopMenu::MenuItem ShopMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
@@ -140,9 +156,17 @@ ShopMenu::MenuItem ShopMenu::update(Point2D point)
   return mouse_over;
 }
 
-void ShopMenu::render(ASGE::Renderer* renderer)
+/**
+ *   @brief   Renders the scene
+ *   @details Only renders the power ups if they haven't been bought yet
+ *   @param   renderer The ASGE renderer
+ *            coins The money the player has
+ */
+void ShopMenu::render(ASGE::Renderer* renderer, int coins)
 {
   renderer->renderSprite(*shop_title);
+  renderer->renderText(
+    "$" + std::to_string(coins), 10, 35, 1.5f, ASGE::COLOURS::GREY);
 
   if (render_damage)
   {
@@ -168,31 +192,51 @@ void ShopMenu::render(ASGE::Renderer* renderer)
   renderer->renderSprite(*open_main_menu);
 }
 
+/**
+ *   @brief   Stop damage power up being shown
+ */
 void ShopMenu::disableDamage()
 {
   render_damage = false;
 }
 
+/**
+ *   @brief   Stop health power up being shown
+ */
 void ShopMenu::disableHealth()
 {
   render_health = false;
 }
 
+/**
+ *   @brief   Stop move speed power up being shown
+ */
 void ShopMenu::disableMoveSpeed()
 {
   render_move_speed = false;
 }
 
+/**
+ *   @brief   Stop shot size power up being shown
+ */
 void ShopMenu::disableShotSize()
 {
   render_shot_size = false;
 }
 
+/**
+ *   @brief   Stop shot speed power up being shown
+ */
 void ShopMenu::disableShotSpeed()
 {
   render_shot_speed = false;
 }
 
+/**
+ *   @brief   Gets the menu item the cursor is hovering over
+ *   @param   point The position of the cursor
+ *   @return  The menu item
+ */
 ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
 {
   if (isInside(open_main_menu, point))
@@ -228,6 +272,9 @@ ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
+/**
+ *   @brief   Resets the opacity of all the buttons
+ */
 void ShopMenu::resetOpacity()
 {
   damage_powerup->opacity(0.5f);

@@ -27,9 +27,6 @@ MyASGEGame::~MyASGEGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
 
-  this->inputs->unregisterCallback(
-    static_cast<unsigned int>(mouse_callback_id));
-
   scene_handler.disableInputs(inputs.get());
 }
 
@@ -56,9 +53,6 @@ bool MyASGEGame::init()
   key_callback_id =
     inputs->addCallbackFnc(ASGE::E_KEY, &MyASGEGame::keyHandler, this);
 
-  mouse_callback_id = inputs->addCallbackFnc(
-    ASGE::E_MOUSE_CLICK, &MyASGEGame::clickHandler, this);
-
   renderer->setClearColour(ASGE::COLOURS::BLACK);
 
   if (!scene_handler.init(
@@ -67,15 +61,21 @@ bool MyASGEGame::init()
     return false;
   }
 
-  map.setupRoomCollision();
+  map.setupRoomCollision(game_width, game_height);
 
   std::string texture = "/data/Characters/Danny.png";
+
   player.init(renderer.get(),
               texture,
-              game_width / 2 - 17,
-              game_height / 2 - 24.5f,
+              game_width / 2.0f - 17,
+              game_height / 2.0f - 24.5f/*,
               34.0f,
-              49.0f);
+              49.0f*/);
+
+  if (!audio_manager.audioSetUp())
+  {
+    return false;
+  }
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -97,8 +97,8 @@ void MyASGEGame::setupResolution()
   // https://www.gamasutra.com/blogs/KenanBolukbasi/20171002/306822/
   // Scaling_and_MultiResolution_in_2D_Games.php
 
-  game_width = 704;
-  game_height = 448;
+  game_width = 1056;
+  game_height = 672;
 }
 
 /**
@@ -111,7 +111,7 @@ void MyASGEGame::setupResolution()
  *   @see     KeyEvent
  *   @return  void
  */
-void MyASGEGame::keyHandler(ASGE::SharedEventData data)
+void MyASGEGame::keyHandler(const ASGE::SharedEventData& data)
 {
   auto key = static_cast<const ASGE::KeyEvent*>(data.get());
 
@@ -127,46 +127,54 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
         key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveVertical(1.0f);
+      last_shoot_dir[1] = 1;
     }
     else if (key->key == ASGE::KEYS::KEY_UP &&
              key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveVertical(-1.0f);
+      last_shoot_dir[1] = -1;
     }
     else if ((key->key == ASGE::KEYS::KEY_DOWN ||
               key->key == ASGE::KEYS::KEY_UP) &&
              key->action == ASGE::KEYS::KEY_RELEASED)
     {
       player.moveVertical(0.0f);
+      last_shoot_dir[1] = 0;
     }
+
     // Horizontal movement
     if (key->key == ASGE::KEYS::KEY_RIGHT &&
         key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveHorizontal(1.0f);
+      last_shoot_dir[0] = 1;
     }
     else if (key->key == ASGE::KEYS::KEY_LEFT &&
              key->action == ASGE::KEYS::KEY_PRESSED)
     {
       player.moveHorizontal(-1.0f);
+      last_shoot_dir[0] = -1;
     }
     else if ((key->key == ASGE::KEYS::KEY_LEFT ||
               key->key == ASGE::KEYS::KEY_RIGHT) &&
              key->action == ASGE::KEYS::KEY_RELEASED)
     {
       player.moveHorizontal(0.0f);
+      last_shoot_dir[0] = 0;
     }
 
     if (key->key == ASGE::KEYS::KEY_SPACE &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
+        key->action == ASGE::KEYS::KEY_PRESSED &&
+        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
     {
-      // fire bullet using players vector
-      player.weaponComponent()->Fire(
-        renderer.get(),
-        player.spriteComponent()->getSprite()->xPos() +
-          player.spriteComponent()->getSprite()->width() / 2,
-        player.spriteComponent()->getSprite()->yPos() +
-          player.spriteComponent()->getSprite()->height() / 2);
+      // Fire Using Shoot Vector
+      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+      player.weaponComponent()->Fire(renderer.get(),
+                                     sprite->xPos() + sprite->width() / 2,
+                                     sprite->yPos() + sprite->height() / 2,
+                                     last_shoot_dir[0],
+                                     last_shoot_dir[1]);
     }
   }
 
@@ -176,6 +184,10 @@ void MyASGEGame::keyHandler(ASGE::SharedEventData data)
   }
 }
 
+/**
+ *   @brief   Handles controller input if one is connected
+ *   @param   input The ASGE inputs
+ */
 void MyASGEGame::playerControllerInput(ASGE::Input* input)
 {
   if (input->getGamePad(0).is_connected)
@@ -209,18 +221,46 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
       player.moveVertical(0.0f);
     }
 
-    if (!shoot_pressed && data.buttons[0])
+    if (data.axis[2] > 0.2f)
     {
-      shoot_pressed = true;
-      player.weaponComponent()->Fire(
-        renderer.get(),
-        player.spriteComponent()->getSprite()->xPos() +
-          player.spriteComponent()->getSprite()->width() / 2,
-        player.spriteComponent()->getSprite()->yPos() +
-          player.spriteComponent()->getSprite()->height() / 2);
+      last_shoot_dir[0] = 1;
+    }
+    else if (data.axis[2] < -0.2f)
+    {
+      last_shoot_dir[0] = -1;
+    }
+    else
+    {
+      last_shoot_dir[0] = 0;
     }
 
-    if (!data.buttons[0])
+    if (data.axis[3] > 0.2f)
+    {
+      last_shoot_dir[1] = -1;
+    }
+    else if (data.axis[3] < -0.2f)
+    {
+      last_shoot_dir[1] = 1;
+    }
+    else
+    {
+      last_shoot_dir[1] = 0;
+    }
+
+    if (!shoot_pressed && data.buttons[5] > 0.5f &&
+        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
+    {
+      shoot_pressed = true;
+      // Fire Using Shoot Vector
+      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+      player.weaponComponent()->Fire(renderer.get(),
+                                     sprite->xPos() + sprite->width() / 2,
+                                     sprite->yPos() + sprite->height() / 2,
+                                     last_shoot_dir[0],
+                                     last_shoot_dir[1]);
+    }
+
+    if (!data.buttons[5])
     {
       shoot_pressed = false;
     }
@@ -232,28 +272,11 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
 }
 
 /**
- *   @brief   Processes any click inputs
- *   @details This function is added as a callback to handle the game's
- *            mouse button input. For this game, calls to this function
- *            are thread safe, so you may alter the game's state as you
- *            see fit.
- *   @param   data The event data relating to key input.
- *   @see     ClickEvent
- *   @return  void
+ *   @brief   Resets all the values of the game
  */
-void MyASGEGame::clickHandler(ASGE::SharedEventData data)
-{
-  auto click = static_cast<const ASGE::ClickEvent*>(data.get());
-
-  double x_pos = click->xpos;
-  double y_pos = click->ypos;
-
-  ASGE::DebugPrinter() << x_pos << std::endl;
-  ASGE::DebugPrinter() << y_pos << std::endl;
-}
-
 void MyASGEGame::resetGame()
 {
+  floor = 1;
   map.generateRooms(renderer.get(), game_width, game_height);
   player.reset(game_width, game_height);
 }
@@ -285,30 +308,35 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         if (player.addDamagePowerup())
         {
           scene_handler.hideDamagePowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_HEALTH_POWERUP:
         if (player.addHealthPowerup())
         {
           scene_handler.hideHealthPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_MOVE_SPEED_POWERUP:
         if (player.addMoveSpeedPowerup())
         {
           scene_handler.hideMoveSpeedPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SIZE_POWERUP:
         if (player.addShotSizePowerup())
         {
           scene_handler.hideShotSizePowerup();
+          audio_manager.playPowerUp();
         }
         break;
       case SceneManager::ReturnValue::BUY_SHOT_SPEED_POWERUP:
         if (player.addShotSpeedPowerup())
         {
           scene_handler.hideShotSpeedPowerup();
+          audio_manager.playPowerUp();
         }
         break;
       default:
@@ -318,15 +346,38 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
   else // In Game
   {
     playerControllerInput(inputs.get());
-    if (player.update(delta_time, map.getCurrentRoom()->getEnemies()))
+    if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
     {
       scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
     }
+    if (map.axePsycho()->inRoom())
+    {
+      map.axePsycho()->update(delta_time,
+                              player.spriteComponent()->getSprite()->xPos(),
+                              player.spriteComponent()->getSprite()->yPos());
+    }
+
     map.handlePlayerCollision(&player);
 
-    std::vector<GameObject*> colliders = map.getEnemies();
+    std::vector<GameObject*> colliders = map.getEnemies(true);
     map.handleObjectCollision(colliders);
-    map.updateCurrentRoom(renderer.get(), delta_time, &player);
+
+    if (map.updateCurrentRoom(renderer.get(),
+                              &audio_manager,
+                              delta_time,
+                              &player,
+                              game_width,
+                              game_height))
+    {
+      // Descend Floor
+      floor += 1;
+      map.generateRooms(renderer.get(), game_width, game_height);
+
+      if (floor == MAX_FLOOR)
+      {
+        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+      }
+    }
   }
 }
 

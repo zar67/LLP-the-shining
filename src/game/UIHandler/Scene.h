@@ -25,13 +25,13 @@ class Scene
   virtual void render(ASGE::Renderer* renderer){};
 
  protected:
-  bool setupSprite(ASGE::Sprite& sprite,
-                   std::string texture,
-                   float x_pos,
-                   float y_pos,
-                   float width,
-                   float height);
-  bool isInside(ASGE::Sprite* btn, Point2D point);
+  static bool setupSprite(ASGE::Sprite& sprite,
+                          const std::string& texture,
+                          float x_pos,
+                          float y_pos,
+                          float width,
+                          float height);
+  static bool isInside(ASGE::Sprite* btn, Point2D point);
   virtual void resetOpacity(){};
 };
 

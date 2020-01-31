@@ -7,12 +7,20 @@
 #include <Engine/InputEvents.h>
 #include <Engine/Mouse.h>
 
+/**
+ *   @brief   Destructor
+ *   @details Free the cursor memory
+ */
 SceneManager::~SceneManager()
 {
   delete cursor;
   cursor = nullptr;
 }
 
+/**
+ *   @brief   Sets up the callback functions for the mouse and click handler
+ *   @param   input The ASGE input class
+ */
 void SceneManager::enableInputs(ASGE::Input* input)
 {
   if (input)
@@ -27,6 +35,10 @@ void SceneManager::enableInputs(ASGE::Input* input)
   }
 }
 
+/**
+ *   @brief   Unregisters the callback functions for the mouse and click handler
+ *   @param   input The ASGE input class
+ */
 void SceneManager::disableInputs(ASGE::Input* input)
 {
   if (input)
@@ -37,6 +49,15 @@ void SceneManager::disableInputs(ASGE::Input* input)
   }
 }
 
+/**
+ *   @brief   Sets up the scene manager
+ *   @details Enables input and sets up the scenes
+ *   @param   input The ASGE input class
+ *            renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *            game_height The height of the game screen
+ *   @return  True if setup correctly
+ */
 bool SceneManager::init(ASGE::Input* input,
                         ASGE::Renderer* renderer,
                         float game_width,
@@ -61,12 +82,12 @@ bool SceneManager::init(ASGE::Input* input,
 
   cursor_pos = { cursor->xPos(), cursor->yPos() };
 
-  if (!main_menu.init(renderer, game_width, game_height))
+  if (!main_menu.init(renderer, game_width))
   {
     return false;
   }
 
-  if (!game_scene.init(renderer, game_width, game_height))
+  if (!game_scene.init(renderer, game_height))
   {
     return false;
   }
@@ -76,9 +97,15 @@ bool SceneManager::init(ASGE::Input* input,
     return false;
   }
 
-  return game_over_menu.init(renderer, game_width, game_height);
+  return game_over_menu.init(renderer, game_width);
 }
 
+/**
+ *   @brief   Updates the main menu
+ *   @details Updates the ui elements and determines which button has been
+ * pressed
+ *   @return  A value for the game to determine what to do next
+ */
 SceneManager::ReturnValue SceneManager::updateMainMenu()
 {
   ReturnValue return_value = ReturnValue::NONE;
@@ -106,6 +133,12 @@ SceneManager::ReturnValue SceneManager::updateMainMenu()
   return return_value;
 }
 
+/**
+ *   @brief   Updates the shop
+ *   @details Updates the ui elements and determines which button has been
+ * pressed
+ *   @return  A value for the game to determine what to do next
+ */
 SceneManager::ReturnValue SceneManager::updateShop()
 {
   ReturnValue return_value = ReturnValue::NONE;
@@ -141,6 +174,12 @@ SceneManager::ReturnValue SceneManager::updateShop()
   return return_value;
 }
 
+/**
+ *   @brief   Updates the game over screen
+ *   @details Updates the ui elements and determines which button has been
+ * pressed
+ *   @return  A value for the game to determine what to do next
+ */
 SceneManager::ReturnValue SceneManager::updateGameOver()
 {
   ReturnValue return_value = ReturnValue::NONE;
@@ -171,6 +210,10 @@ SceneManager::ReturnValue SceneManager::updateGameOver()
   return return_value;
 }
 
+/**
+ *   @brief   Updates the open scene
+ *   @return  A value for the game to determine what to do next
+ */
 SceneManager::ReturnValue
 SceneManager::update(double delta_time, ASGE::Input* input)
 {
@@ -196,6 +239,14 @@ SceneManager::update(double delta_time, ASGE::Input* input)
   return return_value;
 }
 
+/**
+ *   @brief   Renders the open scene
+ *   @param   renderer The ASGE renderer
+ *            floor The current floor the player is on
+ *            coins The number of coins the player has
+ *            health The players health
+ *            abilities The abilities of the player
+ */
 void SceneManager::render(
   ASGE::Renderer* renderer, int floor, int coins, int health, bool* abilities)
 {
@@ -205,7 +256,7 @@ void SceneManager::render(
   }
   else if (screen_open == ScreenOpen::SHOP)
   {
-    shop_menu.render(renderer);
+    shop_menu.render(renderer, coins);
   }
   else if (screen_open == ScreenOpen::GAME)
   {
@@ -223,47 +274,72 @@ void SceneManager::render(
   }
 }
 
-SceneManager::ScreenOpen SceneManager::screenOpen()
-{
-  return screen_open;
-}
-
+/**
+ *   @brief   Sets what screen is currently open
+ *   @param   screen The new screen to open
+ */
 void SceneManager::screenOpen(SceneManager::ScreenOpen screen)
 {
   screen_open = screen;
 }
 
+/**
+ *   @brief   Determines if in a menu
+ *   @return  True if in menu
+ *            False if in game
+ */
 bool SceneManager::inMenu()
 {
   return screen_open != ScreenOpen::GAME;
 }
 
+/**
+ *   @brief   Hides the damage power up from the shop
+ */
 void SceneManager::hideDamagePowerup()
 {
   shop_menu.disableDamage();
 }
 
+/**
+ *   @brief   Hides the health power up from the shop
+ */
 void SceneManager::hideHealthPowerup()
 {
   shop_menu.disableHealth();
 }
 
+/**
+ *   @brief   Hides the move speed power up from the shop
+ */
 void SceneManager::hideMoveSpeedPowerup()
 {
   shop_menu.disableMoveSpeed();
 }
 
+/**
+ *   @brief   Hides the shot size power up from the shop
+ */
 void SceneManager::hideShotSizePowerup()
 {
   shop_menu.disableShotSize();
 }
 
+/**
+ *   @brief   Hides the shot speed power up from the shop
+ */
 void SceneManager::hideShotSpeedPowerup()
 {
   shop_menu.disableShotSpeed();
 }
 
-void SceneManager::mouseHandler(ASGE::SharedEventData data)
+/**
+ *   @brief   Handles movement of the mouse
+ *   @details Updates the cursor position when the mouse is moved. Only works if
+ * a controller is not connected
+ *   @param   data The event data relating to mouse input.
+ */
+void SceneManager::mouseHandler(const ASGE::SharedEventData& data)
 {
   if (!controller_connected)
   {
@@ -275,7 +351,13 @@ void SceneManager::mouseHandler(ASGE::SharedEventData data)
   }
 }
 
-void SceneManager::clickHandler(ASGE::SharedEventData data)
+/**
+ *   @brief   Handles any mouse clicks
+ *   @details Updates the cursor position and updates the selected_pressed when
+ * the left mouse button is clicked. Only works if a controller is not connected
+ *   @param   data The event data relating to mouse input.
+ */
+void SceneManager::clickHandler(const ASGE::SharedEventData& data)
 {
   if (!controller_connected)
   {
@@ -289,6 +371,12 @@ void SceneManager::clickHandler(ASGE::SharedEventData data)
   }
 }
 
+/**
+ *   @brief   Handles any inputs from the controller
+ *   @details Gets the input from the left analog stick and A button and updates
+ * the cursor and selected_pressed variables
+ *   @param   input The ASGE inputs
+ */
 void SceneManager::controllerHandler(double delta_time, ASGE::Input* input)
 {
   if (input->getGamePad(0).is_connected)

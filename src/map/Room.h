@@ -5,9 +5,14 @@
 #ifndef PROJECT_ROOM_H
 #define PROJECT_ROOM_H
 
+#include "../game/Components/AudioManager.h"
+#include "../game/SceneObjects/Enemies/AxePsycho.h"
 #include "../game/SceneObjects/Enemies/Demon.h"
 #include "../game/SceneObjects/Enemies/Ghost.h"
 #include "../game/SceneObjects/GameObject.h"
+#include "../game/SceneObjects/InteractableObjects.h"
+#include "../game/SceneObjects/Item.h"
+
 #include <string>
 #include <vector>
 
@@ -43,19 +48,36 @@ class Room : public GameObject
 
   bool canMove();
   void canMove(bool movement);
+  bool found();
+  void found(bool found);
 
   void renderObjectsInRoom(ASGE::Renderer* renderer);
-  void updateObjectsInRoom(ASGE::Renderer* renderer,
+  bool updateObjectsInRoom(ASGE::Renderer* renderer,
+                           AudioManager* audio,
                            double delta_time,
-                           Player* player);
+                           Player* player,
+                           int game_width,
+                           int game_height);
 
   void addDemonToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
   void addGhostToRoom(ASGE::Renderer* renderer, float x_pos, float y_pos);
 
-  std::vector<GameObject*> getEnemies();
+  std::vector<InteractableObjects*> getObjectsInRoom();
+  std::vector<GameObject*> getEnemies(bool include_objects);
   void checkEnemyHealth();
 
+  void addItemToRoom(ASGE::Renderer* renderer,
+                     std::string filename,
+                     Item::GameItems item_type,
+                     float x_pos,
+                     float y_pos);
+  void addItemToRoom(Item* new_item);
+
+  bool axeManPresent(AxePsycho* axe_man, int game_width, int game_height);
+
  private:
+  void chanceForItem(ASGE::Renderer* renderer, ASGE::Sprite* sprite);
+
   int ID = -1;
   RoomType type = NORMAL;
   bool north = false;
@@ -63,12 +85,15 @@ class Room : public GameObject
   bool south = false;
   bool west = false;
   bool movement_enabled = true;
+  bool revealed = false;
 
-  // zoe remeber to delete the eneimes when you change room/ memory leak other
   // wise
   std::vector<Demon*> demons;
   std::vector<Ghost*> ghosts;
-  // std::vector<Item> items;
+
+  // objects in the room
+  std::vector<InteractableObjects*> interactable_objs;
+  std::vector<Item*> items;
 };
 
 #endif // PROJECT_ROOM_H

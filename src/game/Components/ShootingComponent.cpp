@@ -5,31 +5,39 @@
 #include "ShootingComponent.h"
 #include "../SceneObjects/Enemies/Enemy.h"
 
+/**
+ *   @brief   Constructor
+ */
 ShootingComponent::ShootingComponent()
 {
   move_direction.reserve(2);
   setMoveDirection(0, -1);
 }
 
+/**
+ *   @brief   Fires a projectile
+ *   @details Creates a new projectile and sets it up
+ */
 void ShootingComponent::Fire(ASGE::Renderer* renderer,
                              float start_x,
-                             float start_y)
+                             float start_y,
+                             float x_dir,
+                             float y_dir)
 {
   auto bullet = new Projectile();
-  bullet->setup(renderer,
-                speed,
-                range,
-                start_x,
-                start_y,
-                move_direction[0],
-                move_direction[1]);
+  bullet->setup(renderer, speed, range, start_x, start_y, x_dir, y_dir);
   bullet->spriteComponent()->getSprite()->width(size);
   bullet->spriteComponent()->getSprite()->height(size);
   projectiles.push_back(bullet);
 }
 
-// detect collision for game objects
-void ShootingComponent::maintainProjectiles(double delta_time,
+/**
+ *   @brief   Updates projectiles
+ *   @details Calculates collision for the projectiles in the component and
+ * damages enemy if hit
+ */
+void ShootingComponent::maintainProjectiles(AudioManager* audio,
+                                            double delta_time,
                                             std::vector<GameObject*> colliders,
                                             int damage)
 {
@@ -44,32 +52,37 @@ void ShootingComponent::maintainProjectiles(double delta_time,
       projectiles.erase(itr);
       continue;
     }
-    for (auto& col : colliders)
+    else
     {
-      col->updateCollisionComponent();
-      if (bullet->collisionComponent()->hasCollided(*col->collisionComponent()))
+      for (auto& col : colliders)
       {
-        // collision
-        delete (bullet);
-        bullet = nullptr;
-        projectiles.erase(itr);
-        try
+        col->updateCollisionComponent();
+        if (bullet->collisionComponent()->hasCollided(
+              *col->collisionComponent()))
         {
-          Enemy* enemy = static_cast<Enemy*>(col);
-          enemy->takeDamage(damage);
-        }
-        catch (const std::exception&)
-        {
+          // collision
+          delete (bullet);
+          bullet = nullptr;
+          projectiles.erase(itr);
+          auto* enemy = static_cast<Enemy*>(col);
+          enemy->takeDamage(audio, damage);
           break;
         }
-        break;
       }
     }
     itr++;
   }
 }
 
-bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
+/**
+ *   @brief   Updates projectiles
+ *   @details Caclaulates collision for projectiles on the component and damages
+ * player if hit
+ */
+bool ShootingComponent::hitPlayer(
+  double delta_time,
+  GameObject* collider,
+  std::vector<InteractableObjects*> scene_objects)
 {
   auto itr = projectiles.begin();
   for (auto& bullet : projectiles)
@@ -93,6 +106,16 @@ bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
       projectiles.erase(itr);
       return true;
     }
+    for (auto& obj : scene_objects)
+    {
+      if (bullet->collisionComponent()->hasCollided(*obj->collisionComponent()))
+      {
+        delete (bullet);
+        bullet = nullptr;
+        projectiles.erase(itr);
+        return false;
+      }
+    }
 
     itr++;
   }
@@ -100,20 +123,32 @@ bool ShootingComponent::hitPlayer(double delta_time, GameObject* collider)
   return false;
 }
 
+/**
+ *   @brief   Sets the projectile speed
+ */
 void ShootingComponent::setSpeed(float value)
 {
   speed = value;
 }
 
+/**
+ *   @brief   Renders all projectiles
+ */
 void ShootingComponent::render(ASGE::Renderer* renderer)
 {
   for (auto& bullet : projectiles)
   {
     ASGE::Sprite* sprite = bullet->spriteComponent()->getSprite();
-    renderer->renderSprite(*sprite);
+    if (sprite)
+    {
+      renderer->renderSprite(*sprite);
+    }
   }
 }
 
+/**
+ *   @brief   Sets the move direction of the projectiles
+ */
 void ShootingComponent::setMoveDirection(float x_dir, float y_dir)
 {
   move_direction.clear();
@@ -121,6 +156,9 @@ void ShootingComponent::setMoveDirection(float x_dir, float y_dir)
   move_direction.push_back(y_dir);
 }
 
+/**
+ *   @brief   Set the size of the projectile sprite
+ */
 void ShootingComponent::setSize(float value)
 {
   size = value;

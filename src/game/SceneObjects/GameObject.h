@@ -10,16 +10,14 @@
 #include "../Components/CollisionComponent.h"
 #include "../Components/SpriteComponent.h"
 
-//#include "../Components/WeaponComponent.h"
-
 class GameObject
 {
  public:
   GameObject() = default;
   ~GameObject();
 
-  bool
-  addSpriteComponent(ASGE::Renderer* renderer, std::string texture_location);
+  bool addSpriteComponent(ASGE::Renderer* renderer,
+                          const std::string& texture_location);
   SpriteComponent* spriteComponent();
 
   void addCollisionComponent();
@@ -27,9 +25,10 @@ class GameObject
 
   void updateCollisionComponent();
   void move(double delta_time, float x_dir, float y_dir, float speed);
-  std::vector<float>
+  static std::vector<float>
   getDirectionFromTo(float from_x, float from_y, float to_x, float to_y);
-  float getDistanceBetween(float from_x, float from_y, float to_x, float to_y);
+  static float
+  getDistanceBetween(float from_x, float from_y, float to_x, float to_y);
 
  protected:
   SpriteComponent* sprite_component = nullptr;

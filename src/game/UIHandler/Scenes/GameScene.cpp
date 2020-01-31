@@ -5,6 +5,10 @@
 #include "GameScene.h"
 #include <iostream>
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 GameScene::~GameScene()
 {
   delete health_bar;
@@ -29,13 +33,18 @@ GameScene::~GameScene()
   shot_speed_powerup_icon = nullptr;
 }
 
-bool GameScene::init(ASGE::Renderer* renderer,
-                     float game_width,
-                     float game_height)
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_height The height of the game screen
+ *   @return  True if setup correctly
+ */
+bool GameScene::init(ASGE::Renderer* renderer, float game_height)
 {
   health_bar = renderer->createRawSprite();
   if (!setupSprite(
-        *health_bar, "data/UI/HealthBar.png", 10, game_height - 80, 100, 20))
+        *health_bar, "data/UI/HealthBar.png", 10, game_height - 120, 150, 30))
   {
     return false;
   }
@@ -44,9 +53,9 @@ bool GameScene::init(ASGE::Renderer* renderer,
   if (!setupSprite(*health_bar_background,
                    "data/UI/HealthBarBackground.png",
                    10,
-                   game_height - 80,
-                   100,
-                   20))
+                   game_height - 120,
+                   150,
+                   30))
   {
     return false;
   }
@@ -55,9 +64,9 @@ bool GameScene::init(ASGE::Renderer* renderer,
   if (!setupSprite(*damage_powerup_icon,
                    "data/UI/Power Up Icons/DamageIcon.png",
                    10,
-                   game_height - 50,
-                   40,
-                   40))
+                   game_height - 75,
+                   60,
+                   60))
   {
     return false;
   }
@@ -65,10 +74,10 @@ bool GameScene::init(ASGE::Renderer* renderer,
   health_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*health_powerup_icon,
                    "data/UI/Power Up Icons/HealthIcon.png",
+                   80,
+                   game_height - 75,
                    60,
-                   game_height - 50,
-                   40,
-                   40))
+                   60))
   {
     return false;
   }
@@ -76,10 +85,10 @@ bool GameScene::init(ASGE::Renderer* renderer,
   move_speed_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*move_speed_powerup_icon,
                    "data/UI/Power Up Icons/MoveSpeedIcon.png",
-                   110,
-                   game_height - 50,
-                   40,
-                   40))
+                   150,
+                   game_height - 75,
+                   60,
+                   60))
   {
     return false;
   }
@@ -87,10 +96,10 @@ bool GameScene::init(ASGE::Renderer* renderer,
   shot_size_powerup_icon = renderer->createRawSprite();
   if (!setupSprite(*shot_size_powerup_icon,
                    "data/UI/Power Up Icons/ShotSizeIcon.png",
-                   160,
-                   game_height - 50,
-                   40,
-                   40))
+                   220,
+                   game_height - 75,
+                   60,
+                   60))
   {
     return false;
   }
@@ -98,20 +107,38 @@ bool GameScene::init(ASGE::Renderer* renderer,
   shot_speed_powerup_icon = renderer->createRawSprite();
   return setupSprite(*shot_speed_powerup_icon,
                      "data/UI/Power Up Icons/ShotSpeedIcon.png",
-                     210,
-                     game_height - 50,
-                     40,
-                     40);
+                     290,
+                     game_height - 75,
+                     60,
+                     60);
 }
 
-void GameScene::render(
-  ASGE::Renderer* renderer, int floor, int coins, int health, bool* abilities)
+/**
+ *   @brief   Renders the scene
+ *   @param   renderer The ASGE renderer
+ *            floor The floort the player is on
+ *            coins The money the player has
+ *            health The player's health
+ *            abilities The abilities the player has
+ */
+void GameScene::render(ASGE::Renderer* renderer,
+                       int floor,
+                       int coins,
+                       int health,
+                       const bool* abilities)
 {
-  renderer->renderText("Floor " + std::to_string(floor), 10, 20);
-  renderer->renderText("$" + std::to_string(coins), 10, 50);
+  renderer->renderText(
+    "Floor " + std::to_string(floor), 10, 30, 1.5f, ASGE::COLOURS::GREY);
+  renderer->renderText(
+    "$" + std::to_string(coins), 10, 65, 1.5f, ASGE::COLOURS::GREY);
+
+  if (abilities[1])
+  {
+    health_bar_background->width(300);
+  }
 
   renderer->renderSprite(*health_bar_background);
-  health_bar->width(health);
+  health_bar->width(health * 1.5f);
   renderer->renderSprite(*health_bar);
 
   // Abilities

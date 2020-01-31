@@ -1,5 +1,7 @@
 #pragma once
 #include "../map/Map.h"
+#include "Components/AudioManager.h"
+#include "SceneObjects/Enemies/AxePsycho.h"
 #include "SceneObjects/Enemies/Demon.h"
 #include "SceneObjects/Player.h"
 #include "UIHandler/SceneManager.h"
@@ -7,8 +9,6 @@
 #include <Engine/OGLGame.h>
 #include <string>
 #include <vector>
-
-const int MAX_FLOOR = 3;
 
 /**
  *  An OpenGL Game based on ASGE.
@@ -21,9 +21,8 @@ class MyASGEGame : public ASGE::OGLGame
   bool init() override;
 
  private:
-  void keyHandler(ASGE::SharedEventData data);
+  void keyHandler(const ASGE::SharedEventData& data);
   void playerControllerInput(ASGE::Input* input);
-  void clickHandler(ASGE::SharedEventData data);
   void setupResolution();
 
   void resetGame();
@@ -31,13 +30,16 @@ class MyASGEGame : public ASGE::OGLGame
   void render(const ASGE::GameTime&) override;
 
   SceneManager scene_handler;
+  AudioManager audio_manager;
   Map map = Map();
   Player player = Player();
 
-  bool controller_connected = false;
-  bool shoot_pressed = true;
+  const int MAX_FLOOR = 4;
   int floor = 0;
 
-  int key_callback_id = -1;   /**< Key Input Callback ID. */
-  int mouse_callback_id = -1; /**< Mouse Input Callback ID. */
+  float last_shoot_dir[2] = { 0, 0 };
+  bool controller_connected = false;
+  bool shoot_pressed = true;
+
+  int key_callback_id = -1; /**< Key Input Callback ID. */
 };

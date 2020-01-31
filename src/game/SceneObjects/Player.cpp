@@ -4,6 +4,7 @@
 
 #include "Player.h"
 #include <iostream>
+#include <utility>
 
 Player::~Player()
 {
@@ -14,9 +15,7 @@ Player::~Player()
 void Player::init(ASGE::Renderer* renderer,
                   std::string& tex_directory,
                   float x_pos,
-                  float y_pos,
-                  float width,
-                  float height)
+                  float y_pos)
 {
   if (!spriteComponent())
   {
@@ -32,8 +31,6 @@ void Player::init(ASGE::Renderer* renderer,
   }
   sprite_component->getSprite()->xPos(x_pos);
   sprite_component->getSprite()->yPos(y_pos);
-  sprite_component->getSprite()->width(width);
-  sprite_component->getSprite()->height(height);
 }
 
 void Player::reset(float game_width, float game_height)
@@ -60,7 +57,9 @@ void Player::reset(float game_width, float game_height)
  * move the player depending on which keys are pressed
  */
 
-bool Player::update(double delta_time, std::vector<GameObject*> enemies)
+bool Player::update(AudioManager* audio,
+                    double delta_time,
+                    std::vector<GameObject*> enemies)
 {
   if (sprite_component)
   {
@@ -70,27 +69,37 @@ bool Player::update(double delta_time, std::vector<GameObject*> enemies)
   // bullet movement
   if (weapon_component)
   {
-    weaponComponent()->maintainProjectiles(delta_time, enemies, damage);
+    weaponComponent()->maintainProjectiles(
+      audio, delta_time, std::move(enemies), damage);
   }
 
   return health <= 0;
 }
 
-void Player::Movement(float x_pos, float y_pos)
+void Player::addHealth(int amount)
 {
-  if (!spriteComponent())
+  if (powerups[health_powerup_index])
   {
-    // show error
-    return;
+    if (health + amount > starting_health * 2)
+    {
+      health = starting_health * 2;
+    }
+    else
+    {
+      health += amount;
+    }
   }
-
-  ASGE::Sprite* sprite = spriteComponent()->getSprite();
-
-  float new_x = x_pos + sprite->xPos() * speed;
-  float new_y = y_pos + sprite->yPos() * speed;
-
-  sprite->xPos(new_x);
-  sprite->yPos(new_y);
+  else
+  {
+    if (health + amount > starting_health)
+    {
+      health = starting_health;
+    }
+    else
+    {
+      health += amount;
+    }
+  }
 }
 
 void Player::takeDamage(int hit_damage)
@@ -120,17 +129,12 @@ void Player::moveHorizontal(float move)
   }
 }
 
-void Player::setMovementVec(float* vec)
+void Player::setMovementVec(const float* vec)
 {
   for (int i = 0; i < 2; ++i)
   {
     vector_movement[i] = vec[i];
   }
-}
-
-float* Player::getDirectionVector()
-{
-  return vector_movement;
 }
 
 bool Player::addWeaponComponent()
@@ -176,6 +180,7 @@ bool Player::addMoveSpeedPowerup()
   if (addPowerup(move_speed_powerup_index))
   {
     speed = starting_speed * 2;
+    powerups[shot_speed_powerup_index] = true;
     return true;
   }
 

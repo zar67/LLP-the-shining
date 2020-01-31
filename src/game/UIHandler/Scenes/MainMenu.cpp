@@ -4,6 +4,10 @@
 
 #include "MainMenu.h"
 
+/**
+ *   @brief   Destructor
+ *   @details Frees up the memory of the sprites
+ */
 MainMenu::~MainMenu()
 {
   delete menu_title;
@@ -17,19 +21,30 @@ MainMenu::~MainMenu()
 
   delete exit_game;
   exit_game = nullptr;
+
+  delete keyboard_image;
+  keyboard_image = nullptr;
+
+  delete controller_image;
+  controller_image = nullptr;
 }
 
-bool MainMenu::init(ASGE::Renderer* renderer,
-                    float game_width,
-                    float game_height)
+/**
+ *   @brief   Sets up the scene
+ *   @details Sets up the sprites in the scene
+ *   @param   renderer The ASGE renderer
+ *            game_width The width of the game screen
+ *   @return  True if setup correctly
+ */
+bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
 {
   menu_title = renderer->createRawSprite();
   if (!setupSprite(*menu_title,
                    "data/UI/MenuTitle.png",
-                   game_width / 2 - 200,
-                   38,
-                   400,
-                   100))
+                   game_width / 2 - 300,
+                   57,
+                   600,
+                   150))
   {
     return false;
   }
@@ -37,10 +52,10 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   start_game = renderer->createRawSprite();
   if (!setupSprite(*start_game,
                    "data/UI/MenuButtons/StartButton.png",
-                   game_width / 2 - 60,
-                   175,
-                   120,
-                   30))
+                   game_width / 2 - 90,
+                   262,
+                   180,
+                   45))
   {
     return false;
   }
@@ -48,23 +63,50 @@ bool MainMenu::init(ASGE::Renderer* renderer,
   open_shop = renderer->createRawSprite();
   if (!setupSprite(*open_shop,
                    "data/UI/MenuButtons/ShopButton.png",
-                   game_width / 2 - 60,
-                   225,
-                   120,
-                   30))
+                   game_width / 2 - 90,
+                   337,
+                   180,
+                   45))
   {
     return false;
   }
 
   exit_game = renderer->createRawSprite();
-  return setupSprite(*exit_game,
-                     "data/UI/MenuButtons/ExitButton.png",
-                     game_width / 2 - 60,
-                     275,
-                     120,
-                     30);
+  if (!setupSprite(*exit_game,
+                   "data/UI/MenuButtons/ExitButton.png",
+                   game_width / 2 - 90,
+                   412,
+                   180,
+                   45))
+  {
+    return false;
+  }
+
+  keyboard_image = renderer->createRawSprite();
+  if (!setupSprite(*keyboard_image,
+                   "data/UI/keyboard.png",
+                   game_width / 4 - 41.5,
+                   262,
+                   83,
+                   70))
+  {
+    return false;
+  }
+
+  controller_image = renderer->createRawSprite();
+  return setupSprite(*controller_image,
+                     "data/UI/controller.png",
+                     (game_width / 4) * 3 - 48,
+                     262,
+                     96,
+                     70);
 }
 
+/**
+ *   @brief   Updates the opacity of the buttons in the scene
+ *   @param   point The cursor position
+ *   @return  The MenuItem the cursor is hovering over
+ */
 MainMenu::MenuItem MainMenu::update(Point2D point)
 {
   MenuItem mouse_over = menuItem(point);
@@ -88,14 +130,37 @@ MainMenu::MenuItem MainMenu::update(Point2D point)
   return mouse_over;
 }
 
+/**
+ *   @brief   Renders the scene
+ *   @param   renderer The ASGE renderer
+ */
 void MainMenu::render(ASGE::Renderer* renderer)
 {
   renderer->renderSprite(*menu_title);
   renderer->renderSprite(*start_game);
   renderer->renderSprite(*open_shop);
   renderer->renderSprite(*exit_game);
+  renderer->renderSprite(*keyboard_image);
+  renderer->renderSprite(*controller_image);
+
+  renderer->renderText("Move: Arrow Keys \nShoot: Space",
+                       keyboard_image->xPos() - 40,
+                       370,
+                       1.0f,
+                       ASGE::COLOURS::GREY);
+  renderer->renderText("Move: Left Analog \nShoot Direction: Right Analog "
+                       "\nShoot: Right Bumper",
+                       controller_image->xPos() - 60,
+                       370,
+                       1.0f,
+                       ASGE::COLOURS::GREY);
 }
 
+/**
+ *   @brief   Gets the menu item the cursor is hovering over
+ *   @param   point The position of the cursor
+ *   @return  The menu item
+ */
 MainMenu::MenuItem MainMenu::menuItem(Point2D point)
 {
   if (isInside(start_game, point))
@@ -114,6 +179,9 @@ MainMenu::MenuItem MainMenu::menuItem(Point2D point)
   return MenuItem::NONE;
 }
 
+/**
+ *   @brief   Resets the opacity of all the buttons
+ */
 void MainMenu::resetOpacity()
 {
   start_game->opacity(0.5f);

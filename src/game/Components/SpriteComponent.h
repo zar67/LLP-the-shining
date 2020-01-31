@@ -15,8 +15,8 @@ class SpriteComponent
   SpriteComponent() = default;
   ~SpriteComponent();
 
-  bool
-  loadSpriteComponent(ASGE::Renderer* renderer, std::string texture_location);
+  bool loadSpriteComponent(ASGE::Renderer* renderer,
+                           const std::string& texture_location);
   ASGE::Sprite* getSprite();
 
  private:

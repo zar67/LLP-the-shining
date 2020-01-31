@@ -22,8 +22,7 @@ class MainMenu : public Scene
   MainMenu() = default;
   ~MainMenu();
 
-  bool
-  init(ASGE::Renderer* renderer, float game_width, float game_height) override;
+  bool init(ASGE::Renderer* renderer, float game_width);
   MenuItem update(Point2D point);
   void render(ASGE::Renderer* renderer) override;
 
@@ -36,6 +35,8 @@ class MainMenu : public Scene
   ASGE::Sprite* start_game = nullptr;
   ASGE::Sprite* open_shop = nullptr;
   ASGE::Sprite* exit_game = nullptr;
+  ASGE::Sprite* keyboard_image = nullptr;
+  ASGE::Sprite* controller_image = nullptr;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_MAINMENU_H

@@ -4,10 +4,11 @@
 
 #include "CollisionComponent.h"
 
-#include <iostream>
-#include <string>
-/*
- * pass in the objects colliderc_componenet so you can check collision status
+/**
+ *   @brief   Calculates if this component has collided with an other
+ *   @details Uses AABB collision
+ *   @param   collided The other collider to check for collision with
+ *   @return  True if collided
  */
 bool CollisionComponent::hasCollided(const CollisionComponent& collided)
 {
@@ -26,6 +27,13 @@ bool CollisionComponent::hasCollided(const CollisionComponent& collided)
               collided_box[1] + collided_box[3]);
 }
 
+/**
+ *   @brief   Calculates which side the collision is on
+ *   @details Finds the side of the collided component that the collision has
+ * occured on
+ *   @param   collided The bounding box to find the side of
+ *   @return  SIDE_NONE, SIDE_LEFT, SIDE_RIGHT, SIDE_TOP, SIDE_BOTTOM
+ */
 CollisionComponent::CollisionSide
 CollisionComponent::getCollisionSide(const CollisionComponent& collided)
 {
@@ -64,18 +72,11 @@ CollisionComponent::getCollisionSide(const CollisionComponent& collided)
   return CollisionSide::SIDE_NONE;
 }
 
-void CollisionComponent::setIsTrigger(bool value)
-{
-  is_trigger = value;
-}
-
-bool CollisionComponent::getIsTrigger()
-{
-  return is_trigger;
-}
-
-/*
- * each time checking collision update collision bounding box
+/**
+ *   @brief   Update the position of the bounding box
+ *   @details Every time collision is checked update the bounding box to the
+ * position of the sprite
+ *   @param   rect The values to update to
  */
 void CollisionComponent::updateBoundingBox(const float rect[4])
 {
@@ -85,7 +86,11 @@ void CollisionComponent::updateBoundingBox(const float rect[4])
   }
 }
 
-void const CollisionComponent::getBoundingBox(float (&out_rect)[4]) const
+/**
+ *   @brief   Gets the bounding box of the component
+ *   @param   out_rect The array to update the values of
+ */
+void CollisionComponent::getBoundingBox(float (&out_rect)[4]) const
 {
   for (int i = 0; i < BOX_SIZE; ++i)
   {

@@ -3,7 +3,6 @@
 //
 
 #ifndef THE_SHINING_GAME_GROUP_3_GAMEOVER_H
-#  define THE_SHINING_GAME_GROUP_3_GAMEOVERMENU_H
 
 #  include "../Scene.h"
 
@@ -23,8 +22,7 @@ class GameOverMenu : public Scene
   GameOverMenu() = default;
   ~GameOverMenu();
 
-  bool
-  init(ASGE::Renderer* renderer, float game_width, float game_height) override;
+  bool init(ASGE::Renderer* renderer, float game_width);
   MenuItem update(Point2D point);
   void render(ASGE::Renderer* renderer, bool game_won);
 

@@ -3,7 +3,7 @@
 //
 
 #include "GameObject.h"
-#include <math.h>
+#include <cmath>
 
 GameObject::~GameObject()
 {
@@ -25,7 +25,7 @@ GameObject::~GameObject()
  * catch boolean value when called to prevent crash
  */
 bool GameObject::addSpriteComponent(ASGE::Renderer* renderer,
-                                    std::string texture_location)
+                                    const std::string& texture_location)
 {
   if (sprite_component)
   {
@@ -118,5 +118,5 @@ float GameObject::getDistanceBetween(float from_x,
   float x_dir = to_x - from_x;
   float y_dir = to_y - from_y;
 
-  return sqrt((x_dir * x_dir) + (y_dir * y_dir));
+  return std::sqrt((x_dir * x_dir) + (y_dir * y_dir));
 }
