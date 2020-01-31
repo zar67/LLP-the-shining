@@ -216,57 +216,11 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
     controller_connected = true;
     ASGE::GamePadData data = input->getGamePad(0);
 
-    if (data.axis[0] < -0.2f)
-    {
-      player.moveHorizontal(-1.0f);
-    }
-    else if (data.axis[0] > 0.2f)
-    {
-      player.moveHorizontal(1.0f);
-    }
-    else
-    {
-      player.moveHorizontal(0.0f);
-    }
+    player.moveHorizontal(data.axis[0]);
+    player.moveVertical(-data.axis[1]);
 
-    if (data.axis[1] < -0.2f)
-    {
-      player.moveVertical(1.0f);
-    }
-    else if (data.axis[1] > 0.2f)
-    {
-      player.moveVertical(-1.0f);
-    }
-    else
-    {
-      player.moveVertical(0.0f);
-    }
-
-    if (data.axis[2] > 0.2f)
-    {
-      last_shoot_dir[0] = 1;
-    }
-    else if (data.axis[2] < -0.2f)
-    {
-      last_shoot_dir[0] = -1;
-    }
-    else
-    {
-      last_shoot_dir[0] = 0;
-    }
-
-    if (data.axis[3] > 0.2f)
-    {
-      last_shoot_dir[1] = -1;
-    }
-    else if (data.axis[3] < -0.2f)
-    {
-      last_shoot_dir[1] = 1;
-    }
-    else
-    {
-      last_shoot_dir[1] = 0;
-    }
+    last_shoot_dir[0] = data.axis[2];
+    last_shoot_dir[1] = -data.axis[3];
 
     if (!shoot_pressed && data.buttons[5] > 0.5f &&
         !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))

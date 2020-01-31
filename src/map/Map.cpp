@@ -552,30 +552,32 @@ void Map::setupMinimap(ASGE::Renderer* renderer,
   // For Each Valid Room, Setup Mini Map Room With a Sprite Component
   for (int i = 0; i < map_size * map_size; i++)
   {
-    if (getRoom(i)->getId() != -1)
+    if (getRoom(i)->getId() == -1)
     {
-      std::string file = "data/MiniMap/";
-      file += getRoom(i)->getNorth() ? "N" : "_";
-      file += getRoom(i)->getEast() ? "E" : "_";
-      file += getRoom(i)->getSouth() ? "S" : "_";
-      file += getRoom(i)->getWest() ? "W" : "_";
-      file += ".png";
+      continue;
+    }
 
-      auto* new_room = new GameObject();
-      mini_map.push_back(new_room);
-      mini_map_ids.push_back(getRoom(i)->getId());
+    std::string file = "data/MiniMap/";
+    file += getRoom(i)->getNorth() ? "N" : "_";
+    file += getRoom(i)->getEast() ? "E" : "_";
+    file += getRoom(i)->getSouth() ? "S" : "_";
+    file += getRoom(i)->getWest() ? "W" : "_";
+    file += ".png";
 
-      if (mini_map.at(count)->addSpriteComponent(renderer, file))
-      {
-        int column = i % map_size;
-        int row = (i - column) / map_size;
+    auto* new_room = new GameObject();
+    mini_map.push_back(new_room);
+    mini_map_ids.push_back(getRoom(i)->getId());
 
-        mini_map.at(count)->spriteComponent()->getSprite()->xPos(
-          game_width - (30 * map_size) + (column * 30));
-        mini_map.at(count)->spriteComponent()->getSprite()->yPos(
-          game_height - (30 * map_size) + (row * 30));
-        count += 1;
-      }
+    if (mini_map.at(count)->addSpriteComponent(renderer, file))
+    {
+      int column = i % map_size;
+      int row = (i - column) / map_size;
+
+      mini_map.at(count)->spriteComponent()->getSprite()->xPos(
+        game_width - (30 * map_size) + (column * 30));
+      mini_map.at(count)->spriteComponent()->getSprite()->yPos(
+        game_height - (30 * map_size) + (row * 30));
+      count += 1;
     }
   }
 
@@ -796,28 +798,30 @@ void Map::generateEnemies(ASGE::Renderer* renderer,
 {
   for (int i = 0; i < map_size * map_size; i++)
   {
-    if (getRoom(i)->getId() != -1 && getRoom(i)->getId() != STARTING_ROOM &&
-        getRoom(i)->getType() == Room::NORMAL)
+    if (getRoom(i)->getId() == -1 || getRoom(i)->getId() == STARTING_ROOM ||
+        getRoom(i)->getId() != Room::NORMAL)
     {
-      // Generate Demons
-      int demon_num = rand() % 2 + 1;
-      for (int x = 0; x < demon_num; x++)
-      {
-        float rand_x = rand() % (game_width - 204) + 102;
-        float rand_y = rand() % (game_height - 236) + 118;
+      continue;
+    }
 
-        getRoom(i)->addDemonToRoom(renderer, rand_x, rand_y);
-      }
+    // Generate Demons
+    int demon_num = rand() % 2 + 1;
+    for (int x = 0; x < demon_num; x++)
+    {
+      float rand_x = rand() % (game_width - 204) + 102;
+      float rand_y = rand() % (game_height - 236) + 118;
 
-      // Generate Ghosts
-      int ghost_num = rand() % 2;
-      for (int x = 0; x < ghost_num; x++)
-      {
-        float rand_x = rand() % (game_width - 204) + 102;
-        float rand_y = rand() % (game_height - 236) + 118;
+      getRoom(i)->addDemonToRoom(renderer, rand_x, rand_y);
+    }
 
-        getRoom(i)->addGhostToRoom(renderer, rand_x, rand_y);
-      }
+    // Generate Ghosts
+    int ghost_num = rand() % 2;
+    for (int x = 0; x < ghost_num; x++)
+    {
+      float rand_x = rand() % (game_width - 204) + 102;
+      float rand_y = rand() % (game_height - 236) + 118;
+
+      getRoom(i)->addGhostToRoom(renderer, rand_x, rand_y);
     }
   }
 }
