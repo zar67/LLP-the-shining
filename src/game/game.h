@@ -22,6 +22,8 @@ class MyASGEGame : public ASGE::OGLGame
 
  private:
   void keyHandler(const ASGE::SharedEventData& data);
+  void playerMovement(const ASGE::SharedEventData& data);
+  void playerShooting(const ASGE::SharedEventData& data);
   void playerControllerInput(ASGE::Input* input);
   void setupResolution();
 
@@ -35,8 +37,8 @@ class MyASGEGame : public ASGE::OGLGame
   Map map = Map();
   Player player = Player();
 
-  const int MAX_FLOOR = 4;
-  int floor = 0;
+  bool game_paused = false;
+  int floor = 3;
 
   float last_shoot_dir[2] = { 0, 0 };
   bool controller_connected = false;

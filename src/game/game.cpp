@@ -68,9 +68,7 @@ bool MyASGEGame::init()
   player.init(renderer.get(),
               texture,
               game_width / 2.0f - 17,
-              game_height / 2.0f - 24.5f/*,
-              34.0f,
-              49.0f*/);
+              game_height / 2.0f - 24.5f);
 
   if (!audio_manager.audioSetUp())
   {
@@ -122,65 +120,86 @@ void MyASGEGame::keyHandler(const ASGE::SharedEventData& data)
 
   if (!controller_connected)
   {
-    // vertical movement
-    if (key->key == ASGE::KEYS::KEY_DOWN &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveVertical(1.0f);
-      last_shoot_dir[1] = 1;
-    }
-    else if (key->key == ASGE::KEYS::KEY_UP &&
-             key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveVertical(-1.0f);
-      last_shoot_dir[1] = -1;
-    }
-    else if ((key->key == ASGE::KEYS::KEY_DOWN ||
-              key->key == ASGE::KEYS::KEY_UP) &&
-             key->action == ASGE::KEYS::KEY_RELEASED)
-    {
-      player.moveVertical(0.0f);
-      last_shoot_dir[1] = 0;
-    }
-
-    // Horizontal movement
-    if (key->key == ASGE::KEYS::KEY_RIGHT &&
-        key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveHorizontal(1.0f);
-      last_shoot_dir[0] = 1;
-    }
-    else if (key->key == ASGE::KEYS::KEY_LEFT &&
-             key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      player.moveHorizontal(-1.0f);
-      last_shoot_dir[0] = -1;
-    }
-    else if ((key->key == ASGE::KEYS::KEY_LEFT ||
-              key->key == ASGE::KEYS::KEY_RIGHT) &&
-             key->action == ASGE::KEYS::KEY_RELEASED)
-    {
-      player.moveHorizontal(0.0f);
-      last_shoot_dir[0] = 0;
-    }
-
-    if (key->key == ASGE::KEYS::KEY_SPACE &&
-        key->action == ASGE::KEYS::KEY_PRESSED &&
-        !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
-    {
-      // Fire Using Shoot Vector
-      ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
-      player.weaponComponent()->Fire(renderer.get(),
-                                     sprite->xPos() + sprite->width() / 2,
-                                     sprite->yPos() + sprite->height() / 2,
-                                     last_shoot_dir[0],
-                                     last_shoot_dir[1]);
-    }
+    playerMovement(data);
+    playerShooting(data);
   }
 
   if (key->key == ASGE::KEYS::KEY_H && key->action == ASGE::KEYS::KEY_RELEASED)
   {
     scene_handler.screenOpen(SceneManager::ScreenOpen::MAIN_MENU);
+  }
+}
+
+/**
+ *   @brief   Detects key press for player movement
+ *   @param   data The event data relating to key input
+ */
+void MyASGEGame::playerMovement(const ASGE::SharedEventData& data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  // vertical movement
+  if (key->key == ASGE::KEYS::KEY_DOWN &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveVertical(1.0f);
+    last_shoot_dir[1] = 1;
+  }
+  else if (key->key == ASGE::KEYS::KEY_UP &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveVertical(-1.0f);
+    last_shoot_dir[1] = -1;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_DOWN ||
+            key->key == ASGE::KEYS::KEY_UP) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    player.moveVertical(0.0f);
+    last_shoot_dir[1] = 0;
+  }
+
+  // Horizontal movement
+  if (key->key == ASGE::KEYS::KEY_RIGHT &&
+      key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveHorizontal(1.0f);
+    last_shoot_dir[0] = 1;
+  }
+  else if (key->key == ASGE::KEYS::KEY_LEFT &&
+           key->action == ASGE::KEYS::KEY_PRESSED)
+  {
+    player.moveHorizontal(-1.0f);
+    last_shoot_dir[0] = -1;
+  }
+  else if ((key->key == ASGE::KEYS::KEY_LEFT ||
+            key->key == ASGE::KEYS::KEY_RIGHT) &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
+  {
+    player.moveHorizontal(0.0f);
+    last_shoot_dir[0] = 0;
+  }
+}
+
+/**
+ *   @brief   Detects key press for player shooting
+ *   @param   data The event data relating to key input
+ */
+void MyASGEGame::playerShooting(const ASGE::SharedEventData& data)
+{
+  auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+
+  if (key->key == ASGE::KEYS::KEY_SPACE &&
+      key->action == ASGE::KEYS::KEY_PRESSED &&
+      !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
+  {
+    // Fire Using Shoot Vector
+    ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
+    player.weaponComponent()->Fire(renderer.get(),
+                                   sprite->xPos() + sprite->width() / 2,
+                                   sprite->yPos() + sprite->height() / 2,
+                                   last_shoot_dir[0],
+                                   last_shoot_dir[1]);
   }
 }
 
@@ -195,52 +214,29 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
     controller_connected = true;
     ASGE::GamePadData data = input->getGamePad(0);
 
-    if (data.axis[0] < -0.2f)
-    {
-      player.moveHorizontal(-1.0f);
-    }
-    else if (data.axis[0] > 0.2f)
-    {
-      player.moveHorizontal(1.0f);
-    }
-    else
-    {
-      player.moveHorizontal(0.0f);
-    }
+    player.moveHorizontal(data.axis[0]);
+    player.moveVertical(-data.axis[1]);
 
-    if (data.axis[1] < -0.2f)
-    {
-      player.moveVertical(1.0f);
-    }
-    else if (data.axis[1] > 0.2f)
-    {
-      player.moveVertical(-1.0f);
-    }
-    else
-    {
-      player.moveVertical(0.0f);
-    }
-
-    if (data.axis[2] > 0.2f)
-    {
-      last_shoot_dir[0] = 1;
-    }
-    else if (data.axis[2] < -0.2f)
+    if (data.axis[2] < -0.2f)
     {
       last_shoot_dir[0] = -1;
+    }
+    else if (data.axis[2] > 0.2f)
+    {
+      last_shoot_dir[0] = 1;
     }
     else
     {
       last_shoot_dir[0] = 0;
     }
 
-    if (data.axis[3] > 0.2f)
-    {
-      last_shoot_dir[1] = -1;
-    }
-    else if (data.axis[3] < -0.2f)
+    if (data.axis[3] < -0.2f)
     {
       last_shoot_dir[1] = 1;
+    }
+    else if (data.axis[3] > 0.2f)
+    {
+      last_shoot_dir[1] = -1;
     }
     else
     {
@@ -276,7 +272,7 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
  */
 void MyASGEGame::resetGame()
 {
-  floor = 1;
+  floor = 3;
   map.generateRooms(renderer.get(), game_width, game_height);
   player.reset(game_width, game_height);
 }
@@ -343,39 +339,47 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         break;
     }
   }
-  else // In Game
+  else
   {
-    playerControllerInput(inputs.get());
-    if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
+    if (game_paused && scene_handler.updateGameSplashScreen(delta_time))
     {
-      scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+      game_paused = false;
     }
-    if (map.axePsycho()->inRoom())
+    else if (!game_paused)
     {
-      map.axePsycho()->update(delta_time,
-                              player.spriteComponent()->getSprite()->xPos(),
-                              player.spriteComponent()->getSprite()->yPos());
-    }
-
-    map.handlePlayerCollision(&player);
-
-    std::vector<GameObject*> colliders = map.getEnemies(true);
-    map.handleObjectCollision(colliders);
-
-    if (map.updateCurrentRoom(renderer.get(),
-                              &audio_manager,
-                              delta_time,
-                              &player,
-                              game_width,
-                              game_height))
-    {
-      // Descend Floor
-      floor += 1;
-      map.generateRooms(renderer.get(), game_width, game_height);
-
-      if (floor == MAX_FLOOR)
+      playerControllerInput(inputs.get());
+      if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
       {
-        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+      }
+      if (map.axePsycho()->inRoom())
+      {
+        map.axePsycho()->update(delta_time,
+                                player.spriteComponent()->getSprite()->xPos(),
+                                player.spriteComponent()->getSprite()->yPos());
+      }
+      map.handlePlayerCollision(&player);
+
+      std::vector<GameObject*> colliders = map.getEnemies(true);
+      map.handleObjectCollision(colliders);
+
+      if (map.updateCurrentRoom(renderer.get(),
+                                &audio_manager,
+                                delta_time,
+                                &player,
+                                game_width,
+                                game_height))
+      {
+        // Descend Floor
+        floor -= 1;
+        map.generateRooms(renderer.get(), game_width, game_height);
+        game_paused = true;
+        scene_handler.openGameSplashScreen();
+
+        if (floor == 0)
+        {
+          scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+        }
       }
     }
   }

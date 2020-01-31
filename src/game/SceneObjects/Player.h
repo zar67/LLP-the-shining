@@ -51,9 +51,9 @@ class Player : public GameObject
   bool addPowerup(int index);
 
   const int starting_health = 100;
-  const float starting_speed = 150;
+  const float starting_speed = 250;
   const int starting_damage = 20;
-  const float starting_shot_speed = 250;
+  const float starting_shot_speed = 400;
   const float starting_shot_size = 8;
 
   int coins = 0;
@@ -63,7 +63,7 @@ class Player : public GameObject
   float input_vector[2] = { 0.0f, 0.0f };
   float vector_movement[2] = { 0.0f, 0.0f };
 
-  bool powerups[5] = { false, false, false, false, false };
+  bool powerups[5] = { true, true, true, true, true };
   ShootingComponent* weapon_component = nullptr;
 
   const int damage_powerup_index = 0;

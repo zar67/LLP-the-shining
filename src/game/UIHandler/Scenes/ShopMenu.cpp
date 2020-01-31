@@ -243,28 +243,23 @@ ShopMenu::MenuItem ShopMenu::menuItem(Point2D point)
   {
     return MenuItem::OPEN_MAIN_MENU;
   }
-
-  if (isInside(damage_powerup, point) && render_damage)
+  else if (isInside(damage_powerup, point) && render_damage)
   {
     return MenuItem::DAMAGE_POWERUP;
   }
-
-  if (isInside(health_powerup, point) && render_health)
+  else if (isInside(health_powerup, point) && render_health)
   {
     return MenuItem::HEALTH_POWERUP;
   }
-
-  if (isInside(move_speed_powerup, point) && render_move_speed)
+  else if (isInside(move_speed_powerup, point) && render_move_speed)
   {
     return MenuItem::MOVE_SPEED_POWERUP;
   }
-
-  if (isInside(shot_size_powerup, point) && render_shot_size)
+  else if (isInside(shot_size_powerup, point) && render_shot_size)
   {
     return MenuItem::SHOT_SIZE_POWERUP;
   }
-
-  if (isInside(shot_speed_powerup, point) && render_shot_speed)
+  else if (isInside(shot_speed_powerup, point) && render_shot_speed)
   {
     return MenuItem::SHOT_SPEED_POWERUP;
   }

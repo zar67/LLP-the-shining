@@ -42,11 +42,11 @@ void Player::reset(float game_width, float game_height)
                                           : starting_health;
   damage = powerups[damage_powerup_index] ? starting_damage * 2
                                           : starting_damage;
-  speed = powerups[move_speed_powerup_index] ? starting_speed * 2
+  speed = powerups[move_speed_powerup_index] ? starting_speed * 1.5f
                                              : starting_speed;
 
   weapon_component->setSpeed(powerups[shot_speed_powerup_index]
-                               ? starting_shot_speed * 2
+                               ? starting_shot_speed * 1.5f
                                : starting_shot_speed);
   weapon_component->setSize(powerups[shot_size_powerup_index]
                               ? starting_shot_size * 2
