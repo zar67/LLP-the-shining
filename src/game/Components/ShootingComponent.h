@@ -41,7 +41,6 @@ class ShootingComponent
   SpriteComponent* spriteComponent();
 
   void arrow_control(float x_pos, float y_pos);
-
   void hasShot(bool value);
   bool hasShot();
 
