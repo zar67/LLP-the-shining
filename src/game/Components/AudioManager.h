@@ -18,18 +18,23 @@ class AudioManager
 
   bool audioSetUp();
 
+  void replayGameMusic(double deltaTime);
+  void playGameMusic();
+
   void playAxeMan();
   void playBox();
   void playCoin();
-  void playDemon();
-  void playGhost();
   void playDownAFloor();
   void playHeart();
   void playHit();
-  void playMaybe();
   void playPowerUp();
 
+  float time = 0;
+
  private:
+  ASGE::FILEIO::File gameMusic;
+  SoLoud::Wav gameMusic_MP3;
+
   ASGE::FILEIO::File axe_Man;
   SoLoud::Wav axe_Man_MP3;
 
@@ -39,12 +44,6 @@ class AudioManager
   ASGE::FILEIO::File Coin;
   SoLoud::Wav Coin_MP3;
 
-  ASGE::FILEIO::File Demon;
-  SoLoud::Wav Demon_MP3;
-
-  ASGE::FILEIO::File Ghost;
-  SoLoud::Wav Ghost_MP3;
-
   ASGE::FILEIO::File DownAFLoor;
   SoLoud::Wav DownAFLoor_MP3;
 
@@ -53,9 +52,6 @@ class AudioManager
 
   ASGE::FILEIO::File HitHurt;
   SoLoud::Wav HitHurt_MP3;
-
-  ASGE::FILEIO::File Maybe;
-  SoLoud::Wav Maybe_MP3;
 
   ASGE::FILEIO::File PowerUp;
   SoLoud::Wav PowerUp_MP3;

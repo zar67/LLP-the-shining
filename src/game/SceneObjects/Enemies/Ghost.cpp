@@ -73,20 +73,9 @@ void Ghost::update(double delta_time,
     spriteComponent()->getSprite()->yPos(y_pos);
   }
   // Random update
-  // Move Object Randomly
-  if (!obj_grabbed)
+  if (obj_grabbed)
   {
-    obj_grabbed = grabClosestObject(objects);
-    getMoveToDoor(doors, door_pos, game_width, game_height);
-    if (obj_grabbed)
-    {
-      obj_grabbed->spriteComponent()->getSprite()->colour(
-        ASGE::COLOURS::GREENYELLOW);
-    }
-  }
-  // move object to block door
-  else
-  {
+    // Move Object to Block Door
     if (getDistanceBetween(obj_grabbed->spriteComponent()->getSprite()->xPos(),
                            obj_grabbed->spriteComponent()->getSprite()->yPos(),
                            door_pos[0],
@@ -105,6 +94,17 @@ void Ghost::update(double delta_time,
       obj_grabbed->setIsGrabbed(false);
       obj_grabbed->spriteComponent()->getSprite()->colour(ASGE::COLOURS::BROWN);
       obj_grabbed = nullptr;
+    }
+  }
+  else
+  {
+    // Grab Object
+    obj_grabbed = grabClosestObject(objects);
+    getMoveToDoor(doors, door_pos, game_width, game_height);
+    if (obj_grabbed)
+    {
+      obj_grabbed->spriteComponent()->getSprite()->colour(
+        ASGE::COLOURS::GREENYELLOW);
     }
   }
 }

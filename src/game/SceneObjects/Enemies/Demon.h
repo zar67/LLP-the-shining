@@ -23,7 +23,7 @@ class Demon : public Enemy
               std::vector<InteractableObjects*> scene_objects);
   void render(ASGE::Renderer* renderer) override;
 
-  bool addWeaponComponent();
+  bool addWeaponComponent(ASGE::Renderer* renderer, bool use_arrow = false);
   ShootingComponent* weaponComponent();
 
  private:

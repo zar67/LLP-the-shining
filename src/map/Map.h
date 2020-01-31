@@ -48,11 +48,11 @@ class Map
  private:
   void
   generateItemRooms(ASGE::Renderer* renderer, int game_width, int game_height);
-  static void setupBoundingBox(CollisionComponent* component,
-                               float x_pos,
-                               float y_pos,
-                               float width,
-                               float height);
+  void setupBoundingBox(CollisionComponent* component,
+                        float x_pos,
+                        float y_pos,
+                        float width,
+                        float height);
   void checkNorthDoorCollision(Player* player);
   void checkEastDoorCollision(Player* player);
   void checkSouthDoorCollision(Player* player);
@@ -64,7 +64,7 @@ class Map
   std::string needEastDoor(int x_pos, int y_pos);
   std::string needSouthDoor(int x_pos, int y_pos);
   std::string needWestDoor(int x_pos, int y_pos);
-  static bool checkRoomName(std::string name, std::string required_doors);
+  bool checkRoomName(std::string name, std::string required_doors);
   bool roomChanged();
 
   const int STARTING_ROOM = 12;

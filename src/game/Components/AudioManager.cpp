@@ -26,6 +26,23 @@ bool AudioManager::audioSetUp()
     return false;
   }
 
+  if (gameMusic.open("/data/Audio/Game Music.mp3"))
+  {
+    auto io_buffer = gameMusic.read();
+    if (gameMusic_MP3.loadMem(io_buffer.as_unsigned_char(),
+                              static_cast<unsigned int>(io_buffer.length),
+                              false,
+                              false))
+    {
+      return true;
+    }
+    gameMusic.close();
+  }
+  else
+  {
+    return false;
+  }
+
   if (axe_Man.open("/data/Audio/Axe Man.mp3"))
   {
     auto io_buffer = axe_Man.read();
@@ -71,40 +88,6 @@ bool AudioManager::audioSetUp()
       return true;
     }
     Coin.close();
-  }
-  else
-  {
-    return false;
-  }
-
-  if (Demon.open("/data/Audio/Demon.mp3"))
-  {
-    auto io_buffer = Demon.read();
-    if (Demon_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Demon.close();
-  }
-  else
-  {
-    return false;
-  }
-
-  if (Ghost.open("/data/Audio/Ghost.mp3"))
-  {
-    auto io_buffer = Ghost.read();
-    if (Ghost_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Ghost.close();
   }
   else
   {
@@ -162,23 +145,6 @@ bool AudioManager::audioSetUp()
     return false;
   }
 
-  if (Maybe.open("/data/Audio/Maybe.mp3"))
-  {
-    auto io_buffer = Maybe.read();
-    if (Maybe_MP3.loadMem(io_buffer.as_unsigned_char(),
-                          static_cast<unsigned int>(io_buffer.length),
-                          false,
-                          false))
-    {
-      return true;
-    }
-    Maybe.close();
-  }
-  else
-  {
-    return false;
-  }
-
   if (PowerUp.open("/data/Audio/PowerUp.mp3"))
   {
     auto io_buffer = PowerUp.read();
@@ -198,6 +164,28 @@ bool AudioManager::audioSetUp()
 
   return true;
 }
+void AudioManager::playGameMusic()
+{
+  soloud.play(gameMusic_MP3);
+}
+
+void AudioManager::replayGameMusic(double deltaTime)
+{
+  if (time < 86)
+  {
+    time = time + deltaTime;
+  }
+  else if (time > 87)
+  {
+    soloud.play(gameMusic_MP3);
+    time = 0;
+  }
+
+  if (time >= 86)
+  {
+    time++;
+  }
+}
 
 void AudioManager::playAxeMan()
 {
@@ -215,16 +203,6 @@ void AudioManager::playBox()
 void AudioManager::playCoin()
 {
   soloud.play(Coin_MP3);
-}
-
-void AudioManager::playDemon()
-{
-  soloud.play(Demon_MP3);
-}
-
-void AudioManager::playGhost()
-{
-  soloud.play(Ghost_MP3);
 }
 
 /**
@@ -249,11 +227,6 @@ void AudioManager::playHeart()
 void AudioManager::playHit()
 {
   soloud.play(HitHurt_MP3);
-}
-
-void AudioManager::playMaybe()
-{
-  soloud.play(Maybe_MP3);
 }
 
 /**

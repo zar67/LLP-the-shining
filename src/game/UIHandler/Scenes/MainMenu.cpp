@@ -22,11 +22,8 @@ MainMenu::~MainMenu()
   delete exit_game;
   exit_game = nullptr;
 
-  delete keyboard_image;
-  keyboard_image = nullptr;
-
-  delete controller_image;
-  controller_image = nullptr;
+  delete splash_screen;
+  splash_screen = nullptr;
 }
 
 /**
@@ -36,7 +33,9 @@ MainMenu::~MainMenu()
  *            game_width The width of the game screen
  *   @return  True if setup correctly
  */
-bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
+bool MainMenu::init(ASGE::Renderer* renderer,
+                    float game_width,
+                    float game_height)
 {
   menu_title = renderer->createRawSprite();
   if (!setupSprite(*menu_title,
@@ -82,24 +81,9 @@ bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
     return false;
   }
 
-  keyboard_image = renderer->createRawSprite();
-  if (!setupSprite(*keyboard_image,
-                   "data/UI/keyboard.png",
-                   game_width / 4 - 41.5,
-                   262,
-                   83,
-                   70))
-  {
-    return false;
-  }
-
-  controller_image = renderer->createRawSprite();
-  return setupSprite(*controller_image,
-                     "data/UI/controller.png",
-                     (game_width / 4) * 3 - 48,
-                     262,
-                     96,
-                     70);
+  splash_screen = renderer->createRawSprite();
+  return setupSprite(
+    *splash_screen, "data/UI/SplashScreen.png", 0, 0, game_width, game_height);
 }
 
 /**
@@ -107,24 +91,38 @@ bool MainMenu::init(ASGE::Renderer* renderer, float game_width)
  *   @param   point The cursor position
  *   @return  The MenuItem the cursor is hovering over
  */
-MainMenu::MenuItem MainMenu::update(Point2D point)
+MainMenu::MenuItem MainMenu::update(float delta_time, Point2D point)
 {
-  MenuItem mouse_over = menuItem(point);
+  MenuItem mouse_over = MenuItem::NONE;
 
-  resetOpacity();
-  switch (mouse_over)
+  if (in_splash_screen)
   {
-    case MenuItem::START_GAME:
-      start_game->opacity(1.0f);
-      break;
-    case MenuItem::OPEN_SHOP:
-      open_shop->opacity(1.0f);
-      break;
-    case MenuItem::EXIT_GAME:
-      exit_game->opacity(1.0f);
-      break;
-    default:
-      break;
+    splash_screen_timer += delta_time;
+    if (splash_screen_timer >= splash_screen_duration)
+    {
+      in_splash_screen = false;
+      mouse_over = MenuItem::SPLASH_SCREEN_ENDED;
+      splash_screen_timer = 0;
+    }
+  }
+  else
+  {
+    mouse_over = menuItem(point);
+    resetOpacity();
+    switch (mouse_over)
+    {
+      case MenuItem::START_GAME:
+        start_game->opacity(1.0f);
+        break;
+      case MenuItem::OPEN_SHOP:
+        open_shop->opacity(1.0f);
+        break;
+      case MenuItem::EXIT_GAME:
+        exit_game->opacity(1.0f);
+        break;
+      default:
+        break;
+    }
   }
 
   return mouse_over;
@@ -136,24 +134,40 @@ MainMenu::MenuItem MainMenu::update(Point2D point)
  */
 void MainMenu::render(ASGE::Renderer* renderer)
 {
-  renderer->renderSprite(*menu_title);
-  renderer->renderSprite(*start_game);
-  renderer->renderSprite(*open_shop);
-  renderer->renderSprite(*exit_game);
-  renderer->renderSprite(*keyboard_image);
-  renderer->renderSprite(*controller_image);
+  if (in_splash_screen)
+  {
+    renderer->renderSprite(*splash_screen);
+    std::string start_string =
+      "Game Starts In: " +
+      std::to_string(
+        static_cast<int>(splash_screen_duration - splash_screen_timer) + 1);
+    renderer->renderText(start_string, 10, 660, 1.5f, ASGE::COLOURS::GREY);
+  }
+  else
+  {
+    renderer->renderSprite(*menu_title);
+    renderer->renderSprite(*start_game);
+    renderer->renderSprite(*open_shop);
+    renderer->renderSprite(*exit_game);
+  }
+}
 
-  renderer->renderText("Move: Arrow Keys \nShoot: Space",
-                       keyboard_image->xPos() - 40,
-                       370,
-                       1.0f,
-                       ASGE::COLOURS::GREY);
-  renderer->renderText("Move: Left Analog \nShoot Direction: Right Analog "
-                       "\nShoot: Right Bumper",
-                       controller_image->xPos() - 60,
-                       370,
-                       1.0f,
-                       ASGE::COLOURS::GREY);
+/**
+ *   @brief   Gets whether the menu is in the splash screen
+ *   @return  in_splash_screen
+ */
+bool MainMenu::inSplashScreen()
+{
+  return in_splash_screen;
+}
+
+/**
+ *   @brief   Opens the splash screen
+ *   @param   value The new value
+ */
+void MainMenu::setSplashScreen(bool value)
+{
+  in_splash_screen = value;
 }
 
 /**

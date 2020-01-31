@@ -6,6 +6,7 @@
 #include <Engine/Input.h>
 #include <Engine/InputEvents.h>
 #include <Engine/Mouse.h>
+#include <iostream>
 
 /**
  *   @brief   Destructor
@@ -82,12 +83,12 @@ bool SceneManager::init(ASGE::Input* input,
 
   cursor_pos = { cursor->xPos(), cursor->yPos() };
 
-  if (!main_menu.init(renderer, game_width))
+  if (!main_menu.init(renderer, game_width, game_height))
   {
     return false;
   }
 
-  if (!game_scene.init(renderer, game_height))
+  if (!game_scene.init(renderer, game_width, game_height))
   {
     return false;
   }
@@ -106,17 +107,17 @@ bool SceneManager::init(ASGE::Input* input,
  * pressed
  *   @return  A value for the game to determine what to do next
  */
-SceneManager::ReturnValue SceneManager::updateMainMenu()
+SceneManager::ReturnValue SceneManager::updateMainMenu(float delta_time)
 {
   ReturnValue return_value = ReturnValue::NONE;
-  MainMenu::MenuItem main_menu_item = main_menu.update(cursor_pos);
-  if (selected_pressed)
+  MainMenu::MenuItem main_menu_item = main_menu.update(delta_time, cursor_pos);
+
+  if (selected_pressed && !main_menu.inSplashScreen())
   {
     switch (main_menu_item)
     {
       case MainMenu::MenuItem::START_GAME:
-        screen_open = ScreenOpen::GAME;
-        return_value = ReturnValue::START_GAME;
+        main_menu.setSplashScreen(true);
         break;
       case MainMenu::MenuItem::OPEN_SHOP:
         screen_open = ScreenOpen::SHOP;
@@ -128,6 +129,12 @@ SceneManager::ReturnValue SceneManager::updateMainMenu()
         break;
     }
     selected_pressed = false;
+  }
+  else if (main_menu_item == MainMenu::MenuItem::SPLASH_SCREEN_ENDED)
+  {
+    screen_open = ScreenOpen::GAME;
+    main_menu.setSplashScreen(false);
+    return_value = ReturnValue::START_GAME;
   }
 
   return return_value;
@@ -143,33 +150,36 @@ SceneManager::ReturnValue SceneManager::updateShop()
 {
   ReturnValue return_value = ReturnValue::NONE;
   ShopMenu::MenuItem shop_menu_item = shop_menu.update(cursor_pos);
-  if (selected_pressed)
+
+  if (!selected_pressed)
   {
-    switch (shop_menu_item)
-    {
-      case ShopMenu::MenuItem::OPEN_MAIN_MENU:
-        screen_open = ScreenOpen::MAIN_MENU;
-        break;
-      case ShopMenu::MenuItem::DAMAGE_POWERUP:
-        return_value = ReturnValue::BUY_DAMAGE_POWERUP;
-        break;
-      case ShopMenu::MenuItem::HEALTH_POWERUP:
-        return_value = ReturnValue::BUY_HEALTH_POWERUP;
-        break;
-      case ShopMenu::MenuItem::MOVE_SPEED_POWERUP:
-        return_value = ReturnValue::BUY_MOVE_SPEED_POWERUP;
-        break;
-      case ShopMenu::MenuItem::SHOT_SIZE_POWERUP:
-        return_value = ReturnValue::BUY_SHOT_SIZE_POWERUP;
-        break;
-      case ShopMenu::MenuItem::SHOT_SPEED_POWERUP:
-        return_value = ReturnValue::BUY_SHOT_SPEED_POWERUP;
-        break;
-      default:
-        break;
-    }
-    selected_pressed = false;
+    return return_value;
   }
+
+  switch (shop_menu_item)
+  {
+    case ShopMenu::MenuItem::OPEN_MAIN_MENU:
+      screen_open = ScreenOpen::MAIN_MENU;
+      break;
+    case ShopMenu::MenuItem::DAMAGE_POWERUP:
+      return_value = ReturnValue::BUY_DAMAGE_POWERUP;
+      break;
+    case ShopMenu::MenuItem::HEALTH_POWERUP:
+      return_value = ReturnValue::BUY_HEALTH_POWERUP;
+      break;
+    case ShopMenu::MenuItem::MOVE_SPEED_POWERUP:
+      return_value = ReturnValue::BUY_MOVE_SPEED_POWERUP;
+      break;
+    case ShopMenu::MenuItem::SHOT_SIZE_POWERUP:
+      return_value = ReturnValue::BUY_SHOT_SIZE_POWERUP;
+      break;
+    case ShopMenu::MenuItem::SHOT_SPEED_POWERUP:
+      return_value = ReturnValue::BUY_SHOT_SPEED_POWERUP;
+      break;
+    default:
+      break;
+  }
+  selected_pressed = false;
 
   return return_value;
 }
@@ -184,28 +194,31 @@ SceneManager::ReturnValue SceneManager::updateGameOver()
 {
   ReturnValue return_value = ReturnValue::NONE;
   GameOverMenu::MenuItem game_over_item = game_over_menu.update(cursor_pos);
-  if (selected_pressed)
+
+  if (!selected_pressed)
   {
-    switch (game_over_item)
-    {
-      case GameOverMenu::MenuItem::START_GAME:
-        screen_open = ScreenOpen::GAME;
-        return_value = ReturnValue::START_GAME;
-        break;
-      case GameOverMenu::MenuItem::OPEN_SHOP:
-        screen_open = ScreenOpen::SHOP;
-        break;
-      case GameOverMenu::MenuItem::MAIN_MENU:
-        screen_open = ScreenOpen::MAIN_MENU;
-        break;
-      case GameOverMenu::MenuItem::EXIT_GAME:
-        return_value = ReturnValue::EXIT_GAME;
-        break;
-      default:
-        break;
-    }
-    selected_pressed = false;
+    return return_value;
   }
+
+  switch (game_over_item)
+  {
+    case GameOverMenu::MenuItem::START_GAME:
+      screen_open = ScreenOpen::GAME;
+      return_value = ReturnValue::START_GAME;
+      break;
+    case GameOverMenu::MenuItem::OPEN_SHOP:
+      screen_open = ScreenOpen::SHOP;
+      break;
+    case GameOverMenu::MenuItem::MAIN_MENU:
+      screen_open = ScreenOpen::MAIN_MENU;
+      break;
+    case GameOverMenu::MenuItem::EXIT_GAME:
+      return_value = ReturnValue::EXIT_GAME;
+      break;
+    default:
+      break;
+  }
+  selected_pressed = false;
 
   return return_value;
 }
@@ -222,7 +235,7 @@ SceneManager::update(double delta_time, ASGE::Input* input)
 
   if (screen_open == ScreenOpen::MAIN_MENU)
   {
-    return_value = updateMainMenu();
+    return_value = updateMainMenu(delta_time);
   }
 
   if (screen_open == ScreenOpen::SHOP)
@@ -237,6 +250,15 @@ SceneManager::update(double delta_time, ASGE::Input* input)
   }
 
   return return_value;
+}
+
+/**
+ *   @brief   Updates the splash screen on the game
+ *   @return  True if game splash screen is over
+ */
+bool SceneManager::updateGameSplashScreen(float delta_time)
+{
+  return game_scene.update(delta_time);
 }
 
 /**
@@ -331,6 +353,14 @@ void SceneManager::hideShotSizePowerup()
 void SceneManager::hideShotSpeedPowerup()
 {
   shop_menu.disableShotSpeed();
+}
+
+/**
+ *   @brief   Opens the screen splash screen
+ */
+void SceneManager::openGameSplashScreen()
+{
+  game_scene.setSplashScreen(true);
 }
 
 /**

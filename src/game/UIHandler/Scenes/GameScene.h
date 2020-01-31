@@ -13,12 +13,15 @@ class GameScene : public Scene
   GameScene() = default;
   ~GameScene();
 
-  bool init(ASGE::Renderer* renderer, float game_height);
+  bool init(ASGE::Renderer* renderer, float game_width, float game_height);
+  bool update(float delta_time);
   void render(ASGE::Renderer* renderer,
               int floor,
               int coins,
               int health,
               const bool* abilities);
+
+  void setSplashScreen(bool value);
 
  private:
   ASGE::Sprite* health_bar = nullptr;
@@ -28,6 +31,11 @@ class GameScene : public Scene
   ASGE::Sprite* move_speed_powerup_icon = nullptr;
   ASGE::Sprite* shot_size_powerup_icon = nullptr;
   ASGE::Sprite* shot_speed_powerup_icon = nullptr;
+
+  ASGE::Sprite* splash_screen = nullptr;
+  bool in_splash_screen = false;
+  float splash_screen_duration = 3;
+  float splash_screen_timer = 0;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_GAMESCENE_H

@@ -18,6 +18,10 @@ class InteractableObjects : public Enemy // inherit from enemy
   void setIsGrabbed(bool value);
   bool isGrabbed();
 
+  void canDamage(bool value);
+  bool canDamage();
+
+  void tickDamage(float delta_time);
   int damage();
 
  private:
@@ -26,6 +30,10 @@ class InteractableObjects : public Enemy // inherit from enemy
   float pos_y = 0.0f;
   bool is_grabbed = false;
   int movement_damage = 25;
+  bool can_damage = true;
+  float current_time = 0.0f;
+  const float WAIT = 2.0f; // once player damaged how long trill can damage
+                           // agaoin
 };
 
 #endif // PROJECT_INTERACTABLEOBJECTS_H
