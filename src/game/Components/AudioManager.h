@@ -18,13 +18,29 @@ class AudioManager
 
   bool audioSetUp();
 
+  void replayGameMusic(double deltaTime);
+  void playGameMusic();
+
+  void playAxeMan();
+  void playBox();
   void playCoin();
   void playDownAFloor();
   void playHeart();
   void playHit();
   void playPowerUp();
 
+  float time = 0;
+
  private:
+  ASGE::FILEIO::File gameMusic;
+  SoLoud::Wav gameMusic_MP3;
+
+  ASGE::FILEIO::File axe_Man;
+  SoLoud::Wav axe_Man_MP3;
+
+  ASGE::FILEIO::File Box;
+  SoLoud::Wav Box_MP3;
+
   ASGE::FILEIO::File Coin;
   SoLoud::Wav Coin_MP3;
 
