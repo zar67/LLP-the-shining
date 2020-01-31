@@ -29,8 +29,6 @@ class AudioManager
   void playHit();
   void playPowerUp();
 
-  float time = 0;
-
  private:
   ASGE::FILEIO::File gameMusic;
   SoLoud::Wav gameMusic_MP3;
@@ -57,6 +55,8 @@ class AudioManager
   SoLoud::Wav PowerUp_MP3;
 
   SoLoud::Soloud soloud;
+
+  float time = 0;
 };
 
 #endif // THE_SHINING_GAME_GROUP_3_AUDIOMANAGER_H
