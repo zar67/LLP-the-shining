@@ -51,6 +51,8 @@ void Player::reset(float game_width, float game_height)
   weapon_component->setSize(powerups[shot_size_powerup_index]
                               ? starting_shot_size * 2
                               : starting_shot_size);
+
+  weaponComponent()->reset();
 }
 
 /*

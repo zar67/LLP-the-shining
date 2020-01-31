@@ -163,3 +163,14 @@ void ShootingComponent::setSize(float value)
 {
   size = value;
 }
+
+void ShootingComponent::reset()
+{
+  auto itr = projectiles.begin();
+  for (auto& bullet : projectiles)
+  {
+    delete (bullet);
+    itr++;
+  }
+  projectiles.clear();
+}

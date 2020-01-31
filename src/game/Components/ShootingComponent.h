@@ -28,6 +28,7 @@ class ShootingComponent
                  GameObject* collider,
                  std::vector<InteractableObjects*> scene_objects);
   void render(ASGE::Renderer* renderer);
+  void reset();
 
   void setMoveDirection(float x_dir, float y_dir);
   void setSpeed(float value);
