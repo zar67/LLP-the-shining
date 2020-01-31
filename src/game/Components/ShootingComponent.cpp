@@ -139,7 +139,10 @@ void ShootingComponent::render(ASGE::Renderer* renderer)
   for (auto& bullet : projectiles)
   {
     ASGE::Sprite* sprite = bullet->spriteComponent()->getSprite();
-    renderer->renderSprite(*sprite);
+    if (sprite)
+    {
+      renderer->renderSprite(*sprite);
+    }
   }
 }
 
