@@ -42,9 +42,16 @@ class ShootingComponent
 
   void arrow_control(float x_pos, float y_pos);
 
- private:
+  void hasShot(bool value);
+  bool hasShot();
 
+ private:
   float calcAngle(float x, float y);
+
+  bool has_shot = false;
+  const float SHOOT_DELAY = 0.3f;
+  float current_time = 0.0f;
+
   float speed = 350.0f;
   float range = 300.0f;
   float size = 8;
@@ -53,7 +60,6 @@ class ShootingComponent
 
   float x_shoot = 0.0f;
   float y_shoot = 0.0f;
-  float offset = 15.0f;
 
   SpriteComponent* sprite_component = nullptr;
 };

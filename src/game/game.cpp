@@ -243,9 +243,10 @@ void MyASGEGame::playerControllerInput(ASGE::Input* input)
       last_shoot_dir[1] = 0;
     }
 
-    if (!shoot_pressed && data.buttons[5] > 0.5f &&
+    if (!player.weaponComponent()->hasShot() &&
         !(last_shoot_dir[0] == 0 && last_shoot_dir[1] == 0))
     {
+      player.weaponComponent()->hasShot(true);
       shoot_pressed = true;
       // Fire Using Shoot Vector
       ASGE::Sprite* sprite = player.spriteComponent()->getSprite();
