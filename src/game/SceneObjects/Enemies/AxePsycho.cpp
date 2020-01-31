@@ -41,7 +41,7 @@ bool AxePsycho::setup(ASGE::Renderer* renderer,
 {
   hp = START_HP;
   damage = 25;
-  speed = 60;
+  speed = 110;
   in_room = false;
 
   addFlashComponent(renderer, ASGE::COLOURS::RED, game_width, game_height);
