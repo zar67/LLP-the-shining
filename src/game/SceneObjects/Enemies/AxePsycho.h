@@ -27,7 +27,7 @@ class AxePsycho : public Enemy
   void inRoom(bool value);
 
   static bool
-  spawnTimerEnd(double delta_time, float timer_aim, double current_time);
+  spawnTimerEnd(double delta_time, float timer_aim, float& current_time);
   void setSpawnedLocation(float x_pos, float y_pos);
 
   FlashComponent* flashComponent();
@@ -52,7 +52,7 @@ class AxePsycho : public Enemy
 
   const int START_HP = 500;
   const float PAUSE_TIME = 1.5f;
-  double current_pause_time = 0.0f;
+  float current_pause_time = 0.0f;
   bool is_paused = false;
 
   float spawned_x = 0.0f;
