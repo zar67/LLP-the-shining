@@ -76,6 +76,7 @@ bool MyASGEGame::init()
   {
     return false;
   }
+  audio_manager.playGameMusic();
 
   ASGE::DebugPrinter{} << "SETUP COMPLETE" << std::endl;
   return true;
@@ -292,6 +293,7 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
 {
   double delta_time = game_time.delta.count() / 1000.0;
 
+  audio_manager.replayGameMusic(delta_time);
   if (scene_handler.inMenu())
   {
     SceneManager::ReturnValue return_value =

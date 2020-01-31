@@ -26,6 +26,23 @@ bool AudioManager::audioSetUp()
     return false;
   }
 
+  if (gameMusic.open("/data/Audio/Game Music.mp3"))
+  {
+    auto io_buffer = gameMusic.read();
+    if (gameMusic_MP3.loadMem(io_buffer.as_unsigned_char(),
+                              static_cast<unsigned int>(io_buffer.length),
+                              false,
+                              false))
+    {
+      return true;
+    }
+    gameMusic.close();
+  }
+  else
+  {
+    return false;
+  }
+
   if (axe_Man.open("/data/Audio/Axe Man.mp3"))
   {
     auto io_buffer = axe_Man.read();
@@ -197,6 +214,28 @@ bool AudioManager::audioSetUp()
   }
 
   return true;
+}
+void AudioManager::playGameMusic()
+{
+  soloud.play(gameMusic_MP3);
+}
+
+void AudioManager::replayGameMusic(double deltaTime)
+{
+  if (time < 86)
+  {
+    time = time + deltaTime;
+  }
+  else if (time > 87)
+  {
+    soloud.play(gameMusic_MP3);
+    time = 0;
+  }
+
+  if (time >= 86)
+  {
+    time++;
+  }
 }
 
 void AudioManager::playAxeMan()
