@@ -256,3 +256,13 @@ bool ShootingComponent::hasShot()
 {
   return has_shot;
 }
+
+void ShootingComponent::hasReset(bool value)
+{
+  has_reset = value;
+}
+
+bool ShootingComponent::hasReset()
+{
+  return has_reset;
+}

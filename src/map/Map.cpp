@@ -360,6 +360,11 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
 
   if (roomChanged())
   {
+    if (!player->weaponComponent()->hasReset())
+    {
+      player->weaponComponent()->reset();
+      player->weaponComponent()->hasReset(true);
+    }
     bool is_ready = axe_psycho.spawnTimerEnd(
       delta_time, axe_psycho.flashAimTime(), *axe_psycho.currentFlashTime());
     if (is_ready)
@@ -367,6 +372,7 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
       last_room = current_room;
       axe_psycho.flashComponent()->isFlashing(
         getCurrentRoom()->axeManPresent(&axe_psycho, game_width, game_height));
+      player->weaponComponent()->hasReset(false);
     }
   }
   else if (axe_psycho.flashComponent()->isFlashing())
