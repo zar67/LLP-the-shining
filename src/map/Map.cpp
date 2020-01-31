@@ -110,10 +110,10 @@ void Map::handlePlayerCollision(Player* player)
       CollisionComponent::CollisionSide side =
         player_collider->getCollisionSide(*obj->collisionComponent());
       fixCollision(player, obj->collisionComponent(), side);
-      if (obj->isGrabbed())
+      if (obj->isGrabbed() && obj->canDamage())
       {
         player->takeDamage(obj->damage());
-        obj->setIsGrabbed(false);
+        obj->canDamage(false);
       }
     }
   }
@@ -346,6 +346,16 @@ bool Map::updateCurrentRoom(ASGE::Renderer* renderer,
   if (getEnemies(false).empty())
   {
     getCurrentRoom()->canMove(true);
+  }
+
+  std::vector<InteractableObjects*> objects =
+    getCurrentRoom()->getObjectsInRoom();
+  for (auto& obj : objects)
+  {
+    if (!obj->canDamage())
+    {
+      obj->tickDamage(delta_time);
+    }
   }
 
   if (roomChanged())
