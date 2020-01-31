@@ -375,10 +375,11 @@ void Map::renderMiniMap(ASGE::Renderer* renderer)
 {
   for (int i = 0; i < mini_map.size(); i++)
   {
-    if (getRoom(mini_map_ids.at(i))->found())
+    /*if (getRoom(mini_map_ids.at(i))->found())
     {
       renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
-    }
+    }*/
+    renderer->renderSprite(*mini_map[i]->spriteComponent()->getSprite());
   }
 }
 

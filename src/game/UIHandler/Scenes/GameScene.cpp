@@ -31,6 +31,9 @@ GameScene::~GameScene()
 
   delete shot_speed_powerup_icon;
   shot_speed_powerup_icon = nullptr;
+
+  delete splash_screen;
+  splash_screen = nullptr;
 }
 
 /**
@@ -40,7 +43,9 @@ GameScene::~GameScene()
  *            game_height The height of the game screen
  *   @return  True if setup correctly
  */
-bool GameScene::init(ASGE::Renderer* renderer, float game_height)
+bool GameScene::init(ASGE::Renderer* renderer,
+                     float game_width,
+                     float game_height)
 {
   health_bar = renderer->createRawSprite();
   if (!setupSprite(
@@ -105,12 +110,34 @@ bool GameScene::init(ASGE::Renderer* renderer, float game_height)
   }
 
   shot_speed_powerup_icon = renderer->createRawSprite();
-  return setupSprite(*shot_speed_powerup_icon,
-                     "data/UI/Power Up Icons/ShotSpeedIcon.png",
-                     230,
-                     game_height - 55,
-                     45,
-                     45);
+  if (!setupSprite(*shot_speed_powerup_icon,
+                   "data/UI/Power Up Icons/ShotSpeedIcon.png",
+                   230,
+                   game_height - 55,
+                   45,
+                   45))
+  {
+    return false;
+  }
+
+  splash_screen = renderer->createRawSprite();
+  return setupSprite(
+    *splash_screen, "data/UI/BlankScreen.png", 0, 0, game_width, game_height);
+}
+
+bool GameScene::update(float delta_time)
+{
+  if (in_splash_screen)
+  {
+    splash_screen_timer += delta_time;
+    if (splash_screen_timer >= splash_screen_duration)
+    {
+      in_splash_screen = false;
+      splash_screen_timer = 0;
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -127,39 +154,53 @@ void GameScene::render(ASGE::Renderer* renderer,
                        int health,
                        const bool* abilities)
 {
-  renderer->renderText(
-    "Floor " + std::to_string(floor), 10, 30, 1.5f, ASGE::COLOURS::GREY);
-  renderer->renderText(
-    "$" + std::to_string(coins), 10, 65, 1.5f, ASGE::COLOURS::GREY);
+  if (in_splash_screen)
+  {
+    renderer->renderSprite(*splash_screen);
+    renderer->renderText(
+      "Floor " + std::to_string(floor), 500, 336, 1.5f, ASGE::COLOURS::GREY);
+  }
+  else
+  {
+    renderer->renderText(
+      "Floor " + std::to_string(floor), 10, 30, 1.5f, ASGE::COLOURS::GREY);
+    renderer->renderText(
+      "$" + std::to_string(coins), 10, 65, 1.5f, ASGE::COLOURS::GREY);
 
-  if (abilities[1])
-  {
-    health_bar_background->width(300);
-  }
+    if (abilities[1])
+    {
+      health_bar_background->width(300);
+    }
 
-  renderer->renderSprite(*health_bar_background);
-  health_bar->width(health * 1.5f);
-  renderer->renderSprite(*health_bar);
+    renderer->renderSprite(*health_bar_background);
+    health_bar->width(health * 1.5f);
+    renderer->renderSprite(*health_bar);
 
-  // Abilities
-  if (abilities[0])
-  {
-    renderer->renderSprite(*damage_powerup_icon);
+    // Abilities
+    if (abilities[0])
+    {
+      renderer->renderSprite(*damage_powerup_icon);
+    }
+    if (abilities[1])
+    {
+      renderer->renderSprite(*health_powerup_icon);
+    }
+    if (abilities[2])
+    {
+      renderer->renderSprite(*move_speed_powerup_icon);
+    }
+    if (abilities[3])
+    {
+      renderer->renderSprite(*shot_size_powerup_icon);
+    }
+    if (abilities[4])
+    {
+      renderer->renderSprite(*shot_speed_powerup_icon);
+    }
   }
-  if (abilities[1])
-  {
-    renderer->renderSprite(*health_powerup_icon);
-  }
-  if (abilities[2])
-  {
-    renderer->renderSprite(*move_speed_powerup_icon);
-  }
-  if (abilities[3])
-  {
-    renderer->renderSprite(*shot_size_powerup_icon);
-  }
-  if (abilities[4])
-  {
-    renderer->renderSprite(*shot_speed_powerup_icon);
-  }
+}
+
+void GameScene::setSplashScreen(bool value)
+{
+  in_splash_screen = true;
 }

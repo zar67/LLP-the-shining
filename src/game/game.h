@@ -36,6 +36,7 @@ class MyASGEGame : public ASGE::OGLGame
   Map map = Map();
   Player player = Player();
 
+  bool game_paused = false;
   int floor = 3;
 
   float last_shoot_dir[2] = { 0, 0 };

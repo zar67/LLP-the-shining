@@ -68,9 +68,7 @@ bool MyASGEGame::init()
   player.init(renderer.get(),
               texture,
               game_width / 2.0f - 17,
-              game_height / 2.0f - 24.5f/*,
-              34.0f,
-              49.0f*/);
+              game_height / 2.0f - 24.5f);
 
   if (!audio_manager.audioSetUp())
   {
@@ -341,39 +339,47 @@ void MyASGEGame::update(const ASGE::GameTime& game_time)
         break;
     }
   }
-  else // In Game
+  else
   {
-    playerControllerInput(inputs.get());
-    if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
+    if (game_paused && scene_handler.updateGameSplashScreen(delta_time))
     {
-      scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+      game_paused = false;
     }
-    if (map.axePsycho()->inRoom())
+    else if (!game_paused)
     {
-      map.axePsycho()->update(delta_time,
-                              player.spriteComponent()->getSprite()->xPos(),
-                              player.spriteComponent()->getSprite()->yPos());
-    }
-
-    map.handlePlayerCollision(&player);
-
-    std::vector<GameObject*> colliders = map.getEnemies(true);
-    map.handleObjectCollision(colliders);
-
-    if (map.updateCurrentRoom(renderer.get(),
-                              &audio_manager,
-                              delta_time,
-                              &player,
-                              game_width,
-                              game_height))
-    {
-      // Descend Floor
-      floor -= 1;
-      map.generateRooms(renderer.get(), game_width, game_height);
-
-      if (floor == 0)
+      playerControllerInput(inputs.get());
+      if (player.update(&audio_manager, delta_time, map.getEnemies(true)))
       {
-        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+        scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_OVER);
+      }
+      if (map.axePsycho()->inRoom())
+      {
+        map.axePsycho()->update(delta_time,
+                                player.spriteComponent()->getSprite()->xPos(),
+                                player.spriteComponent()->getSprite()->yPos());
+      }
+      map.handlePlayerCollision(&player);
+
+      std::vector<GameObject*> colliders = map.getEnemies(true);
+      map.handleObjectCollision(colliders);
+
+      if (map.updateCurrentRoom(renderer.get(),
+                                &audio_manager,
+                                delta_time,
+                                &player,
+                                game_width,
+                                game_height))
+      {
+        // Descend Floor
+        floor -= 1;
+        map.generateRooms(renderer.get(), game_width, game_height);
+        game_paused = true;
+        scene_handler.openGameSplashScreen();
+
+        if (floor == 0)
+        {
+          scene_handler.screenOpen(SceneManager::ScreenOpen::GAME_WON);
+        }
       }
     }
   }

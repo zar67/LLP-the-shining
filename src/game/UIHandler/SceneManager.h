@@ -47,11 +47,12 @@ class SceneManager
             float game_width,
             float game_height);
 
-  ReturnValue updateMainMenu();
+  ReturnValue updateMainMenu(float delta_time);
   ReturnValue updateShop();
   ReturnValue updateGameOver();
 
   ReturnValue update(double delta_time, ASGE::Input* input);
+  bool updateGameSplashScreen(float delta_time);
   void render(ASGE::Renderer* renderer,
               int floor,
               int coins,
@@ -66,6 +67,8 @@ class SceneManager
   void hideMoveSpeedPowerup();
   void hideShotSizePowerup();
   void hideShotSpeedPowerup();
+
+  void openGameSplashScreen();
 
  private:
   void mouseHandler(const ASGE::SharedEventData& data);
